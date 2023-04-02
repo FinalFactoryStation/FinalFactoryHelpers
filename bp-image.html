@@ -1,0 +1,150 @@
+<html>
+<head>
+  <title>Blueprint Drawing thingy</title>
+  <style>
+    canvas {
+      border: 1px solid black;
+    }
+  </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Base64/1.2.0/base64.min.js" integrity="sha512-wuN7AU4m/qE3ZCKOCoBIuTU4M/dK8w8becOGgb4geNwPDm69wwu1AqZut6awol/qllGfyySmSoQ2CRwJADXKOA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js" integrity="sha512-g2TeAWw5GPnX7z0Kn8nFbYfeHcvAu/tx6d6mrLe/90mkCxO+RcptyYpksUz35EO337F83bZwcmUyHiHamspkfg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+    <label for="blueprint-textbox">Blueprint:</label><br>
+    <textarea id="blueprint-textbox" rows="10" cols="50"></textarea><br>
+    <button id="draw-button">Draw Blueprint</button>
+    <br>
+  <canvas id="myCanvas" width="500" height="500"></canvas>
+<script>
+
+
+function decode(bps) {
+  bps = bps.substring(16);
+  var bpsb = atob(bps);
+  var bytes = new Uint8Array(bpsb.length);
+  for (var i = 0; i < bpsb.length; i++) {
+    bytes[i] = bpsb.charCodeAt(i);
+  }
+  var inflated = pako.inflate(bytes, {
+    to: 'string'
+  });
+  return JSON.parse(inflated);
+}
+
+function get_rotated_object_info(obj) {
+        // Get position and rotation values
+        const pos = obj['OriginalPlacedPosition'];
+        const rot = obj['OriginalRotation']['value'];
+
+        // Calculate width and height after rotation
+        const length = obj['Length'];
+        const width = obj['Width'];
+        const yaw = Math.atan2(2*(rot['w']*rot['z'] + rot['x']*rot['y']), 1 - 2*(rot['y']**2 + rot['z']**2));
+        const wcos = Math.abs(rot['w']*Math.cos(yaw) - rot['z']*Math.sin(yaw));
+        const wsin = Math.abs(rot['w']*Math.sin(yaw) + rot['z']*Math.cos(yaw));
+        const hcos = Math.abs(rot['w']*Math.cos(yaw) - rot['x']*Math.sin(yaw));
+        const hsin = Math.abs(rot['w']*Math.sin(yaw) + rot['x']*Math.cos(yaw));
+        const width_rotated = length;
+        const height_rotated = width;
+
+        // Calculate center_x and center_y
+        const center_x = pos['z']/10;
+        const center_y = pos['x']/10;
+
+        // Return values as an object
+        return {
+          center_x,
+          center_y,
+          width: width_rotated,
+          height: height_rotated,
+          itemName: obj['ItemName']
+        };
+      }
+    
+function drawBoxes(canvas, boxList) {
+  const scalingFactor = 75;
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+
+  // Loop through the boxes to find the min and max coordinates
+  boxList.forEach(box => {
+    minX = Math.min(minX, box.center_x - box.width / 2);
+    minY = Math.min(minY, box.center_y - box.height / 2);
+    maxX = Math.max(maxX, box.center_x + box.width / 2);
+    maxY = Math.max(maxY, box.center_y + box.height / 2);
+  });
+
+  // Calculate the size of the canvas based on the size of the boxes
+  const width = (maxX - minX) * scalingFactor;
+  const height = (maxY - minY) * scalingFactor;
+  canvas.width = width;
+  canvas.height = height;
+
+  // Draw boxes and images
+  const ctx = canvas.getContext("2d");
+  const boxSize = 50;
+  for (let box of boxList) {
+    // Scale and shift the box coordinates
+    const center_x = (box.center_x - minX) * scalingFactor;
+    const center_y = (box.center_y - minY) * scalingFactor;
+
+    let width = box.width * scalingFactor;
+    let height = box.height * scalingFactor;
+    // Normalize coordinates to fit in canvas
+    let x = center_x - width / 2;
+    let y = center_y - height / 2;
+
+    // Load and draw image
+    const img = new Image();
+    img.src = `./Icons/${box.itemName.replace(/\s/g, '')}.png`;
+    img.onload = () => {
+      const imgAspect = img.width / img.height;
+      const boxAspect = width / height;
+      let imgWidth = width;
+      let imgHeight = height;
+      if (imgAspect > boxAspect) {
+        imgWidth = Math.min(width, img.width);
+        imgHeight = imgWidth / imgAspect;
+      } else {
+        imgHeight = Math.min(height, img.height);
+        imgWidth = imgHeight * imgAspect;
+      }
+      const imgX = x + (width - imgWidth) / 2;
+      const imgY = y + (height - imgHeight) / 2;
+      ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+    };
+
+    // Draw box
+    ctx.strokeStyle = "red";
+    ctx.strokeRect(x, y, width, height);
+    ctx.fillStyle = "white";
+    ctx.fillRect(x, y, width, height);
+
+    // Draw label at top of box
+    const labelY = y + 14; // Font size + padding
+    ctx.fillStyle = "black";
+    ctx.font = "12px Arial";
+    const labelWidth = ctx.measureText(box.itemName).width;
+    ctx.fillText(box.itemName, x + width / 2 - labelWidth / 2, labelY);
+  }
+}
+
+const canvas = document.getElementById('myCanvas');
+const blueprintTextbox = document.getElementById('blueprint-textbox');
+const drawButton = document.getElementById('draw-button');
+  
+drawButton.addEventListener('click', function() {
+    const bps = blueprintTextbox.value;
+    const d = decode(bps);
+    const image_locs = d["Items"].map(item => get_rotated_object_info(item));
+    drawBoxes(canvas, image_locs);
+  });
+
+
+
+console.log(image_locs)
+
+
+</script>
+
+</body>
+</html>
