@@ -95,7 +95,7 @@ function drawBoxes(canvas, boxList) {
 
     // Load and draw image
     const img = new Image();
-    img.src = `./Icons/${box.itemName.replace(/\s/g, '')}.png`;
+    img.src = `Icons/${box.itemName.replace(/\s/g, '')}.png`;
     img.onload = () => {
       const imgAspect = img.width / img.height;
       const boxAspect = width / height;
