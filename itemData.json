@@ -1,0 +1,2960 @@
+{
+  "items": [
+    {
+      "itemId": 1,
+      "name": "Advanced Assembler",
+      "description": "Module that produces other modules and logistics units.",
+      "itemCategory": "Stations",
+      "stabilityCost": 9,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 2,
+      "powerConsumptionMax": 40,
+      "heatRate": 0.6,
+      "length": 3,
+      "width": 3,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Assembler",
+          "quantity": 1
+        },
+        {
+          "itemName": "Quantum Computer",
+          "quantity": 2
+        },
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 20
+        }
+      ]
+    },
+    {
+      "itemId": 2,
+      "name": "Advanced Miner Bot",
+      "description": "A drone that will mine ore and dump it in mining stations.",
+      "itemCategory": "Logistics",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Recycled Miner Bot",
+          "quantity": 2
+        },
+        {
+          "itemName": "High Energy Laser",
+          "quantity": 2
+        },
+        {
+          "itemName": "Quantum Computer",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "itemId": 3,
+      "name": "Advanced Mining Station",
+      "description": "Place near an asteroid and give it mining drones to automate mining.",
+      "itemCategory": "Stations",
+      "stabilityCost": 6,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 20,
+      "powerConsumptionMax": 20,
+      "heatRate": 0,
+      "length": 2,
+      "width": 3,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "High Density Structure",
+          "quantity": 10
+        },
+        {
+          "itemName": "Mining Station",
+          "quantity": 1
+        },
+        {
+          "itemName": "Quantum Computer",
+          "quantity": 4
+        }
+      ]
+    },
+    {
+      "itemId": 4,
+      "name": "Advanced Ship Assembler",
+      "description": "Constructs ships. Ships will be deployed into the ship logistics network, not into connectors.",
+      "itemCategory": "Stations",
+      "stabilityCost": 9,
+      "stabilityConferred": 3,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 2,
+      "powerConsumptionMax": 40,
+      "heatRate": 0.6,
+      "length": 3,
+      "width": 3,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Assembler",
+          "quantity": 1
+        },
+        {
+          "itemName": "Quantum Computer",
+          "quantity": 4
+        },
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 20
+        }
+      ]
+    },
+    {
+      "itemId": 5,
+      "name": "AI Controller Circuit",
+      "description": "A complex circuit used in the operation of automated modules and units.",
+      "itemCategory": "Component",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Silica Ore",
+          "quantity": 2
+        },
+        {
+          "itemName": "Bauxite Ore",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "itemId": 6,
+      "name": "Ancient Portal",
+      "description": "An ancient cosmic structure of origins unknown. ",
+      "itemCategory": "Terrain",
+      "stabilityCost": 400,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 20,
+      "width": 20,
+      "height": 3,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 7,
+      "name": "Antimatter Collector",
+      "description": "Attach to an Antimatter Power Station to allow for the collection of antimatter particles in the vacuum of space. ",
+      "itemCategory": "Stations",
+      "stabilityCost": 2,
+      "stabilityConferred": 0,
+      "powerProduction": 10,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 1,
+      "width": 2,
+      "height": 1,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Low Density Structure",
+          "quantity": 4
+        },
+        {
+          "itemName": "AI Controller Circuit",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "itemId": 8,
+      "name": "Antimatter Power Station",
+      "description": "Generates power from antimatter collected from nearby space using Antipower Power Collection sails.",
+      "itemCategory": "Stations",
+      "stabilityCost": 4,
+      "stabilityConferred": 0,
+      "powerProduction": 10,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0.4,
+      "length": 2,
+      "width": 2,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 10
+        },
+        {
+          "itemName": "Fabricator",
+          "quantity": 6
+        },
+        {
+          "itemName": "Solid State Laser",
+          "quantity": 4
+        }
+      ]
+    },
+    {
+      "itemId": 9,
+      "name": "Assembler",
+      "description": "Automates the production of complex items, stations, and non-fleet logistics units.",
+      "itemCategory": "Stations",
+      "stabilityCost": 4,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 2,
+      "powerConsumptionMax": 12,
+      "heatRate": 0.5,
+      "length": 2,
+      "width": 2,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 15
+        },
+        {
+          "itemName": "Fabricator",
+          "quantity": 4
+        }
+      ]
+    },
+    {
+      "itemId": 10,
+      "name": "Asteroid Research Bot",
+      "description": "A bot that will scan asteroids when loaded into an Asteroid Research Station. Will self destruct after researching a set amount.",
+      "itemCategory": "Logistics",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Low Density Structure",
+          "quantity": 6
+        },
+        {
+          "itemName": "AI Controller Circuit",
+          "quantity": 8
+        }
+      ]
+    },
+    {
+      "itemId": 11,
+      "name": "Asteroid Research Station",
+      "description": "Place near asteroids to allow Research Bots to automate research. ",
+      "itemCategory": "Stations",
+      "stabilityCost": 12,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 3,
+      "powerConsumptionMax": 5,
+      "heatRate": 0,
+      "length": 3,
+      "width": 4,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 16
+        },
+        {
+          "itemName": "AI Controller Circuit",
+          "quantity": 8
+        },
+        {
+          "itemName": "Robotic Parts",
+          "quantity": 8
+        }
+      ]
+    },
+    {
+      "itemId": 12,
+      "name": "Atomic Printer",
+      "description": "Prints intermediate products used in more complex recipes.",
+      "itemCategory": "Stations",
+      "stabilityCost": 2,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 2,
+      "powerConsumptionMax": 5,
+      "heatRate": 0.5,
+      "length": 2,
+      "width": 1,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 10
+        },
+        {
+          "itemName": "Fabricator",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "itemId": 13,
+      "name": "Bat",
+      "description": "A small fiesty fleet ship.",
+      "itemCategory": "Ship",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Small Ship Core",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "itemId": 14,
+      "name": "Bat Dock",
+      "description": "Connect this directly to a Defense Platform or Ship Yard to have it continually request Bats from the ship logistics network.",
+      "itemCategory": "Stations",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 7,
+      "powerConsumptionMax": 7,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 8
+        },
+        {
+          "itemName": "Low Density Structure",
+          "quantity": 4
+        },
+        {
+          "itemName": "AI Controller Circuit",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "itemId": 15,
+      "name": "Bauxite Asteroid",
+      "description": "Filled with Bauxite Ore for mining.",
+      "itemCategory": "Terrain",
+      "stabilityCost": 900,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 30,
+      "width": 30,
+      "height": 4,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 16,
+      "name": "Bauxite Ore",
+      "description": "Ore used used printing aluminum based products.",
+      "itemCategory": "Ore",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 17,
+      "name": "Black Hole",
+      "description": "A mass of apparent infinite densite, trapping all things that enter its event horizon.",
+      "itemCategory": "Terrain",
+      "stabilityCost": 4225,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 65,
+      "width": 65,
+      "height": 3,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 18,
+      "name": "Breadcrumb",
+      "description": "Keeps the fog revealed for a short time as the player explores",
+      "itemCategory": "Meta",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 19,
+      "name": "Cargo Drone",
+      "description": "A longer range ship that can fly over most stations. Can only take items between two Logistics Bays.",
+      "itemCategory": "Logistics",
+      "stabilityCost": 5,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 5,
+      "width": 1,
+      "height": 1,
+      "heightPosition": 2,
+      "recipe": [
+        {
+          "itemName": "Robotic Parts",
+          "quantity": 8
+        },
+        {
+          "itemName": "AI Controller Circuit",
+          "quantity": 4
+        },
+        {
+          "itemName": "Plasma Engine Parts",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "itemId": 20,
+      "name": "Cargo Hold",
+      "description": "Can hold a small amount of items.",
+      "itemCategory": "Stations",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 1,
+      "powerConsumptionMax": 1,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 12
+        }
+      ]
+    },
+    {
+      "itemId": 21,
+      "name": "Comet Catcher",
+      "description": "Pulls in nearby comets so they can be harvested for ice. This module costs no stability.",
+      "itemCategory": "Stations",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 15,
+      "powerConsumptionMax": 60,
+      "heatRate": 0,
+      "length": 4,
+      "width": 5,
+      "height": 3,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "High Density Structure",
+          "quantity": 16
+        },
+        {
+          "itemName": "Singularity Field Generator",
+          "quantity": 8
+        },
+        {
+          "itemName": "Robotic Parts",
+          "quantity": 12
+        }
+      ]
+    },
+    {
+      "itemId": 22,
+      "name": "Comet Core",
+      "description": "A comet that can be caught and harvested for ice.",
+      "itemCategory": "Ore",
+      "stabilityCost": 4,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 2,
+      "width": 2,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 23,
+      "name": "Comet Fragment",
+      "description": "A comet fragment that can be mined for ice and organics",
+      "itemCategory": "Terrain",
+      "stabilityCost": 4,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 2,
+      "width": 2,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 24,
+      "name": "Comet Harvester",
+      "description": "Extracts resources from comets. Attaches to a comet catcher.",
+      "itemCategory": "Stations",
+      "stabilityCost": 15,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 4,
+      "powerConsumptionMax": 20,
+      "heatRate": 1,
+      "length": 3,
+      "width": 5,
+      "height": 3,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "High Density Structure",
+          "quantity": 12
+        },
+        {
+          "itemName": "Robotic Parts",
+          "quantity": 18
+        },
+        {
+          "itemName": "Solid State Laser",
+          "quantity": 20
+        }
+      ]
+    },
+    {
+      "itemId": 25,
+      "name": "Connector",
+      "description": "Connects stations together and carries items and power between them.",
+      "itemCategory": "Stations",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 2,
+      "powerConsumptionMax": 2,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 1,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 4
+        },
+        {
+          "itemName": "Solid State Laser",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "itemId": 26,
+      "name": "Construction Bot",
+      "description": "A little pal that will build things for you",
+      "itemCategory": "Logistics",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Small Ship Core",
+          "quantity": 1
+        },
+        {
+          "itemName": "AI Controller Circuit",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "itemId": 27,
+      "name": "Dark Star Gate",
+      "description": "A mega structure used for the construction and deployment of the ultimate cosmic vessel, allowing for traversal through a black hole.",
+      "itemCategory": "Stations",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 2000,
+      "powerConsumptionMax": 2000,
+      "heatRate": 1,
+      "length": 43,
+      "width": 21,
+      "height": 3,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Fullerene Structure",
+          "quantity": 200
+        },
+        {
+          "itemName": "Advanced Ship Assembler",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "itemId": 28,
+      "name": "Defense Platform",
+      "description": "Provides area defense via combat units. Provides a bonus ot attack damage and health regen for units stationed here.",
+      "itemCategory": "Stations",
+      "stabilityCost": 9,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 6,
+      "powerConsumptionMax": 6,
+      "heatRate": 0,
+      "length": 3,
+      "width": 3,
+      "height": 3,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 12
+        },
+        {
+          "itemName": "AI Controller Circuit",
+          "quantity": 6
+        }
+      ]
+    },
+    {
+      "itemId": 29,
+      "name": "Derelict Outpost",
+      "description": "Used to located the first boss.",
+      "itemCategory": "Terrain",
+      "stabilityCost": 900,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 30,
+      "width": 30,
+      "height": 3,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 30,
+      "name": "Destroyed Player",
+      "description": "The smoldering remains of the player's ship.",
+      "itemCategory": "Meta",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 31,
+      "name": "Duplicator Artifact",
+      "description": "An ancient device that appears to have the ability to increase the production of an entire station grid.",
+      "itemCategory": "Stations",
+      "stabilityCost": 12,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 40,
+      "powerConsumptionMax": 40,
+      "heatRate": 0,
+      "length": 4,
+      "width": 3,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 32,
+      "name": "Dyson Bot",
+      "description": "A bot equipped with a solar panel that will swarm around a star with other bots to form a Dyson Sphere. Will also harvest Exotic Matter from the suns atmosphere.",
+      "itemCategory": "Logistics",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 20,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Recycled Miner Bot",
+          "quantity": 1
+        },
+        {
+          "itemName": "Quantum Computer",
+          "quantity": 2
+        },
+        {
+          "itemName": "Solar Panel",
+          "quantity": 1
+        },
+        {
+          "itemName": "High Energy Laser",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "itemId": 33,
+      "name": "Dyson Power Receiver",
+      "description": "Can absorb a high powered energy beam and convert it into electricity.",
+      "itemCategory": "Stations",
+      "stabilityCost": 9,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 3,
+      "width": 3,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "High Density Structure",
+          "quantity": 16
+        },
+        {
+          "itemName": "Fullerene Structure",
+          "quantity": 12
+        },
+        {
+          "itemName": "Robotic Parts",
+          "quantity": 8
+        }
+      ]
+    },
+    {
+      "itemId": 34,
+      "name": "Dyson Power Transmitter",
+      "description": "Transmits all excess energy from the station its attached to to the first Dyson Power Receiver in its path.",
+      "itemCategory": "Stations",
+      "stabilityCost": 9,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 10000,
+      "heatRate": 0,
+      "length": 3,
+      "width": 3,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "High Density Structure",
+          "quantity": 18
+        },
+        {
+          "itemName": "High Energy Laser",
+          "quantity": 12
+        },
+        {
+          "itemName": "Fullerene Structure",
+          "quantity": 9
+        }
+      ]
+    },
+    {
+      "itemId": 35,
+      "name": "Dyson Rotator",
+      "description": "Meta item used to rotate dyson bots around a star",
+      "itemCategory": "Meta",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 36,
+      "name": "Dyson Segment",
+      "description": "Place this near a Main Sequence Star to begin construction on one quadrant of the Dyson structure. Capable of generating Exotic Matter when Dyson Drones are assigned to a fully constructed segment.",
+      "itemCategory": "Stations",
+      "stabilityCost": 0,
+      "stabilityConferred": 50,
+      "powerProduction": 10,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 9,
+      "width": 9,
+      "height": 4,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "High Density Structure",
+          "quantity": 75
+        },
+        {
+          "itemName": "Fullerene Structure",
+          "quantity": 50
+        }
+      ]
+    },
+    {
+      "itemId": 37,
+      "name": "Enemy Camp",
+      "description": "The item config for enemy camps",
+      "itemCategory": "Meta",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 38,
+      "name": "Exotic Matter",
+      "description": "Matter found in the sun's atmosphere",
+      "itemCategory": "Ore",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 39,
+      "name": "Exploration Center",
+      "description": "Responsible for deploying Exploration Drones into the great unknown.",
+      "itemCategory": "Stations",
+      "stabilityCost": 9,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 10,
+      "powerConsumptionMax": 10,
+      "heatRate": 0.1,
+      "length": 3,
+      "width": 3,
+      "height": 3,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 10
+        },
+        {
+          "itemName": "AI Controller Circuit",
+          "quantity": 5
+        },
+        {
+          "itemName": "Robotic Parts",
+          "quantity": 5
+        }
+      ]
+    },
+    {
+      "itemId": 40,
+      "name": "Explorer Bot",
+      "description": "A bot that will fly in a straight light until it crashes into something. It's crash location will be shown on your map.",
+      "itemCategory": "Logistics",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Low Density Structure",
+          "quantity": 3
+        },
+        {
+          "itemName": "AI Controller Circuit",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "itemId": 41,
+      "name": "Explorer Crash Site",
+      "description": "Shows where an explorer bot crashed on the map",
+      "itemCategory": "Meta",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 42,
+      "name": "Fabricator",
+      "description": "Device for printing structures at the atomic level.",
+      "itemCategory": "Intermediates",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Robotic Parts",
+          "quantity": 1
+        },
+        {
+          "itemName": "Solid State Laser",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "itemId": 43,
+      "name": "Fast Cargo Drone",
+      "description": "A longer range ship that can fly over most stations. Can only take items between two Logistics Bays.",
+      "itemCategory": "Logistics",
+      "stabilityCost": 3,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 3,
+      "width": 1,
+      "height": 1,
+      "heightPosition": 2,
+      "recipe": [
+        {
+          "itemName": "Cargo Drone",
+          "quantity": 1
+        },
+        {
+          "itemName": "Quantum Computer",
+          "quantity": 1
+        },
+        {
+          "itemName": "High Density Structure",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "itemId": 44,
+      "name": "Fast Inserter Bot",
+      "description": "A drone used to take items from one inventory and place into another. Can fly over connectors and some other buildings.",
+      "itemCategory": "Logistics",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 1,
+      "heightPosition": 1,
+      "recipe": [
+        {
+          "itemName": "Inserter Bot",
+          "quantity": 1
+        },
+        {
+          "itemName": "Quantum Computer",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "itemId": 45,
+      "name": "Fleet Navigation Center",
+      "description": "Extends your logistics network but houses no ships.",
+      "itemCategory": "Stations",
+      "stabilityCost": 7,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 5,
+      "powerConsumptionMax": 5,
+      "heatRate": 0,
+      "length": 1,
+      "width": 7,
+      "height": 3,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 15
+        },
+        {
+          "itemName": "Robotic Parts",
+          "quantity": 4
+        },
+        {
+          "itemName": "AI Controller Circuit",
+          "quantity": 6
+        }
+      ]
+    },
+    {
+      "itemId": 46,
+      "name": "Fullerene Structure",
+      "description": "An advanced material used to build mega structures.",
+      "itemCategory": "Intermediates",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "High Density Structure",
+          "quantity": 3
+        },
+        {
+          "itemName": "Organic Polymer",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "itemId": 47,
+      "name": "Greenhouse Station",
+      "description": "A greenhouse for producing organic materials.",
+      "itemCategory": "Stations",
+      "stabilityCost": 4,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 2,
+      "powerConsumptionMax": 20,
+      "heatRate": 0.5,
+      "length": 2,
+      "width": 2,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 15
+        },
+        {
+          "itemName": "Fabricator",
+          "quantity": 5
+        },
+        {
+          "itemName": "Robotic Parts",
+          "quantity": 10
+        }
+      ]
+    },
+    {
+      "itemId": 48,
+      "name": "Hauler",
+      "description": "A large ship capable of carrying large amounts of cargo over long distances",
+      "itemCategory": "Logistics",
+      "stabilityCost": 15,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 30,
+      "heatRate": 0,
+      "length": 5,
+      "width": 3,
+      "height": 1,
+      "heightPosition": 2,
+      "recipe": [
+        {
+          "itemName": "Small Ship Core",
+          "quantity": 10
+        },
+        {
+          "itemName": "Cargo Hold",
+          "quantity": 5
+        },
+        {
+          "itemName": "Plasma Engine Parts",
+          "quantity": 10
+        }
+      ]
+    },
+    {
+      "itemId": 49,
+      "name": "Hauler Station",
+      "description": "A stop for Haulers to drop off cargo, recharge, and replenish their fleet.",
+      "itemCategory": "Stations",
+      "stabilityCost": 20,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 4,
+      "powerConsumptionMax": 30,
+      "heatRate": 0,
+      "length": 5,
+      "width": 4,
+      "height": 3,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 15
+        },
+        {
+          "itemName": "Robotic Parts",
+          "quantity": 15
+        },
+        {
+          "itemName": "AI Controller Circuit",
+          "quantity": 5
+        }
+      ]
+    },
+    {
+      "itemId": 50,
+      "name": "Heat Exchanger",
+      "description": "Pulls in heat from the grid it's connected to and transfers that heat to connected radiators. Can also dissipate a small amount of heat itself.",
+      "itemCategory": "Stations",
+      "stabilityCost": 4,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": -1,
+      "length": 2,
+      "width": 2,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 6
+        },
+        {
+          "itemName": "Low Density Structure",
+          "quantity": 4
+        }
+      ]
+    },
+    {
+      "itemId": 51,
+      "name": "High Density Station Core",
+      "description": "Provides a lot of stability to stations. Only one Station Core per grid can confer stability to the grid.",
+      "itemCategory": "Stations",
+      "stabilityCost": 0,
+      "stabilityConferred": 160,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 8,
+      "powerConsumptionMax": 14,
+      "heatRate": 0,
+      "length": 4,
+      "width": 4,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "High Density Structure",
+          "quantity": 15
+        },
+        {
+          "itemName": "Station Core",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "itemId": 52,
+      "name": "High Density Structure",
+      "description": "A hardy structure used in the production of many items.",
+      "itemCategory": "Component",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Iron Ore",
+          "quantity": 3
+        },
+        {
+          "itemName": "Organic Compounds",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "itemId": 53,
+      "name": "High Energy Connector",
+      "description": "Connects stations together and carries items and power between them.",
+      "itemCategory": "Stations",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 7,
+      "powerConsumptionMax": 7,
+      "heatRate": 0.05,
+      "length": 1,
+      "width": 1,
+      "height": 1,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Connector",
+          "quantity": 1
+        },
+        {
+          "itemName": "High Energy Laser",
+          "quantity": 1
+        },
+        {
+          "itemName": "Quantum Computer",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "itemId": 54,
+      "name": "High Energy Laser",
+      "description": "A laser with many engineering uses.",
+      "itemCategory": "Intermediates",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Solid State Laser",
+          "quantity": 1
+        },
+        {
+          "itemName": "Organic Polymer",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "itemId": 55,
+      "name": "Ice",
+      "description": "A chunk of ice.",
+      "itemCategory": "Ore",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Comet Core",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "itemId": 56,
+      "name": "Indomitable Obelisk",
+      "description": "This Obelisk can grant your ship a hardening effect, increasing its hitpoints.",
+      "itemCategory": "Terrain",
+      "stabilityCost": 9,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 3,
+      "width": 3,
+      "height": 3,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 57,
+      "name": "Inserter Bot",
+      "description": "A drone used to take items from one inventory and place into another. Can fly over connectors and some other buildings.",
+      "itemCategory": "Logistics",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 1,
+      "heightPosition": 1,
+      "recipe": [
+        {
+          "itemName": "Plasma Engine Parts",
+          "quantity": 2
+        },
+        {
+          "itemName": "Robotic Parts",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "itemId": 58,
+      "name": "Iron Asteroid",
+      "description": "Filled with Iron Ore for mining.",
+      "itemCategory": "Terrain",
+      "stabilityCost": 900,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 30,
+      "width": 30,
+      "height": 3,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 59,
+      "name": "Iron Ore",
+      "description": "Used to make hard stuff.",
+      "itemCategory": "Ore",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 60,
+      "name": "Junction",
+      "description": "Splits items evenly to all connected connectors.",
+      "itemCategory": "Stations",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 2,
+      "powerConsumptionMax": 4,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 6
+        },
+        {
+          "itemName": "Robotic Parts",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "itemId": 61,
+      "name": "Knight",
+      "description": "A small tanky ship.",
+      "itemCategory": "Ship",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Small Ship Core",
+          "quantity": 6
+        },
+        {
+          "itemName": "High Density Structure",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "itemId": 62,
+      "name": "Knight Dock",
+      "description": "Connect this directly to a Defense Platform or Ship Yard to have it continually request Knights from the ship logistics network.",
+      "itemCategory": "Stations",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 9,
+      "powerConsumptionMax": 9,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "High Density Structure",
+          "quantity": 15
+        }
+      ]
+    },
+    {
+      "itemId": 63,
+      "name": "Krillo",
+      "description": "A long range ship capable of firing extrmely destructive discs of energy.",
+      "itemCategory": "Ship",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Small Ship Core",
+          "quantity": 12
+        },
+        {
+          "itemName": "High Energy Laser",
+          "quantity": 4
+        },
+        {
+          "itemName": "Quantum Computer",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "itemId": 64,
+      "name": "Large Cargo Hold",
+      "description": "Can hold a large amount of items.",
+      "itemCategory": "Stations",
+      "stabilityCost": 4,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 8,
+      "powerConsumptionMax": 8,
+      "heatRate": 0,
+      "length": 2,
+      "width": 2,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "High Density Structure",
+          "quantity": 15
+        },
+        {
+          "itemName": "Cargo Hold",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "itemId": 65,
+      "name": "Logistics Bay",
+      "description": "Cargo drones and inserters can take and drop off items here.",
+      "itemCategory": "Stations",
+      "stabilityCost": 2,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 3,
+      "powerConsumptionMax": 3,
+      "heatRate": 0,
+      "length": 2,
+      "width": 1,
+      "height": 3,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 8
+        },
+        {
+          "itemName": "Robotic Parts",
+          "quantity": 12
+        }
+      ]
+    },
+    {
+      "itemId": 66,
+      "name": "Ancient Treasure",
+      "description": "A box full of shiny stuff.",
+      "itemCategory": "Component",
+      "stabilityCost": 4,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 2,
+      "width": 2,
+      "height": 1,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 67,
+      "name": "Loot Pickupable",
+      "description": "An orb that contains goodies that will float to the player",
+      "itemCategory": "Component",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 68,
+      "name": "Low Density Structure",
+      "description": "A common structure comprised primarily of aluminum.",
+      "itemCategory": "Component",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Bauxite Ore",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "itemId": 69,
+      "name": "Main Sequence Star",
+      "description": "A star in the prime of its life. Capable of housing a Dyson Sphere.",
+      "itemCategory": "Terrain",
+      "stabilityCost": 14400,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 120,
+      "width": 120,
+      "height": 3,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 70,
+      "name": "Medium Density Structure",
+      "description": "A common structure comprised primarily of iron.",
+      "itemCategory": "Component",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Iron Ore",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "itemId": 71,
+      "name": "Miner Bot",
+      "description": "A bot that will mine ore and dump it in mining stations. It will self destruct after gathering a certain number of ore.",
+      "itemCategory": "Logistics",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Low Density Structure",
+          "quantity": 2
+        },
+        {
+          "itemName": "Solid State Laser",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "itemId": 72,
+      "name": "Mining Station",
+      "description": "Place near an asteroid and give it mining drones to automate mining.",
+      "itemCategory": "Stations",
+      "stabilityCost": 6,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 1,
+      "powerConsumptionMax": 1,
+      "heatRate": 0,
+      "length": 2,
+      "width": 3,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 12
+        }
+      ]
+    },
+    {
+      "itemId": 73,
+      "name": "Neutron Star",
+      "description": "The collapsed core of massive supergiant star. Provides a large research bonus.",
+      "itemCategory": "Terrain",
+      "stabilityCost": 100,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 10,
+      "width": 10,
+      "height": 3,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 74,
+      "name": "Obliterator Disc",
+      "description": "The item config for the obliterator disc effect",
+      "itemCategory": "Meta",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 75,
+      "name": "Organic Compounds",
+      "description": "Material made up of complex organic molecules.",
+      "itemCategory": "Ore",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Ice",
+          "quantity": 10
+        },
+        {
+          "itemName": "Organic Compounds",
+          "quantity": 4
+        }
+      ]
+    },
+    {
+      "itemId": 76,
+      "name": "Organic Polymer",
+      "description": "It's a fancy word for plastic.",
+      "itemCategory": "Component",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Ice",
+          "quantity": 2
+        },
+        {
+          "itemName": "Organic Compounds",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "itemId": 77,
+      "name": "Planetary Research Bot",
+      "description": "A bot that will scan planets when loaded into a Planetary Research Station.",
+      "itemCategory": "Logistics",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Recycled Asteroid Research Bot",
+          "quantity": 2
+        },
+        {
+          "itemName": "Inserter Bot",
+          "quantity": 4
+        },
+        {
+          "itemName": "Fabricator",
+          "quantity": 6
+        }
+      ]
+    },
+    {
+      "itemId": 78,
+      "name": "Planetary Research Station",
+      "description": "Place near planets to allow Planetary Research Bots to automate research.",
+      "itemCategory": "Stations",
+      "stabilityCost": 12,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 8,
+      "powerConsumptionMax": 30,
+      "heatRate": 0.2,
+      "length": 3,
+      "width": 4,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Asteroid Research Station",
+          "quantity": 1
+        },
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 15
+        },
+        {
+          "itemName": "Robotic Parts",
+          "quantity": 20
+        }
+      ]
+    },
+    {
+      "itemId": 79,
+      "name": "Plasma Engine Parts",
+      "description": "The complex parts needed to assemble a plasma engine. Plasma engines do not use conventional fuel, they instead rely on electrcity.",
+      "itemCategory": "Component",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Bauxite Ore",
+          "quantity": 2
+        },
+        {
+          "itemName": "Iron Ore",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "itemId": 80,
+      "name": "Player",
+      "description": "The player!",
+      "itemCategory": "Player",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 6,
+      "powerConsumptionMax": 6,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 81,
+      "name": "Power Receiver",
+      "description": "Can absorb an energy beam and convert it into electricity.",
+      "itemCategory": "Stations",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Robotic Parts",
+          "quantity": 2
+        },
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 10
+        }
+      ]
+    },
+    {
+      "itemId": 82,
+      "name": "Power Transmitter",
+      "description": "Transmits a limited amount of excess energy from the station its attached to to the first Power Receiver in its path.",
+      "itemCategory": "Stations",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 32,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 6
+        },
+        {
+          "itemName": "Solid State Laser",
+          "quantity": 4
+        }
+      ]
+    },
+    {
+      "itemId": 83,
+      "name": "Quantum Computer",
+      "description": "Leverages quantum properties to perform complex calculations.",
+      "itemCategory": "Intermediates",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Organic Polymer",
+          "quantity": 2
+        },
+        {
+          "itemName": "AI Controller Circuit",
+          "quantity": 4
+        },
+        {
+          "itemName": "Low Density Structure",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "itemId": 84,
+      "name": "Quantum Printer",
+      "description": "Prints intermediate products used in more complex recipes. Harnesses the quantum properties of quarks and subatmoic forces to create items faster than ever.",
+      "itemCategory": "Stations",
+      "stabilityCost": 6,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 2,
+      "powerConsumptionMax": 40,
+      "heatRate": 0.6,
+      "length": 3,
+      "width": 2,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Atomic Printer",
+          "quantity": 1
+        },
+        {
+          "itemName": "Quantum Computer",
+          "quantity": 4
+        },
+        {
+          "itemName": "High Density Structure",
+          "quantity": 10
+        }
+      ]
+    },
+    {
+      "itemId": 85,
+      "name": "Radiator Artifact",
+      "description": "An ancient relic capable of dissipating heat from any station grid it's attached to.",
+      "itemCategory": "Stations",
+      "stabilityCost": 4,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": -3,
+      "length": 2,
+      "width": 2,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Ice",
+          "quantity": 6
+        },
+        {
+          "itemName": "Low Density Structure",
+          "quantity": 15
+        }
+      ]
+    },
+    {
+      "itemId": 86,
+      "name": "Radiator",
+      "description": "Attaches directly to heat exchangers and dissipates a large amount of heat from the grid.",
+      "itemCategory": "Stations",
+      "stabilityCost": 6,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": -5,
+      "length": 3,
+      "width": 2,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Ice",
+          "quantity": 6
+        },
+        {
+          "itemName": "Low Density Structure",
+          "quantity": 15
+        }
+      ]
+    },
+    {
+      "itemId": 87,
+      "name": "Razor",
+      "description": "Enemy unit that fires homing missiles.",
+      "itemCategory": "Ship",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 88,
+      "name": "Razor Missile Splash",
+      "description": "Splash damage effect for razor missiles",
+      "itemCategory": "Meta",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 89,
+      "name": "Razor Spawner",
+      "description": "Spawns enemy Razor ships in the area",
+      "itemCategory": "Stations",
+      "stabilityCost": 6,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 2,
+      "width": 3,
+      "height": 1,
+      "heightPosition": 3,
+      "recipe": []
+    },
+    {
+      "itemId": 90,
+      "name": "Recycled Asteroid Research Bot",
+      "description": "The recycled bits of an asteroid research bot. Use it to make more complex research bots.",
+      "itemCategory": "Reprocessed",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Asteroid Research Bot",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "itemId": 91,
+      "name": "Recycled Miner Bot",
+      "description": "The recycled bits of a miner bot.",
+      "itemCategory": "Reprocessed",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Miner Bot",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "itemId": 92,
+      "name": "Recycled Planetary Research Bot",
+      "description": "The recycled bits of a planetary research bot. Use it to make more complex research bots.",
+      "itemCategory": "Reprocessed",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Planetary Research Bot",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "itemId": 93,
+      "name": "Red Giant Star",
+      "description": "A star nearing the end of its life, ready to supernova at any moment.",
+      "itemCategory": "Terrain",
+      "stabilityCost": 32400,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 180,
+      "width": 180,
+      "height": 3,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 94,
+      "name": "Repair Center",
+      "description": "Attaches direction to a station and provides a small healing effect to all connected structures.",
+      "itemCategory": "Stations",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 1,
+      "powerConsumptionMax": 5,
+      "heatRate": 0.1,
+      "length": 1,
+      "width": 1,
+      "height": 1,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Fabricator",
+          "quantity": 8
+        },
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 6
+        }
+      ]
+    },
+    {
+      "itemId": 95,
+      "name": "Research Pickupable",
+      "description": "An orb that contains goodies that will float to the player",
+      "itemCategory": "Component",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 96,
+      "name": "Rich Bauxite Asteroid",
+      "description": "Filled with Bauxite Ore for mining.",
+      "itemCategory": "Terrain",
+      "stabilityCost": 900,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 30,
+      "width": 30,
+      "height": 4,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 97,
+      "name": "Rich Iron Asteroid",
+      "description": "Filled with Iron Ore for mining.",
+      "itemCategory": "Terrain",
+      "stabilityCost": 900,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 30,
+      "width": 30,
+      "height": 3,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 98,
+      "name": "Rich Silica Asteroid",
+      "description": "Filled with Silica Ore for mining.",
+      "itemCategory": "Terrain",
+      "stabilityCost": 900,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 30,
+      "width": 30,
+      "height": 3,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 99,
+      "name": "Robotic Parts",
+      "description": "Various parts used in the construction of robots.",
+      "itemCategory": "Component",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Silica Ore",
+          "quantity": 1
+        },
+        {
+          "itemName": "Iron Ore",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "itemId": 100,
+      "name": "Ship Assembler",
+      "description": "Constructs ships. Ships will be deployed into the ship logistics network, not into connectors.",
+      "itemCategory": "Stations",
+      "stabilityCost": 4,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 2,
+      "powerConsumptionMax": 16,
+      "heatRate": 0.4,
+      "length": 2,
+      "width": 2,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Robotic Parts",
+          "quantity": 6
+        },
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 24
+        },
+        {
+          "itemName": "AI Controller Circuit",
+          "quantity": 12
+        }
+      ]
+    },
+    {
+      "itemId": 101,
+      "name": "Ship Reprocessing Plant",
+      "description": "A place for ships to go to be churned up into spare parts.",
+      "itemCategory": "Stations",
+      "stabilityCost": 72,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 3,
+      "powerConsumptionMax": 30,
+      "heatRate": 4,
+      "length": 9,
+      "width": 8,
+      "height": 3,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 30
+        },
+        {
+          "itemName": "Solid State Laser",
+          "quantity": 10
+        },
+        {
+          "itemName": "Assembler",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "itemId": 102,
+      "name": "Ship Yard",
+      "description": "Houses ships waiting to be deployed to the logistics network. Costs no stability.",
+      "itemCategory": "Stations",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 20,
+      "powerConsumptionMax": 20,
+      "heatRate": 0,
+      "length": 12,
+      "width": 7,
+      "height": 3,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 30
+        },
+        {
+          "itemName": "Robotic Parts",
+          "quantity": 8
+        },
+        {
+          "itemName": "AI Controller Circuit",
+          "quantity": 12
+        }
+      ]
+    },
+    {
+      "itemId": 103,
+      "name": "Silica Asteroid",
+      "description": "Filled with Silica Ore for mining.",
+      "itemCategory": "Terrain",
+      "stabilityCost": 900,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 30,
+      "width": 30,
+      "height": 3,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 104,
+      "name": "Silica Ore",
+      "description": "Used primarily for printing computing components.",
+      "itemCategory": "Ore",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 105,
+      "name": "Singularity Circuit",
+      "description": "A complex circuit composed of mini singularities, leveraging the curvature of spacetime to make computations and navigate difficult geometric conditions (like those present in Black Holes).",
+      "itemCategory": "Intermediates",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Singularity Field Generator",
+          "quantity": 2
+        },
+        {
+          "itemName": "Quantum Computer",
+          "quantity": 4
+        },
+        {
+          "itemName": "Organic Polymer",
+          "quantity": 4
+        },
+        {
+          "itemName": "Exotic Matter",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "itemId": 106,
+      "name": "Singularity Engine",
+      "description": "An engine that manipulates the curvature of space time to generate momentum.",
+      "itemCategory": "Intermediates",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Singularity Power Station",
+          "quantity": 1
+        },
+        {
+          "itemName": "Plasma Engine Parts",
+          "quantity": 20
+        },
+        {
+          "itemName": "Dyson Power Transmitter",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "itemId": 107,
+      "name": "Singularity Field Generator",
+      "description": "A device used to create immense spacetime curvature in small area.",
+      "itemCategory": "Intermediates",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Power Transmitter",
+          "quantity": 1
+        },
+        {
+          "itemName": "Fabricator",
+          "quantity": 10
+        },
+        {
+          "itemName": "Robotic Parts",
+          "quantity": 5
+        }
+      ]
+    },
+    {
+      "itemId": 108,
+      "name": "Singularity Power Station",
+      "description": "Destroys any item it receives and converts it into energy based on its mass.",
+      "itemCategory": "Stations",
+      "stabilityCost": 9,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 3,
+      "width": 3,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Cargo Hold",
+          "quantity": 2
+        },
+        {
+          "itemName": "Singularity Field Generator",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "itemId": 109,
+      "name": "Singularity Vessel",
+      "description": "A spacecraft capable of traversing through a black hole. Constructed at a Dark Star Gate.",
+      "itemCategory": "Ship",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 110,
+      "name": "Small Ship Core",
+      "description": "The core structure and functionality for small ships.",
+      "itemCategory": "Intermediates",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Low Density Structure",
+          "quantity": 5
+        },
+        {
+          "itemName": "AI Controller Circuit",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "itemId": 111,
+      "name": "Solar Panel",
+      "description": "Attaches directly to station cores to provide power to it and any directly attached modules.",
+      "itemCategory": "Stations",
+      "stabilityCost": 2,
+      "stabilityConferred": 0,
+      "powerProduction": 5,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 2,
+      "width": 1,
+      "height": 1,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Silica Ore",
+          "quantity": 6
+        },
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "itemId": 112,
+      "name": "Solid State Laser",
+      "description": "A laser with many engineering uses.",
+      "itemCategory": "Component",
+      "stabilityCost": 0,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 0,
+      "width": 0,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Silica Ore",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "itemId": 113,
+      "name": "Space Rocks",
+      "description": "Rocks with no partcular value floating around space.",
+      "itemCategory": "Terrain",
+      "stabilityCost": 900,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 30,
+      "width": 30,
+      "height": 3,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 114,
+      "name": "Spawner Chest",
+      "description": "Will automatically spawn selected inventory item",
+      "itemCategory": "Stations",
+      "stabilityCost": 1,
+      "stabilityConferred": 500,
+      "powerProduction": 500,
+      "powerConsumptionIdle": 1,
+      "powerConsumptionMax": 1,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Iron Ore",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "itemId": 115,
+      "name": "Stabilizer Artifact",
+      "description": "An ancient device that grants stability to any grid it's connected to.",
+      "itemCategory": "Stations",
+      "stabilityCost": 0,
+      "stabilityConferred": 10,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 2,
+      "powerConsumptionMax": 2,
+      "heatRate": 0,
+      "length": 3,
+      "width": 3,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 116,
+      "name": "Station Core",
+      "description": "Provides a lot of stability to stations. Only one Station Core per grid can confer stability to the grid.",
+      "itemCategory": "Stations",
+      "stabilityCost": 0,
+      "stabilityConferred": 80,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 4,
+      "powerConsumptionMax": 8,
+      "heatRate": 0,
+      "length": 3,
+      "width": 3,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 10
+        },
+        {
+          "itemName": "Robotic Parts",
+          "quantity": 5
+        },
+        {
+          "itemName": "AI Controller Circuit",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "itemId": 117,
+      "name": "Stellar Research Bot",
+      "description": "A bot that will scan points of interest when loaded into a Research Station. Can research stars.",
+      "itemCategory": "Logistics",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Recycled Planetary Research Bot",
+          "quantity": 3
+        },
+        {
+          "itemName": "High Energy Connector",
+          "quantity": 4
+        },
+        {
+          "itemName": "High Density Structure",
+          "quantity": 8
+        },
+        {
+          "itemName": "Quantum Computer",
+          "quantity": 4
+        }
+      ]
+    },
+    {
+      "itemId": 118,
+      "name": "Stellar Research Station",
+      "description": "Place near stars to allow Stellar Research Bots to automate research.",
+      "itemCategory": "Stations",
+      "stabilityCost": 12,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 8,
+      "powerConsumptionMax": 40,
+      "heatRate": 0.6,
+      "length": 3,
+      "width": 4,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Asteroid Research Station",
+          "quantity": 1
+        },
+        {
+          "itemName": "Quantum Computer",
+          "quantity": 15
+        },
+        {
+          "itemName": "High Density Structure",
+          "quantity": 10
+        }
+      ]
+    },
+    {
+      "itemId": 119,
+      "name": "Stinger",
+      "description": "Basic enemy unit",
+      "itemCategory": "Ship",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 0,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 120,
+      "name": "Stinger Spawner",
+      "description": "Spawns Stinger enemies in the area",
+      "itemCategory": "Stations",
+      "stabilityCost": 4,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 2,
+      "width": 2,
+      "height": 1,
+      "heightPosition": 3,
+      "recipe": []
+    },
+    {
+      "itemId": 121,
+      "name": "Strut",
+      "description": "Connects stations together and negates the stability cost of the smaller station up to a maximum of 5, unless the smaller station costs no stability, then the larger station will have its stability reduced by up to 5 instead.",
+      "itemCategory": "Stations",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 1,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 10
+        }
+      ]
+    },
+    {
+      "itemId": 122,
+      "name": "Terra World",
+      "description": "A world filled with life.",
+      "itemCategory": "Terrain",
+      "stabilityCost": 2025,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 45,
+      "width": 45,
+      "height": 3,
+      "heightPosition": 0,
+      "recipe": []
+    },
+    {
+      "itemId": 123,
+      "name": "Trash Can",
+      "description": "Destroys everything you feed it.",
+      "itemCategory": "Stations",
+      "stabilityCost": 1,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 2,
+      "powerConsumptionMax": 2,
+      "heatRate": 0,
+      "length": 1,
+      "width": 1,
+      "height": 2,
+      "heightPosition": 0,
+      "recipe": [
+        {
+          "itemName": "Medium Density Structure",
+          "quantity": 12
+        }
+      ]
+    },
+    {
+      "itemId": 124,
+      "name": "Warp Obelisk",
+      "description": "This Obelisk can grant your ship the power to manipulate the geometry of space, increasing its speed.",
+      "itemCategory": "Terrain",
+      "stabilityCost": 9,
+      "stabilityConferred": 0,
+      "powerProduction": 0,
+      "powerConsumptionIdle": 0,
+      "powerConsumptionMax": 0,
+      "heatRate": 0,
+      "length": 3,
+      "width": 3,
+      "height": 3,
+      "heightPosition": 0,
+      "recipe": []
+    }
+  ]
+}
