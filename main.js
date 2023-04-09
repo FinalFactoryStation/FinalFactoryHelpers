@@ -55,14 +55,14 @@ const readData = async url => {
     const facing = item => rotate(UP, item.direction);
 
     const accessible = (item1, item2, direction) => {
-        const { access = 15, overhang = 0 } = get(item2);
+        const { access = ANY_DIRECTION, overhang = 0 } = get(item2);
         if (!(direction & rotate(access, item2.direction))) {
             return false;
         }
         if (!overhang) {
             return true;
         }
-        if (direction & 5) {
+        if (direction & VERTICAL) {
             return item2.left+overhang <= item1.left && item2.right-overhang >= item1.right
         } else {
             return item2.top+overhang <= item1.top && item2.bottom-overhang >= item1.bottom
@@ -70,7 +70,7 @@ const readData = async url => {
     }
 
     const connects = (item1, item2, direction) => {
-        const { connect, extend, chain } = get(item1);
+        const { connect, extend, chain, mate } = get(item1);
         const categories = get(item2).categories ?? [];
         if (compatable(connect, item2.itemName, categories)) {
             return accessible(item1, item2, direction);
@@ -80,6 +80,9 @@ const readData = async url => {
         }
         if (compatable(chain, item2.itemName, categories)) {
             return facing(item1) != rotate180(facing(item2));
+        }
+        if (compatable(mate, item2.itemName, categories)) {
+            return connections(item1) == rotate180(facing(item2));
         }
         return false;
     }

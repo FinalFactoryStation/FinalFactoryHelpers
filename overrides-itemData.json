@@ -66,6 +66,17 @@
     },
     "Large Cargo Hold": {
         "categories": ["basic", "inventory"]
+    },
+    "Comet Catcher": {
+        "connections": 4,
+        "mate": "Comet Harvester"
+    },
+    "Comet Harvester": {
+        "connections": 1,
+        "categories": ["basic", "inventory"],
+        "access": 14
     }
+
+
 
 }
