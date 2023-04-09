@@ -60,7 +60,6 @@
         "categories": ["basic"]
     },
     "Asteroid Research Station": {
-        "connections": 5,
         "categories": ["basic"],
         "access": 10,
         "overhang": 1

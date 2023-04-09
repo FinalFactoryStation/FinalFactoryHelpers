@@ -14,6 +14,10 @@ const RIGHT = 0b10;
 const DOWN = 0b100;
 const LEFT = 0b1000;
 
+const ANY_DIRECTION = UP + RIGHT + DOWN + LEFT;
+const HORIZONTAL = RIGHT + LEFT;
+const VERTICAL = UP + DOWN;
+
 const UNCONNECT_SIZE = 0.03;
 
 
