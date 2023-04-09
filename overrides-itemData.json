@@ -1,0 +1,90 @@
+{
+    "Advanced Mining Station": {
+        "categories": ["basic", "inventory"]
+    },
+    "Antimatter Power Station": {
+        "connections": 1,
+        "connect":"basic"
+    },
+    "Antimatter Collector": {
+        "connections": 1,
+        "connect":"Antimatter Power Station"
+    },
+    "Radiator": {
+        "connections": 1,
+        "connect":"Heat Exchanger"
+    },
+    "Solar Panel": {
+        "connections": 1,
+        "connect":"basic"
+    },
+    "Connector": {
+        "connections": 5,
+        "connect":"inventory",
+        "categories": ["pipe"],
+        "chain": "pipe"
+    },
+    "High Energy Connector": {
+        "connections": 5,
+        "connect":"inventory",
+        "categories": ["pipe"],
+        "chain": "pipe"
+    },
+    "Strut": {
+        "connections": 5,
+        "connect":"basic",
+        "extend": "Strut"
+    },
+    "Station Core": {
+        "categories": ["basic", "inventory"]
+    },
+    "High Density Station Core": {
+        "categories": ["basic", "inventory"]
+    },
+    "Logistics Bay": {
+        "categories": ["basic", "inventory"]
+    },
+    "Heat Exchanger": {
+        "connections": 1,
+        "connect":"basic"
+    },
+    "Exploration Center": {
+        "categories": ["basic"],
+        "connections": 5,
+        "slots": [2, 0, 0, 0, 2, 0, 0, 0]
+    },
+    "Repair Center": {
+        "connections": 1,
+        "connect":"basic"
+    },
+    "Hauler Station": {
+        "categories": ["basic", "inventory"]
+    },
+    "Defense Platform": {
+        "categories": ["basic"]
+    },
+    "Asteroid Research Station": {
+        "categories": ["basic"],
+        "slots": [2, 0, 0, 0, 2, 0, 0, 0]
+    },
+    "Large Cargo Hold": {
+        "categories": ["basic", "inventory"]
+    },
+    "Comet Catcher": {
+        "connections": 4,
+        "mate": "Comet Harvester"
+    },
+    "Comet Harvester": {
+        "connections": 1,
+        "categories": ["basic", "inventory"],
+        "slots": [-1, 0, -1, 0, 0, 0, -1, 0]
+    },
+    "Ship Yard": {
+        "categories": ["basic"],
+        "slots": [0, 0, 546, 0, 0, 0, 546, 0]
+    }
+
+
+
+
+}
