@@ -2670,7 +2670,8 @@
           "itemName": "Medium Density Structure",
           "quantity": 3
         }
-      ]
+      ],
+      "connections": 1
     },
     {
       "itemId": 112,
