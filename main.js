@@ -4,10 +4,31 @@ import 'https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js';
 
 const DEFLATE_OPTIONS = {to: 'string'};
 
+const ITEM_BACKGROUND = "black";
+const CANVAS_BACKGROUND = "white";
+
+const UP = 0b1;
+const LEFT = 0b10;
+const DOWN = 0b100;
+const RIGHT = 0b1000;
+
+const UNCONNECT_SIZE = 0.03;
+
 const decode = bps => JSON.parse(pako.inflate(Base64.toUint8Array(bps.substring(16)), DEFLATE_OPTIONS));
 
 const readItems = j => j["Items"].map(get_rotated_object_info);
 
+const readData = async url => {
+    const itemData = await fetch(url)
+        .then(response => response.json())
+        .then(jsonData => Object.fromEntries(jsonData.items.map(item => [item.name, item])));
+    const itemOverrides = await fetch("overrides-"+url)
+        .then(response => response.json())
+    for (const name in itemOverrides) {
+        Object.assign(itemData[name], itemOverrides[name]);
+    }
+    return itemData;
+}
 
 
 const get_rotated_object_info = obj => {
@@ -30,6 +51,12 @@ const get_rotated_object_info = obj => {
     };
 }
 
+const rotate = (sides, direction) => {
+    console.log(sides)
+    const v = sides << (3- direction);
+    console.log(v & 15)
+    return v & 15 + ((v & ~15) >> 4);
+}
 
 const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
     canvas.width = (boundingBox.right - boundingBox.left) * scalingFactor;
@@ -38,8 +65,47 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
     const ctx = canvas.getContext("2d");
     const {top, left} = boundingBox;
 
+    const drawRect = (rtop, rbottom, rleft, rright, color) => {
 
-    const drawRect = (ctx, item, x, y, width, height) => {
+        ctx.fillStyle = color;
+        ctx.fillRect(
+            (rleft -left) * scalingFactor, 
+            (rtop - top) * scalingFactor, 
+            (rright - rleft) * scalingFactor, 
+            (rbottom - rtop) * scalingFactor);
+    }
+
+    const getConnections = item => {
+        const data = itemData[item.itemName];
+        if (data.connections) {
+            return rotate(data.connections, item.direction);
+        } else {
+            return UP + DOWN + LEFT + RIGHT
+        }
+    }
+
+    const drawItem = item => {
+        drawRect(item.top, item.bottom, item.left, item.right, ITEM_BACKGROUND);
+        const connections = getConnections(item)
+        console.log(item.itemName + ":" + connections)
+        if (!(connections & UP)) {
+            drawRect(item.top, item.top+UNCONNECT_SIZE, item.left, item.right, CANVAS_BACKGROUND);
+        }
+        if (!(connections & DOWN)) {
+            drawRect(item.bottom-UNCONNECT_SIZE, item.bottom, item.left, item.right, CANVAS_BACKGROUND);
+        }
+        if (!(connections & LEFT)) {
+            drawRect(item.top, item.bottom, item.left, item.left+UNCONNECT_SIZE, CANVAS_BACKGROUND);
+        }
+        if (!(connections & RIGHT)) {
+            drawRect(item.top, item.bottom, item.right-UNCONNECT_SIZE, item.right, CANVAS_BACKGROUND);
+        }
+    }
+
+
+
+
+    const drawItemRect = (ctx, item, x, y, width, height) => {
         ctx.fillStyle = "black";
         ctx.fillRect(x, y, width, height);
         ctx.strokeStyle = "red";
@@ -56,7 +122,8 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
         let y = (item.top - top) * scalingFactor;
         let width = item.width * scalingFactor;
         let height = item.height * scalingFactor;
-        drawRect(ctx, item, x, y, width, height);
+        drawItem(item);
+        // drawItemRect(ctx, item, x, y, width, height);
         addImage(ctx, item, x, y, width, height);
     };
     
@@ -152,4 +219,4 @@ const boundingBox = items => {
     return items.reduce(mergeBox, VOID_BOX)
 }
 
-export { decode, drawBoxes, get_rotated_object_info, readItems }
+export { decode, drawBoxes, get_rotated_object_info, readItems, readData }

@@ -58,7 +58,7 @@
 
 
   <script type="module">
-    import { decode, drawBoxes, get_rotated_object_info, readItems } from "./main.js";
+    import { decode, drawBoxes, get_rotated_object_info, readItems, readData } from "./main.js";
 
 
 
@@ -72,11 +72,9 @@
 
     const queryParams = new URLSearchParams(window.location.search);
     const bps = queryParams.get('bp');
-    const d = decode(bps);
-    const items = readItems(d);
-    const itemData = await fetch("itemData.json")
-      .then(response => response.json())
-      .then(jsonData => Object.fromEntries(jsonData.items.map(item => [item.name, item])));
+    const blueprint = decode(bps);
+    const items = readItems(blueprint);
+    const itemData = await readData("itemData.json")
 
 
     let totalStabilityCost = 0, totalPowerIdle = 0, totalPowerMax = 0, totalPowerProduced = 0, totalHeatRate = 0, totalStabilityConferred = 0;
@@ -84,8 +82,7 @@
       let itemInfo = itemData[box.itemName];
       if (!itemInfo) {
         console.log("ERROR: No item info for " + box.itemName);
-      }
-      else {
+      } else {
         totalStabilityCost += itemInfo.stabilityCost;
         totalStabilityConferred += itemInfo.stabilityConferred;
         totalPowerIdle += itemInfo.powerConsumptionIdle;

@@ -1,0 +1,17 @@
+{
+    "Antimatter Collector": {
+        "connections": 1
+    },
+    "Solar Panel": {
+        "connections": 1
+    },
+    "Connector": {
+        "connections": 5
+    },
+    "High Energy Connector": {
+        "connections": 5
+    },
+    "Strut": {
+        "connections": 5
+    }
+}
