@@ -4,10 +4,16 @@ import 'https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js';
 
 const DEFLATE_OPTIONS = {to: 'string'};
 
-const ITEM_BACKGROUND = "black";
+const BACKGROUND_ITEM = "black";
 const CANVAS_BACKGROUND = "grey";
 const NO_CONNECT_BACKGROUND = "red"
 const CONNECT_BACKGROUND = "midnightblue"
+
+const STOKE_HIGHLIGHT = "green";
+const WIDTH_HIGHLIGHT = .04;
+const STOKE_DEFAULT = "black";
+const WIDTH_DEFAULT = 0;
+const BACKGROUND_HIGHLIGHT = "charcoal";
 
 const UP = 0b1;
 const RIGHT = 0b10;
@@ -148,6 +154,9 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
     canvas.width = (boundingBox.right - boundingBox.left) * scalingFactor;
     canvas.height = (boundingBox.bottom - boundingBox.top) * scalingFactor;
 
+    const eventXScale = canvas.width / canvas.clientWidth;
+    const eventYScale = canvas.height / canvas.clientHeight;
+
     const ctx = canvas.getContext("2d");
     ctx.fillStyle = CANVAS_BACKGROUND;
     ctx.fillRect(0,0,canvas.width, canvas.height);
@@ -166,12 +175,13 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
             0.5 + scalingFactor);
         ctx.fillStyle = color;
         ctx.fill(box);
-        boxes.push(box);
+        return box;
     }
 
 
     const drawItem = item => {
-        drawRect(item.top+UNCONNECT_SIZE, item.bottom-UNCONNECT_SIZE, item.left+UNCONNECT_SIZE, item.right-UNCONNECT_SIZE, ITEM_BACKGROUND);
+        const box = drawRect(item.top+UNCONNECT_SIZE, item.bottom-UNCONNECT_SIZE, item.left+UNCONNECT_SIZE, item.right-UNCONNECT_SIZE, BACKGROUND_ITEM);
+        boxes.push(box);
         const connections = itemData.connections(item);
         const center = (item.left + item.right) / 2;
         const middle = (item.top + item.bottom) / 2;
@@ -273,10 +283,62 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
         }
     };
 
-    return { render, renderAdjacent };
+
+    const findBox = (x,y) => {
+        // for (let box of boxes) {
+        for (let i = 0; i < boxes.length; i++) {
+            let box = boxes[i]
+            if (ctx.isPointInPath(box, x, y)) {
+                return box;
+            }
+        }
+        return undefined;
+    }
+
+    let highlighed = undefined;
+    const mouseMoveEventHandler = event => {
+        const box = findBox(event.offsetX * eventXScale, event.offsetY * eventYScale);
+        if (highlighed == box) {
+            return;
+        }
+        if (highlighed) {
+            ctx.lineWidth = WIDTH_DEFAULT  * scalingFactor;
+            ctx.strokeStyle = STOKE_DEFAULT;
+            ctx.stroke(highlighed);
+            // ctx.fillStyle = BACKGROUND_ITEM;
+            // ctx.fill(highlighed);
+        } 
+        highlighed = box;
+        if (highlighed) {
+            ctx.lineWidth = WIDTH_HIGHLIGHT * scalingFactor;
+            ctx.strokeStyle = STOKE_HIGHLIGHT;
+            ctx.stroke(highlighed);
+            // ctx.fillStyle = BACKGROUND_HIGHLIGHT;
+            // ctx.fill(highlighed);
+        }
+}
+
+    return { render, renderAdjacent, mouseMoveEventHandler};
     
 }
 
+const mergeBox = (item1, item2) => ({
+    top: Math.min(item1.top, item2.top),
+    bottom: Math.max(item1.bottom, item2.bottom),
+    left: Math.min(item1.left, item2.left),
+    right: Math.max(item1.right, item2.right),
+})
+
+const VOID_BOX = {
+    top: Infinity,
+    bottom: -Infinity,
+    left: Infinity,
+    right: -Infinity,
+}
+
+const boundingBox = items => {
+    return items.reduce(mergeBox, VOID_BOX)
+}
 
 
 
@@ -316,25 +378,11 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
         }
     }
 
+    return {
+        "mouseMoveEventHandler": event => view.mouseMoveEventHandler(event)
+    }
 
   }
 
-const mergeBox = (item1, item2) => ({
-    top: Math.min(item1.top, item2.top),
-    bottom: Math.max(item1.bottom, item2.bottom),
-    left: Math.min(item1.left, item2.left),
-    right: Math.max(item1.right, item2.right),
-})
 
-const VOID_BOX = {
-    top: Infinity,
-    bottom: -Infinity,
-    left: Infinity,
-    right: -Infinity,
-}
-
-const boundingBox = items => {
-    return items.reduce(mergeBox, VOID_BOX)
-}
-
-export { decode, drawBoxes, getInfo as get_rotated_object_info, readItems, readData }
+export { decode, drawBoxes, readItems, readData }

@@ -58,7 +58,7 @@
 
 
   <script type="module">
-    import { decode, drawBoxes, get_rotated_object_info, readItems, readData } from "./main.js";
+    import { decode, drawBoxes, readItems, readData } from "./main.js";
 
 
 
@@ -102,7 +102,9 @@
 
 
 
-    drawBoxes(canvas, items, itemData);
+    const view = drawBoxes(canvas, items, itemData);
+
+    canvas.addEventListener("mousemove", view.mouseMoveEventHandler);
 
     // drawButton.addEventListener('click', function() {
     //     const bps = blueprintTextbox.value;
