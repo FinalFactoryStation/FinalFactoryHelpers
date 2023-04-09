@@ -6,17 +6,28 @@ const DEFLATE_OPTIONS = {to: 'string'};
 
 const ITEM_BACKGROUND = "black";
 const CANVAS_BACKGROUND = "white";
+const NO_CONNECT_BACKGROUND = "red"
+const CONNECT_BACKGROUND = "blue"
 
 const UP = 0b1;
-const LEFT = 0b10;
+const RIGHT = 0b10;
 const DOWN = 0b100;
-const RIGHT = 0b1000;
+const LEFT = 0b1000;
 
 const UNCONNECT_SIZE = 0.03;
 
+
+const rotate = (sides, direction) => {
+    const v = sides << direction;
+    return (v & 15) + ((v & ~15) >> 4);
+}
+
+const rotate180 = sides => rotate(sides, 2);
+
+
 const decode = bps => JSON.parse(pako.inflate(Base64.toUint8Array(bps.substring(16)), DEFLATE_OPTIONS));
 
-const readItems = j => j["Items"].map(get_rotated_object_info);
+const readItems = j => j["Items"].map(getInfo);
 
 const readData = async url => {
     const itemData = await fetch(url)
@@ -27,36 +38,80 @@ const readData = async url => {
     for (const name in itemOverrides) {
         Object.assign(itemData[name], itemOverrides[name]);
     }
-    return itemData;
+
+    const get = item => itemData[item.itemName];
+
+    const connections = item => {
+        const data = get(item);
+        return rotate(data.connections ?? 0, item.direction);
+    }
+
+    const connects = (item1, item2) => {
+        const connect = get(item1).connects;
+        if (connect == item2.itemName) {
+            return true;
+        } 
+        const categories = get(item2).categories ?? [];
+        if (categories.includes(connect)) {
+            return true;
+        }
+        return false;
+    }
+
+    return { get, connections, connects };
+}
+
+const adjacent = (item1, item2) => {
+    if (item1.top == item2.bottom) {
+        if ((item1.left - item2.left) * (item1.right - item2.right) <= 0) {
+            return UP;
+        }
+    } else if (item1.bottom == item2.top) {
+        if ((item1.left - item2.left) * (item1.right - item2.right) <= 0) {
+            return DOWN;
+        }
+    } else if (item1.left == item2.right) {
+        if ((item1.top - item2.top) * (item1.bottom - item2.bottom) <= 0) {
+            return LEFT;
+        }
+    } else if (item1.right == item2.left) {
+        if ((item1.top - item2.top) * (item1.bottom - item2.bottom) <= 0) {
+            return RIGHT;
+        }
+    }
+    return 0;
+}
+
+const connected = (item1, item2, direction, itemData) => {
+    const connections1 = itemData.connections(item1);
+    const connections2 = itemData.connections(item2);
+    if ((connections1 & direction) && itemData.connects(item1, item2)) {
+        return true;
+    } else if ((connections2 & rotate180(direction)) && itemData.connects(item2, item1)) {
+        return true;
+    } 
+    return false;
 }
 
 
-const get_rotated_object_info = obj => {
-    const center_x = obj['OriginalPlacedPosition']['z'] / 10;
-    const center_y = obj['OriginalPlacedPosition']['x'] / 10;
-    const width = obj['Length'];
-    const height = obj['Width'];
+const getInfo = obj => {
+    const center_x = obj['OriginalPlacedPosition']['x'] / 10;
+    const center_y = obj['OriginalPlacedPosition']['z'] / 10;
+    const width = obj['Width'];
+    const height = obj['Length'];
 
     return {
-        center_x,
-        center_y,
         width,
         height,
         direction: obj['CurrentDirection'],
-        top: center_y - height / 2,
-        bottom: center_y + height / 2,
-        left: center_x - width / 2,
-        right: center_x + width / 2,
+        top: -Math.round(center_y + height / 2),
+        bottom: -Math.round(center_y - height / 2),
+        left: Math.round(center_x - width / 2),
+        right: Math.round(center_x + width / 2),
         itemName: obj['ItemName']
     };
 }
 
-const rotate = (sides, direction) => {
-    console.log(sides)
-    const v = sides << (3- direction);
-    console.log(v & 15)
-    return v & 15 + ((v & ~15) >> 4);
-}
 
 const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
     canvas.width = (boundingBox.right - boundingBox.left) * scalingFactor;
@@ -75,110 +130,119 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
             (rbottom - rtop) * scalingFactor);
     }
 
-    const getConnections = item => {
-        const data = itemData[item.itemName];
-        if (data.connections) {
-            return rotate(data.connections, item.direction);
-        } else {
-            return UP + DOWN + LEFT + RIGHT
-        }
-    }
 
     const drawItem = item => {
-        drawRect(item.top, item.bottom, item.left, item.right, ITEM_BACKGROUND);
-        const connections = getConnections(item)
-        console.log(item.itemName + ":" + connections)
-        if (!(connections & UP)) {
-            drawRect(item.top, item.top+UNCONNECT_SIZE, item.left, item.right, CANVAS_BACKGROUND);
+        drawRect(item.top+UNCONNECT_SIZE, item.bottom-UNCONNECT_SIZE, item.left+UNCONNECT_SIZE, item.right-UNCONNECT_SIZE, ITEM_BACKGROUND);
+        const connections = itemData.connections(item);
+        const center = (item.left + item.right) / 2;
+        const middle = (item.top + item.bottom) / 2;
+        if (connections & UP) {
+            drawRect(item.top, item.top+UNCONNECT_SIZE, center-UNCONNECT_SIZE, center+UNCONNECT_SIZE, NO_CONNECT_BACKGROUND);
         }
-        if (!(connections & DOWN)) {
-            drawRect(item.bottom-UNCONNECT_SIZE, item.bottom, item.left, item.right, CANVAS_BACKGROUND);
+        if (connections & DOWN) {
+            drawRect(item.bottom-+UNCONNECT_SIZE, item.bottom, center-UNCONNECT_SIZE, center+UNCONNECT_SIZE, NO_CONNECT_BACKGROUND);
         }
-        if (!(connections & LEFT)) {
-            drawRect(item.top, item.bottom, item.left, item.left+UNCONNECT_SIZE, CANVAS_BACKGROUND);
+        if (connections & LEFT) {
+            drawRect(middle-UNCONNECT_SIZE, middle+UNCONNECT_SIZE, item.left, item.left+UNCONNECT_SIZE, NO_CONNECT_BACKGROUND);
         }
-        if (!(connections & RIGHT)) {
-            drawRect(item.top, item.bottom, item.right-UNCONNECT_SIZE, item.right, CANVAS_BACKGROUND);
+        if (connections & RIGHT) {
+            drawRect(middle-UNCONNECT_SIZE, middle+UNCONNECT_SIZE, item.right-UNCONNECT_SIZE, item.right, NO_CONNECT_BACKGROUND);
         }
     }
 
 
+    // const wordWrap = (text, width)
 
+    const drawLabel = item => {
+        const width = (item.right - item.left) * scalingFactor;
+        const size = Math.round(scalingFactor/5);
+        const labelY = (item.top - top) * scalingFactor + size;
+        ctx.font = size + "px Arial";
+        ctx.fillStyle = "white";
+        const words = item.itemName.split(' ');
+        let line = '';
+        let lines = [];
+        for (let i = 0; i < words.length; i++) {
+          const testLine = line + words[i] + ' ';
+          const testWidth = ctx.measureText(testLine).width;
+          if (testWidth > width - 20) {
+            lines.push(line.trim());
+            line = words[i] + ' ';
+          } else {
+            line = testLine;
+          }
+        }
+        lines.push(line.trim());
+        lines = lines.filter(l => !!l)
+        for (let i = 0; i < lines.length; i++) {
+            const labelWidth = ctx.measureText(lines[i]).width;
+            console.log("-" + lines[i] + "-");
+            ctx.fillText(lines[i], (item.left - left) * scalingFactor + width / 2 - labelWidth / 2, labelY + i * size);
+        }
+      }
 
-    const drawItemRect = (ctx, item, x, y, width, height) => {
-        ctx.fillStyle = "black";
-        ctx.fillRect(x, y, width, height);
-        ctx.strokeStyle = "red";
-        ctx.lineWidth = 4;
-        ctx.strokeRect(x, y, width, height);
-    };
-    
-
-
-
-
-    return item => {
+      
+    const addImage = item => {
         let x = (item.left - left) * scalingFactor;
         let y = (item.top - top) * scalingFactor;
         let width = item.width * scalingFactor;
         let height = item.height * scalingFactor;
+    
+        const img = new Image();
+        img.src = `Icons/${item.itemName.replace(/\s/g, '')}.png`;
+        img.onload = () => {
+          const imgAspect = img.width / img.height;
+          const boxAspect = width / height;
+          let imgWidth = width;
+          let imgHeight = height;
+          if (imgAspect > boxAspect) {
+            imgWidth = Math.min(width, img.width);
+            imgHeight = imgWidth / imgAspect;
+          } else {
+            imgHeight = Math.min(height, img.height);
+            imgWidth = imgHeight * imgAspect;
+          }
+          const imgX = x + (width - imgWidth) / 2;
+          const imgY = y + (height - imgHeight) / 2;
+          ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+        };
+      }
+    
+
+    
+
+
+    const render = item => {
         drawItem(item);
-        // drawItemRect(ctx, item, x, y, width, height);
-        addImage(ctx, item, x, y, width, height);
+        addImage(item);
+        drawLabel(item);
     };
+
+    const renderAdjacent = (item1, item2, direction) => {
+        switch (direction) {
+            case(UP):
+                drawRect(item1.top-UNCONNECT_SIZE, item1.top+UNCONNECT_SIZE, Math.max(item1.left, item2.left)+UNCONNECT_SIZE, Math.min(item1.right, item2.right)-UNCONNECT_SIZE, CONNECT_BACKGROUND)
+                break;
+            case(LEFT):
+                drawRect(Math.max(item1.top, item2.top)+UNCONNECT_SIZE, Math.min(item1.bottom, item2.bottom)-UNCONNECT_SIZE, item1.left-UNCONNECT_SIZE, item1.left+UNCONNECT_SIZE, CONNECT_BACKGROUND)
+                break;
+            case(DOWN):
+                drawRect(item1.bottom-UNCONNECT_SIZE, item1.bottom+UNCONNECT_SIZE, Math.max(item1.left, item2.left)+UNCONNECT_SIZE, Math.min(item1.right, item2.right)-UNCONNECT_SIZE, CONNECT_BACKGROUND)
+                break;
+            case(RIGHT):
+                drawRect(Math.max(item1.top, item2.top)+UNCONNECT_SIZE, Math.min(item1.bottom, item2.bottom)-UNCONNECT_SIZE, item1.right-UNCONNECT_SIZE, item1.right+UNCONNECT_SIZE, CONNECT_BACKGROUND)
+                break;
+        }
+    };
+
+    return { render, renderAdjacent };
     
 }
 
 
 
-  // Add image
-  function addImage(ctx, box, x, y, width, height) {
-
-    const img = new Image();
-    img.src = `Icons/${box.itemName.replace(/\s/g, '')}.png`;
-    img.onload = () => {
-      const imgAspect = img.width / img.height;
-      const boxAspect = width / height;
-      let imgWidth = width;
-      let imgHeight = height;
-      if (imgAspect > boxAspect) {
-        imgWidth = Math.min(width, img.width);
-        imgHeight = imgWidth / imgAspect;
-      } else {
-        imgHeight = Math.min(height, img.height);
-        imgWidth = imgHeight * imgAspect;
-      }
-      const imgX = x + (width - imgWidth) / 2;
-      const imgY = y + (height - imgHeight) / 2;
-      ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
-      drawLabel(ctx, box.itemName, x, y, width, height);
-    };
-  }
 
   // Draw label
-  function drawLabel(ctx, label, x, y, width, height) {
-    const labelY = y + 48;
-    ctx.fillStyle = "white";
-    ctx.font = "48px Arial";
-    const words = label.split(' ');
-    let line = '';
-    let lines = [];
-    for (let i = 0; i < words.length; i++) {
-      const testLine = line + words[i] + ' ';
-      const testWidth = ctx.measureText(testLine).width;
-      if (testWidth > width - 20) {
-        lines.push(line.trim());
-        line = words[i] + ' ';
-      } else {
-        line = testLine;
-      }
-    }
-    lines.push(line.trim());
-    for (let i = 0; i < lines.length; i++) {
-      const labelWidth = ctx.measureText(lines[i]).width;
-      ctx.fillText(lines[i], x + width / 2 - labelWidth / 2, labelY + i * 48);
-    }
-  }
 
   function drawBoxes(canvas, items, itemData) {
 
@@ -195,10 +259,26 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
       ? canvasHeight / (Math.max(...items.map(b => b.height)) * 1.1)
       : canvasWidth / (Math.max(...items.map(b => b.width)) * 1.1);
 
-    const render = makeRender(canvas, itemData, boundingBox(items), scalingFactor);
+    const view = makeRender(canvas, itemData, boundingBox(items), scalingFactor);
+
     for (let item of items) {
-        render(item);
+        view.render(item);
     }
+
+    const queue = [...items]
+    while (queue.length) {
+        let item = queue.shift();
+        for (let i of queue) {
+            const direction = adjacent(item, i)
+            if (direction) {
+                if (connected(item, i, direction, itemData)) {
+                    view.renderAdjacent(item, i, direction);
+                }
+            }
+        }
+    }
+
+
   }
 
 const mergeBox = (item1, item2) => ({
@@ -219,4 +299,4 @@ const boundingBox = items => {
     return items.reduce(mergeBox, VOID_BOX)
 }
 
-export { decode, drawBoxes, get_rotated_object_info, readItems, readData }
+export { decode, drawBoxes, getInfo as get_rotated_object_info, readItems, readData }

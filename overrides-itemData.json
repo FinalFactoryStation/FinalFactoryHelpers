@@ -1,17 +1,52 @@
 {
+    "Antimatter Power Station": {
+        "connections": 1,
+        "connects": "basic"
+    },
     "Antimatter Collector": {
-        "connections": 1
+        "connections": 1,
+        "connects": ["Antimatter Power Station"]
+    },
+    "Radiator": {
+        "connections": 1,
+        "connects": ["Heat Exchanger"]
     },
     "Solar Panel": {
-        "connections": 1
+        "connections": 1,
+        "connects": "basic"
     },
     "Connector": {
-        "connections": 5
+        "connections": 5,
+        "connects": "inventory"
     },
     "High Energy Connector": {
-        "connections": 5
+        "connections": 5,
+        "connects": "inventory"
     },
     "Strut": {
-        "connections": 5
+        "connections": 5,
+        "connects": "basic"
+    },
+    "Station Core": {
+        "categories": ["basic", "inventory"]
+    },
+    "High Density Station Core": {
+        "categories": ["basic", "inventory"]
+    },
+    "Logistics Bay": {
+        "categories": ["basic", "inventory"]
+    },
+    "Heat Exchanger": {
+        "connections": 1,
+        "connects": "basic"
+    },
+    "Exploration Center": {
+        "connections": 5,
+        "connects": "Strut"
+    },
+    "Repair Center": {
+        "connections": 1,
+        "connects": "basic"
     }
+
 }
