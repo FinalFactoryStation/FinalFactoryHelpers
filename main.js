@@ -5,9 +5,9 @@ import 'https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js';
 const DEFLATE_OPTIONS = {to: 'string'};
 
 const ITEM_BACKGROUND = "black";
-const CANVAS_BACKGROUND = "white";
+const CANVAS_BACKGROUND = "grey";
 const NO_CONNECT_BACKGROUND = "red"
-const CONNECT_BACKGROUND = "blue"
+const CONNECT_BACKGROUND = "midnightblue"
 
 const UP = 0b1;
 const RIGHT = 0b10;
@@ -50,11 +50,26 @@ const readData = async url => {
 
     const facing = item => rotate(UP, item.direction);
 
+    const accessible = (item1, item2, direction) => {
+        const { access = 15, overhang = 0 } = get(item2);
+        if (!(direction & rotate(access, item2.direction))) {
+            return false;
+        }
+        if (!overhang) {
+            return true;
+        }
+        if (direction & 5) {
+            return item2.left+overhang <= item1.left && item2.right-overhang >= item1.right
+        } else {
+            return item2.top+overhang <= item1.top && item2.bottom-overhang >= item1.bottom
+        }
+    }
+
     const connects = (item1, item2, direction) => {
         const { connect, extend, chain } = get(item1);
         const categories = get(item2).categories ?? [];
         if (compatable(connect, item2.itemName, categories)) {
-            return true;
+            return accessible(item1, item2, direction);
         }
         if (compatable(extend, item2.itemName, categories)) {
             return direction & connections(item2);
@@ -127,16 +142,24 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
     canvas.height = (boundingBox.bottom - boundingBox.top) * scalingFactor;
 
     const ctx = canvas.getContext("2d");
+    ctx.fillStyle = CANVAS_BACKGROUND;
+    ctx.fillRect(0,0,canvas.width, canvas.height);
+
     const {top, left} = boundingBox;
 
-    const drawRect = (rtop, rbottom, rleft, rright, color) => {
+    const boxes = [];
 
-        ctx.fillStyle = color;
-        ctx.fillRect(
+    const drawRect = (rtop, rbottom, rleft, rright, color) => {
+        const box = new Path2D();
+        box.rect(
             (rleft -left) * scalingFactor, 
             (rtop - top) * scalingFactor, 
             (rright - rleft) * scalingFactor, 
-            (rbottom - rtop) * scalingFactor);
+            (rbottom - rtop) * scalingFactor,
+            0.5 + scalingFactor);
+        ctx.fillStyle = color;
+        ctx.fill(box);
+        boxes.push(box);
     }
 
 
