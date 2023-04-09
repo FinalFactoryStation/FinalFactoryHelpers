@@ -129,8 +129,8 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
       : canvasWidth / (Math.max(...items.map(b => b.width)) * 1.1);
 
     const render = makeRender(canvas, itemData, boundingBox(items), scalingFactor);
-    for (let items of items) {
-        render(items);
+    for (let item of items) {
+        render(item);
     }
   }
 
