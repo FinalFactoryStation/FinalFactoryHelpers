@@ -46,14 +46,21 @@ const readData = async url => {
         return rotate(data.connections ?? 0, item.direction);
     }
 
-    const connects = (item1, item2) => {
-        const connect = get(item1).connects;
-        if (connect == item2.itemName) {
-            return true;
-        } 
+    const compatable = (value, name, categories) => (value == name) || categories.includes(value);
+
+    const facing = item => rotate(UP, item.direction);
+
+    const connects = (item1, item2, direction) => {
+        const { connect, extend, chain } = get(item1);
         const categories = get(item2).categories ?? [];
-        if (categories.includes(connect)) {
+        if (compatable(connect, item2.itemName, categories)) {
             return true;
+        }
+        if (compatable(extend, item2.itemName, categories)) {
+            return direction & connections(item2);
+        }
+        if (compatable(chain, item2.itemName, categories)) {
+            return facing(item1) != rotate180(facing(item2));
         }
         return false;
     }
@@ -84,10 +91,12 @@ const adjacent = (item1, item2) => {
 
 const connected = (item1, item2, direction, itemData) => {
     const connections1 = itemData.connections(item1);
-    const connections2 = itemData.connections(item2);
-    if ((connections1 & direction) && itemData.connects(item1, item2)) {
+    if ((connections1 & direction) && itemData.connects(item1, item2, direction)) {
         return true;
-    } else if ((connections2 & rotate180(direction)) && itemData.connects(item2, item1)) {
+    }
+    const connections2 = itemData.connections(item2);
+    const reversed = rotate180(direction);
+    if ((connections2 & reversed) && itemData.connects(item2, item1, reversed)) {
         return true;
     } 
     return false;
@@ -176,7 +185,6 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
         lines = lines.filter(l => !!l)
         for (let i = 0; i < lines.length; i++) {
             const labelWidth = ctx.measureText(lines[i]).width;
-            console.log("-" + lines[i] + "-");
             ctx.fillText(lines[i], (item.left - left) * scalingFactor + width / 2 - labelWidth / 2, labelY + i * size);
         }
       }

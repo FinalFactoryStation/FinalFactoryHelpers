@@ -1,31 +1,36 @@
 {
     "Antimatter Power Station": {
         "connections": 1,
-        "connects": "basic"
+        "connect":"basic"
     },
     "Antimatter Collector": {
         "connections": 1,
-        "connects": ["Antimatter Power Station"]
+        "connect":"Antimatter Power Station"
     },
     "Radiator": {
         "connections": 1,
-        "connects": ["Heat Exchanger"]
+        "connect":"Heat Exchanger"
     },
     "Solar Panel": {
         "connections": 1,
-        "connects": "basic"
+        "connect":"basic"
     },
     "Connector": {
         "connections": 5,
-        "connects": "inventory"
+        "connect":"inventory",
+        "categories": ["pipe"],
+        "chain": "pipe"
     },
     "High Energy Connector": {
         "connections": 5,
-        "connects": "inventory"
+        "connect":"inventory",
+        "categories": ["pipe"],
+        "chain": "pipe"
     },
     "Strut": {
         "connections": 5,
-        "connects": "basic"
+        "connect":"basic",
+        "extend": "Strut"
     },
     "Station Core": {
         "categories": ["basic", "inventory"]
@@ -38,15 +43,24 @@
     },
     "Heat Exchanger": {
         "connections": 1,
-        "connects": "basic"
+        "connect":"basic"
     },
     "Exploration Center": {
         "connections": 5,
-        "connects": "Strut"
+        "connect":"Strut"
     },
     "Repair Center": {
         "connections": 1,
-        "connects": "basic"
+        "connect":"basic"
+    },
+    "Hauler Station": {
+        "categories": ["basic", "inventory"]
+    },
+    "Defense Platform": {
+        "categories": ["basic"]
+    },
+    "Large Cargo Hold": {
+        "categories": ["basic", "inventory"]
     }
 
 }
