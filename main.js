@@ -4,16 +4,16 @@ import 'https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js';
 
 const DEFLATE_OPTIONS = {to: 'string'};
 
-const BACKGROUND_ITEM = "black";
+const BACKGROUND_DEFAULT = "black";
+const BACKGROUND_HIGHLIGHT = "#414a4c";
 const CANVAS_BACKGROUND = "grey";
 const NO_CONNECT_BACKGROUND = "red"
 const CONNECT_BACKGROUND = "midnightblue"
 
-const STOKE_HIGHLIGHT = "green";
-const WIDTH_HIGHLIGHT = .04;
+const STROKE_HIGHLIGHT = "green";
+const WIDTH_STROKE = .03;
 const STOKE_DEFAULT = "black";
-const WIDTH_DEFAULT = 0;
-const BACKGROUND_HIGHLIGHT = "charcoal";
+
 
 const UP = 0b1;
 const RIGHT = 0b10;
@@ -24,11 +24,14 @@ const ANY_DIRECTION = UP + RIGHT + DOWN + LEFT;
 const HORIZONTAL = RIGHT + LEFT;
 const VERTICAL = UP + DOWN;
 
-const UNCONNECT_SIZE = 0.03;
+const UNCONNECT_SIZE = 0.04;
+const MARGIN_ITEM = UNCONNECT_SIZE + WIDTH_STROKE -0.02;
+
+const HIGHLIGHTED = 1;
 
 
 const rotate = (sides, direction) => {
-    const v = sides << direction;
+    const v = sides << (direction % 4);
     return (v & 15) + ((v & ~15) >> 4);
 }
 
@@ -60,19 +63,33 @@ const readData = async url => {
 
     const facing = item => rotate(UP, item.direction);
 
-    const accessible = (item1, item2, direction) => {
-        const { access = ANY_DIRECTION, overhang = 0 } = get(item2);
-        if (!(direction & rotate(access, item2.direction))) {
-            return false;
+    const getMask = (item, slots, direction) => {
+        switch(rotate(direction, 4-item.direction)) {
+            case UP:
+                return slots[0];
+            case RIGHT:
+                return slots[2];
+            case DOWN:
+                return slots[4];
+            case LEFT:
+                return slots[6];
         }
-        if (!overhang) {
+        console.log("error")
+    }
+
+    const accessible = (item1, item2, direction) => {
+        const { slots = undefined } = get(item2);
+        if (!slots) {
             return true;
         }
-        if (direction & VERTICAL) {
-            return item2.left+overhang <= item1.left && item2.right-overhang >= item1.right
-        } else {
-            return item2.top+overhang <= item1.top && item2.bottom-overhang >= item1.bottom
-        }
+
+        // TODO update for 64 bits
+        const match = (direction & VERTICAL) 
+            ? (((1 << (item1.right- item1.left))-1) << (item1.left - item2.left))
+            : (((1 << (item1.bottom - item1.top)) - 1) << (item1.top - item2.top));
+        const slotMask = getMask(item2, slots, direction);
+        console.log(slotMask + ":" + match);0
+        return (slotMask & match) == match;
     }
 
     const connects = (item1, item2, direction) => {
@@ -165,7 +182,7 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
 
     const boxes = [];
 
-    const drawRect = (rtop, rbottom, rleft, rright, color) => {
+    const drawRect = (rtop, rbottom, rleft, rright, fill, stroke) => {
         const box = new Path2D();
         box.rect(
             (rleft -left) * scalingFactor, 
@@ -173,14 +190,21 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
             (rright - rleft) * scalingFactor, 
             (rbottom - rtop) * scalingFactor,
             0.5 + scalingFactor);
-        ctx.fillStyle = color;
+        ctx.fillStyle = fill;
         ctx.fill(box);
+        if (stroke) {
+            ctx.strokeStyle = stroke;
+            ctx.lineWidth = WIDTH_STROKE * scalingFactor;
+            ctx.stroke(box);
+        }
         return box;
     }
 
 
-    const drawItem = item => {
-        const box = drawRect(item.top+UNCONNECT_SIZE, item.bottom-UNCONNECT_SIZE, item.left+UNCONNECT_SIZE, item.right-UNCONNECT_SIZE, BACKGROUND_ITEM);
+    const drawItem = (item, state)  => {
+        const stroke = state == HIGHLIGHTED ? STROKE_HIGHLIGHT : STOKE_DEFAULT;
+        const fill = state == HIGHLIGHTED ? BACKGROUND_HIGHLIGHT : BACKGROUND_DEFAULT;
+        const box = drawRect(item.top+MARGIN_ITEM, item.bottom-MARGIN_ITEM, item.left+MARGIN_ITEM, item.right-MARGIN_ITEM, fill, stroke);
         boxes.push(box);
         const connections = itemData.connections(item);
         const center = (item.left + item.right) / 2;
@@ -260,8 +284,8 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
     
 
 
-    const render = item => {
-        drawItem(item);
+    const render = (item, state) => {
+        drawItem(item, state);
         addImage(item);
         drawLabel(item);
     };
@@ -284,37 +308,35 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
     };
 
 
-    const findBox = (x,y) => {
+    const findBox = (x,y, items) => {
         // for (let box of boxes) {
         for (let i = 0; i < boxes.length; i++) {
             let box = boxes[i]
             if (ctx.isPointInPath(box, x, y)) {
-                return box;
+                return items[i];
             }
         }
         return undefined;
     }
 
     let highlighed = undefined;
-    const mouseMoveEventHandler = event => {
-        const box = findBox(event.offsetX * eventXScale, event.offsetY * eventYScale);
-        if (highlighed == box) {
+    const mouseMoveEventHandler = (event, items) => {
+        const item = findBox(event.offsetX * eventXScale, event.offsetY * eventYScale, items);
+        if (highlighed == item) {
             return;
         }
         if (highlighed) {
-            ctx.lineWidth = WIDTH_DEFAULT  * scalingFactor;
-            ctx.strokeStyle = STOKE_DEFAULT;
-            ctx.stroke(highlighed);
+            render(highlighed)
+            // ctx.lineWidth = WIDTH_DEFAULT  * scalingFactor;
+            // ctx.strokeStyle = STOKE_DEFAULT;
+            // ctx.stroke(highlighed);
             // ctx.fillStyle = BACKGROUND_ITEM;
             // ctx.fill(highlighed);
         } 
-        highlighed = box;
+        highlighed = item;
         if (highlighed) {
-            ctx.lineWidth = WIDTH_HIGHLIGHT * scalingFactor;
-            ctx.strokeStyle = STOKE_HIGHLIGHT;
-            ctx.stroke(highlighed);
-            // ctx.fillStyle = BACKGROUND_HIGHLIGHT;
-            // ctx.fill(highlighed);
+            // console.log(highlighed);
+            render(highlighed, HIGHLIGHTED)
         }
 }
 
@@ -379,7 +401,7 @@ const boundingBox = items => {
     }
 
     return {
-        "mouseMoveEventHandler": event => view.mouseMoveEventHandler(event)
+        "mouseMoveEventHandler": event => view.mouseMoveEventHandler(event, items)
     }
 
   }

@@ -1,4 +1,7 @@
 {
+    "Advanced Mining Station": {
+        "categories": ["basic", "inventory"]
+    },
     "Antimatter Power Station": {
         "connections": 1,
         "connect":"basic"
@@ -46,8 +49,9 @@
         "connect":"basic"
     },
     "Exploration Center": {
+        "categories": ["basic"],
         "connections": 5,
-        "connect":"Strut"
+        "slots": [2, 0, 0, 0, 2, 0, 0, 0]
     },
     "Repair Center": {
         "connections": 1,
@@ -61,8 +65,7 @@
     },
     "Asteroid Research Station": {
         "categories": ["basic"],
-        "access": 10,
-        "overhang": 1
+        "slots": [2, 0, 0, 0, 2, 0, 0, 0]
     },
     "Large Cargo Hold": {
         "categories": ["basic", "inventory"]
@@ -74,7 +77,7 @@
     "Comet Harvester": {
         "connections": 1,
         "categories": ["basic", "inventory"],
-        "access": 14
+        "slots": [-1, 0, -1, 0, 0, 0, -1, 0]
     }
 
 
