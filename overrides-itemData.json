@@ -78,7 +78,12 @@
         "connections": 1,
         "categories": ["basic", "inventory"],
         "slots": [-1, 0, -1, 0, 0, 0, -1, 0]
+    },
+    "Ship Yard": {
+        "categories": ["basic"],
+        "slots": [0, 0, 546, 0, 0, 0, 546, 0]
     }
+
 
 
 
