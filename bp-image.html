@@ -78,41 +78,31 @@
       .then(response => response.json())
       .then(jsonData => Object.fromEntries(jsonData.items.map(item => [item.name, item])));
 
-    const itemDataUrl = "itemData.json";
-    let itemLookup = {};
-    fetch(itemDataUrl)
-      .then(response => response.json())
-      .then(jsonData => {
-        jsonData.items.forEach(item => {
-          itemLookup[item.name] = item;
-        });
 
-        let totalStabilityCost = 0, totalPowerIdle = 0, totalPowerMax = 0, totalPowerProduced = 0, totalHeatRate = 0, totalStabilityConferred = 0;
-        items.forEach(box => {
-          let itemInfo = itemLookup[box.itemName];
-          if (!itemInfo) {
-            console.log("ERROR: No item info for " + box.itemName);
-          }
-          else {
-            totalStabilityCost += itemInfo.stabilityCost;
-            totalStabilityConferred += itemInfo.stabilityConferred;
-            totalPowerIdle += itemInfo.powerConsumptionIdle;
-            totalPowerMax += itemInfo.powerConsumptionMax;
-            totalPowerProduced += itemInfo.powerProduction;
-            totalHeatRate += itemInfo.heatRate;
+    let totalStabilityCost = 0, totalPowerIdle = 0, totalPowerMax = 0, totalPowerProduced = 0, totalHeatRate = 0, totalStabilityConferred = 0;
+    items.forEach(box => {
+      let itemInfo = itemData[box.itemName];
+      if (!itemInfo) {
+        console.log("ERROR: No item info for " + box.itemName);
+      }
+      else {
+        totalStabilityCost += itemInfo.stabilityCost;
+        totalStabilityConferred += itemInfo.stabilityConferred;
+        totalPowerIdle += itemInfo.powerConsumptionIdle;
+        totalPowerMax += itemInfo.powerConsumptionMax;
+        totalPowerProduced += itemInfo.powerProduction;
+        totalHeatRate += itemInfo.heatRate;
 
-          }
-        });
-        // Set the innerText values
-        stabilityCostElement.innerText = totalStabilityCost;
-        stabilityconferredElement.innerText = totalStabilityConferred;
-        powerConsumptionIdleElement.innerText = totalPowerIdle;
-        powerConsumptionMaxElement.innerText = totalPowerMax;
-        powerProducedElement.innerText = totalPowerProduced;
-        heatRateElement.innerText = totalHeatRate;
+      }
+    });
+    // Set the innerText values
+    stabilityCostElement.innerText = totalStabilityCost;
+    stabilityconferredElement.innerText = totalStabilityConferred;
+    powerConsumptionIdleElement.innerText = totalPowerIdle;
+    powerConsumptionMaxElement.innerText = totalPowerMax;
+    powerProducedElement.innerText = totalPowerProduced;
+    heatRateElement.innerText = totalHeatRate;
 
-      })
-      .catch(error => console.error(error));
 
 
     drawBoxes(canvas, items, itemData);
