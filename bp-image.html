@@ -75,7 +75,7 @@
     const itemData = await readData("itemData.json")
 
 
-    let totalStabilityCost = 0, totalPowerIdle = 0, totalPowerMax = 0, totalPowerProduced = 0, totalHeatRate = 0, totalStabilityConferred = 0;
+    let totalStabilityCost = 0, totalPowerIdle = 0, totalPowerMax = 0, totalPowerProduced = 0, totalHeatRate = 0, totalStabilityConferred = 15;
     items.forEach(box => {
       let itemInfo = itemData.get(box);
       if (!itemInfo) {
