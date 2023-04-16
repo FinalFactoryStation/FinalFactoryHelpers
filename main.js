@@ -151,8 +151,8 @@ const connected = (item1, item2, direction, itemData) => {
 const getInfo = obj => {
     const center_x = obj['OriginalPlacedPosition']['x'] / 10;
     const center_y = obj['OriginalPlacedPosition']['z'] / 10;
-    const width = obj['Width'];
-    const height = obj['Length'];
+    const height = obj['Width'];
+    const width = obj['Length'];
 
     return {
         width,
@@ -176,7 +176,7 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
 
     const ctx = canvas.getContext("2d");
     ctx.fillStyle = CANVAS_BACKGROUND;
-    ctx.fillRect(0,0,canvas.width, canvas.height);
+    ctx.fillRect(0,0, canvas.width, canvas.height);
 
     const {top, left} = boundingBox;
 
@@ -365,23 +365,23 @@ const boundingBox = items => {
 
 
   // Draw label
-
   function drawBoxes(canvas, items, itemData) {
 
-    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    var bb = boundingBox(items);
+    const width = bb.right - bb.left;
+    const height = bb.bottom - bb.top;
+    const boundingBoxAspectRatio = height / width;
     const padding = 10;
-    const minBoxSize = 50;
-    const aspectRatio = 16 / 9; // Set the aspect ratio of the canvas
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
     const canvasWidth = windowWidth - padding * 2;
     const canvasHeight = windowHeight - padding * 2;
     const canvasAspectRatio = canvasWidth / canvasHeight;
-    const scalingFactor = canvasAspectRatio > aspectRatio
+    const scalingFactor = canvasAspectRatio > boundingBoxAspectRatio
       ? canvasHeight / (Math.max(...items.map(b => b.height)) * 1.1)
       : canvasWidth / (Math.max(...items.map(b => b.width)) * 1.1);
 
-    const view = makeRender(canvas, itemData, boundingBox(items), scalingFactor);
+    const view = makeRender(canvas, itemData, bb, scalingFactor);
 
     for (let item of items) {
         view.render(item);
