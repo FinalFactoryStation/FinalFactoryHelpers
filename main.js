@@ -358,7 +358,7 @@ const VOID_BOX = {
     right: -Infinity,
 }
 
-const boundingBox = items => {
+const CaluclateBoundingBox = items => {
     return items.reduce(mergeBox, VOID_BOX)
 }
 
@@ -368,20 +368,49 @@ const boundingBox = items => {
 
   function drawBoxes(canvas, items, itemData) {
 
-    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-    const padding = 10;
-    const minBoxSize = 50;
-    const aspectRatio = 16 / 9; // Set the aspect ratio of the canvas
+    // Calculate the bounding box of the items
+    const boundingBox = CaluclateBoundingBox(items);
+
+    // Get the dimensions of the bounding box and the window
+    const { left, right, top, bottom } = boundingBox;
+    const boundingBoxWidth = right - left;
+    const boundingBoxHeight = bottom - top;
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
-    const canvasWidth = windowWidth - padding * 2;
-    const canvasHeight = windowHeight - padding * 2;
-    const canvasAspectRatio = canvasWidth / canvasHeight;
-    const scalingFactor = canvasAspectRatio > aspectRatio
-      ? canvasHeight / (Math.max(...items.map(b => b.height)) * 1.1)
-      : canvasWidth / (Math.max(...items.map(b => b.width)) * 1.1);
 
-    const view = makeRender(canvas, itemData, boundingBox(items), scalingFactor);
+    // Calculate the aspect ratios of the bounding box and the window
+    const boundingBoxAspectRatio = boundingBoxWidth / boundingBoxHeight;
+    const windowAspectRatio = windowWidth / windowHeight;
+
+    // Set maximum dimensions to limit the scaling factor
+    const MAX_WIDTH = 1000;
+    const MAX_HEIGHT = 800;
+
+    // Calculate the scaling factor based on the aspect ratios and the maximum dimensions
+    let scalingFactor = boundingBoxAspectRatio > windowAspectRatio
+    ? Math.min(MAX_HEIGHT / boundingBoxHeight, windowHeight / boundingBoxHeight) // If bounding box is taller than the window, limit by height
+    : Math.min(MAX_WIDTH / boundingBoxWidth, windowWidth / boundingBoxWidth); // Otherwise, limit by width
+
+    // If the scaled height exceeds the maximum height, scale down based on height
+    if (scalingFactor * boundingBoxHeight > MAX_HEIGHT) {
+    scalingFactor = MAX_HEIGHT / boundingBoxHeight;
+    }
+
+    // If the scaled width exceeds the maximum width, scale down based on width
+    if (scalingFactor * boundingBoxWidth > MAX_WIDTH) {
+    scalingFactor = MAX_WIDTH / boundingBoxWidth;
+    }
+
+    // Calculate the scaled dimensions using the scaling factor
+    const scaledWidth = boundingBoxWidth * scalingFactor;
+    const scaledHeight = boundingBoxHeight * scalingFactor;
+
+    // Log the scaled dimensions to the console
+    console.log(`Scaled width: ${scaledWidth}px`);
+    console.log(`Scaled height: ${scaledHeight}px`);
+
+
+    const view = makeRender(canvas, itemData, boundingBox, scalingFactor);
 
     for (let item of items) {
         view.render(item);
