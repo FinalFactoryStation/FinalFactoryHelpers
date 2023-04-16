@@ -110,7 +110,9 @@ const readData = async url => {
         return false;
     }
 
-    return { get, connections, connects };
+    const itemCategories = [...new Set(Object.values(itemData).map(obj => obj.itemCategory))];
+
+    return { get, connections, connects, itemCategories, itemData };
 }
 
 const adjacent = (item1, item2) => {
@@ -328,11 +330,6 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
         }
         if (highlighed) {
             render(highlighed)
-            // ctx.lineWidth = WIDTH_DEFAULT  * scalingFactor;
-            // ctx.strokeStyle = STOKE_DEFAULT;
-            // ctx.stroke(highlighed);
-            // ctx.fillStyle = BACKGROUND_ITEM;
-            // ctx.fill(highlighed);
         }
         highlighed = item;
         if (highlighed) {
@@ -359,49 +356,52 @@ const VOID_BOX = {
     right: -Infinity,
 }
 
-const CaluclateBoundingBox = items => {
+const caluclateBoundingBox = items => {
     return items.reduce(mergeBox, VOID_BOX)
 }
 
-const CalculateTotals = (items, itemData) => {
+const calculateTotals = (items, itemData) => {
     let totalStabilityCost = 0,
         totalPowerIdle = 0,
         totalPowerMax = 0,
         totalPowerProduced = 0,
         totalHeatRate = 0,
-        totalStabilityConferred = 15;
-  
+        totalStabilityConferred = 15,
+        totalItems = 0;
+
     items.forEach(box => {
-      let itemInfo = itemData.get(box);
-      if (!itemInfo) {
-        console.log("ERROR: No item info for " + box.itemName);
-      } else {
-        totalStabilityCost += itemInfo.stabilityCost;
-        totalStabilityConferred += itemInfo.stabilityConferred;
-        totalPowerIdle += itemInfo.powerConsumptionIdle;
-        totalPowerMax += itemInfo.powerConsumptionMax;
-        totalPowerProduced += itemInfo.powerProduction;
-        totalHeatRate += itemInfo.heatRate;
-      }
+        let itemInfo = itemData.get(box);
+        if (!itemInfo) {
+            console.log("ERROR: No item info for " + box.itemName);
+        } else {
+            totalStabilityCost += itemInfo.stabilityCost;
+            totalStabilityConferred = Math.max(totalStabilityConferred, itemInfo.stabilityConferred+15);
+            totalPowerIdle += itemInfo.powerConsumptionIdle;
+            totalPowerMax += itemInfo.powerConsumptionMax;
+            totalPowerProduced += itemInfo.powerProduction;
+            totalHeatRate += itemInfo.heatRate;
+            totalItems += 1;
+        }
     });
-  
+
     return {
-      totalStabilityCost,
-      totalPowerIdle,
-      totalPowerMax,
-      totalPowerProduced,
-      totalHeatRate,
-      totalStabilityConferred
+        totalStabilityCost,
+        totalPowerIdle,
+        totalPowerMax,
+        totalPowerProduced,
+        totalHeatRate,
+        totalStabilityConferred,
+        totalItems
     };
-  }
-  
+}
+
 
 // Draw label
 
 function drawBoxes(canvas, items, itemData) {
 
     // Calculate the bounding box of the items
-    const boundingBox = CaluclateBoundingBox(items);
+    const boundingBox = caluclateBoundingBox(items);
 
     // Get the dimensions of the bounding box and the window
     const { left, right, top, bottom } = boundingBox;
@@ -456,13 +456,10 @@ function drawBoxes(canvas, items, itemData) {
     });
 
     const queue = [...itemsWithId]
-    const parent = {}; // or an array of indices
+    const parent = {};
     for (let item of itemsWithId) {
         parent[item.index] = item.index;
     }
-
-
-
 
     function find(item) {
         if (parent[item.index] === item.index) {
@@ -477,7 +474,7 @@ function drawBoxes(canvas, items, itemData) {
         parent[root2] = root1;
     }
 
-    
+
     while (queue.length) {
         let item = queue.shift();
         for (let i of queue) {
@@ -492,20 +489,24 @@ function drawBoxes(canvas, items, itemData) {
     function extractGroups(parent) {
         const groups = {};
         for (let i in parent) {
-          const root = find({ index: i, item: null });
-          if (groups[root]) {
-            groups[root].push(items[i]);
-          } else {
-            groups[root] = [items[i]];
-          }
+            let item = items[i]
+            const root = find({ index: i, item: item });
+            if (groups[root]) {
+                groups[root].push(item);
+            } else {
+                groups[root] = [item];
+            }
         }
         return Object.values(groups);
-      }
+    }
 
+    let allGroups = extractGroups(parent);
+    console.log(allGroups);
+    let stationGroups = allGroups.map(group => group.filter(item => itemData.get(item).itemCategory === "Stations")).filter(group => group.length > 0);
 
     return {
         "mouseMoveEventHandler": event => view.mouseMoveEventHandler(event, items),
-        "groups": extractGroups(parent).map(group => CalculateTotals(group, itemData))
+        "stationGroupTotals": stationGroups.map(group => calculateTotals(group, itemData))
     }
 
 }

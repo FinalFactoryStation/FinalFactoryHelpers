@@ -93,7 +93,7 @@
     canvas.addEventListener("mousemove", view.mouseMoveEventHandler);
     const templateDiv = document.querySelector('#tooltip');
 
-    let groups = view.groups;
+    let groups = view.stationGroupTotals;
     for (let i = 0; i < groups.length; i++) {
       // Get the values from the JSON object
       const group = i; // Set the group index as the loop index
@@ -103,13 +103,16 @@
       const powerMax = groups[i].totalPowerMax;
       const powerProduced = groups[i].totalPowerProduced;
       const heatRate = groups[i].totalHeatRate;
+      const totalItems = groups[i].totalItems;
 
+      console.log(groups[i])
       // Create a new div element for each JSON object
       const div = document.createElement('div');
 
       // Set the values in the HTML template using the element IDs
-      div.innerHTML = `<div class="groups">Group: <span id="group">${group}</span><br />
-                    Stability. Cost:<span id="stability-cost">${stabilityCost}</span>, Conferred: <span id="stability-conferred">${stabilityConferred}</span><br />
+      div.innerHTML = `<div class="groups">Structure: <span id="group">${group}</span><br />
+                    Contains: <span id="contains">${groups[i].totalItems} stations.</span><br />
+                    Stability. Cost:<span id="stability-cost">${stabilityCost}</span>, Conferred: <span id="stability-conferred">${stabilityConferred}</span> <strong>(This is doesn't account for struct or artifacts!)</strong> <br />
                     Power Consumption. Idle: <span id="power-consumption-idle">${powerIdle}</span>, Max:<span id="power-consumption-max">${powerMax}</span>, Produced:<span id="power-produced">${powerProduced}</span><br />
                     Heat Rate: <span id="heat-rate">${heatRate}</span></div>`
 
