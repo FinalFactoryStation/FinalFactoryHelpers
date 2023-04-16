@@ -2,7 +2,7 @@ import { Base64 } from 'https://cdn.jsdelivr.net/npm/js-base64@3.7.5/base64.mjs'
 import 'https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js';
 
 
-const DEFLATE_OPTIONS = {to: 'string'};
+const DEFLATE_OPTIONS = { to: 'string' };
 
 const BACKGROUND_DEFAULT = "black";
 const BACKGROUND_HIGHLIGHT = "#414a4c";
@@ -25,7 +25,7 @@ const HORIZONTAL = RIGHT + LEFT;
 const VERTICAL = UP + DOWN;
 
 const UNCONNECT_SIZE = 0.04;
-const MARGIN_ITEM = UNCONNECT_SIZE + WIDTH_STROKE -0.02;
+const MARGIN_ITEM = UNCONNECT_SIZE + WIDTH_STROKE - 0.02;
 
 const HIGHLIGHTED = 1;
 
@@ -46,7 +46,7 @@ const readData = async url => {
     const itemData = await fetch(url)
         .then(response => response.json())
         .then(jsonData => Object.fromEntries(jsonData.items.map(item => [item.name, item])));
-    const itemOverrides = await fetch("overrides-"+url)
+    const itemOverrides = await fetch("overrides-" + url)
         .then(response => response.json())
     for (const name in itemOverrides) {
         Object.assign(itemData[name], itemOverrides[name]);
@@ -64,7 +64,7 @@ const readData = async url => {
     const facing = item => rotate(UP, item.direction);
 
     const getMask = (item, slots, direction) => {
-        switch(rotate(direction, 4-item.direction)) {
+        switch (rotate(direction, 4 - item.direction)) {
             case UP:
                 return slots[0];
             case RIGHT:
@@ -84,11 +84,11 @@ const readData = async url => {
         }
 
         // TODO update for 64 bits
-        const match = (direction & VERTICAL) 
-            ? (((1 << (item1.right- item1.left))-1) << (item1.left - item2.left))
+        const match = (direction & VERTICAL)
+            ? (((1 << (item1.right - item1.left)) - 1) << (item1.left - item2.left))
             : (((1 << (item1.bottom - item1.top)) - 1) << (item1.top - item2.top));
         const slotMask = getMask(item2, slots, direction);
-        console.log(slotMask + ":" + match);0
+        console.log(slotMask + ":" + match); 0
         return (slotMask & match) == match;
     }
 
@@ -143,7 +143,7 @@ const connected = (item1, item2, direction, itemData) => {
     const reversed = rotate180(direction);
     if ((connections2 & reversed) && itemData.connects(item2, item1, reversed)) {
         return true;
-    } 
+    }
     return false;
 }
 
@@ -176,18 +176,18 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
 
     const ctx = canvas.getContext("2d");
     ctx.fillStyle = CANVAS_BACKGROUND;
-    ctx.fillRect(0,0,canvas.width, canvas.height);
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    const {top, left} = boundingBox;
+    const { top, left } = boundingBox;
 
     const boxes = [];
 
     const drawRect = (rtop, rbottom, rleft, rright, fill, stroke) => {
         const box = new Path2D();
         box.rect(
-            (rleft -left) * scalingFactor, 
-            (rtop - top) * scalingFactor, 
-            (rright - rleft) * scalingFactor, 
+            (rleft - left) * scalingFactor,
+            (rtop - top) * scalingFactor,
+            (rright - rleft) * scalingFactor,
             (rbottom - rtop) * scalingFactor,
             0.5 + scalingFactor);
         ctx.fillStyle = fill;
@@ -201,25 +201,25 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
     }
 
 
-    const drawBox = (item, state)  => {
+    const drawBox = (item, state) => {
         const stroke = state == HIGHLIGHTED ? STROKE_HIGHLIGHT : STOKE_DEFAULT;
         const fill = state == HIGHLIGHTED ? BACKGROUND_HIGHLIGHT : BACKGROUND_DEFAULT;
-        const box = drawRect(item.top+MARGIN_ITEM, item.bottom-MARGIN_ITEM, item.left+MARGIN_ITEM, item.right-MARGIN_ITEM, fill, stroke);
+        const box = drawRect(item.top + MARGIN_ITEM, item.bottom - MARGIN_ITEM, item.left + MARGIN_ITEM, item.right - MARGIN_ITEM, fill, stroke);
         boxes.push(box);
         const connections = itemData.connections(item);
         const center = (item.left + item.right) / 2;
         const middle = (item.top + item.bottom) / 2;
         if (connections & UP) {
-            drawRect(item.top, item.top+UNCONNECT_SIZE, center-UNCONNECT_SIZE, center+UNCONNECT_SIZE, NO_CONNECT_BACKGROUND);
+            drawRect(item.top, item.top + UNCONNECT_SIZE, center - UNCONNECT_SIZE, center + UNCONNECT_SIZE, NO_CONNECT_BACKGROUND);
         }
         if (connections & DOWN) {
-            drawRect(item.bottom-+UNCONNECT_SIZE, item.bottom, center-UNCONNECT_SIZE, center+UNCONNECT_SIZE, NO_CONNECT_BACKGROUND);
+            drawRect(item.bottom - +UNCONNECT_SIZE, item.bottom, center - UNCONNECT_SIZE, center + UNCONNECT_SIZE, NO_CONNECT_BACKGROUND);
         }
         if (connections & LEFT) {
-            drawRect(middle-UNCONNECT_SIZE, middle+UNCONNECT_SIZE, item.left, item.left+UNCONNECT_SIZE, NO_CONNECT_BACKGROUND);
+            drawRect(middle - UNCONNECT_SIZE, middle + UNCONNECT_SIZE, item.left, item.left + UNCONNECT_SIZE, NO_CONNECT_BACKGROUND);
         }
         if (connections & RIGHT) {
-            drawRect(middle-UNCONNECT_SIZE, middle+UNCONNECT_SIZE, item.right-UNCONNECT_SIZE, item.right, NO_CONNECT_BACKGROUND);
+            drawRect(middle - UNCONNECT_SIZE, middle + UNCONNECT_SIZE, item.right - UNCONNECT_SIZE, item.right, NO_CONNECT_BACKGROUND);
         }
     }
 
@@ -228,7 +228,7 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
 
     const drawLabel = item => {
         const width = (item.right - item.left) * scalingFactor;
-        const size = Math.round(scalingFactor/5);
+        const size = Math.round(scalingFactor / 5);
         const labelY = (item.top - top) * scalingFactor + size;
         ctx.font = size + "px Arial";
         ctx.fillStyle = "white";
@@ -236,14 +236,14 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
         let line = '';
         let lines = [];
         for (let i = 0; i < words.length; i++) {
-          const testLine = line + words[i] + ' ';
-          const testWidth = ctx.measureText(testLine).width;
-          if (testWidth > width - 20) {
-            lines.push(line.trim());
-            line = words[i] + ' ';
-          } else {
-            line = testLine;
-          }
+            const testLine = line + words[i] + ' ';
+            const testWidth = ctx.measureText(testLine).width;
+            if (testWidth > width - 20) {
+                lines.push(line.trim());
+                line = words[i] + ' ';
+            } else {
+                line = testLine;
+            }
         }
         lines.push(line.trim());
         lines = lines.filter(l => !!l)
@@ -251,38 +251,38 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
             const labelWidth = ctx.measureText(lines[i]).width;
             ctx.fillText(lines[i], (item.left - left) * scalingFactor + width / 2 - labelWidth / 2, labelY + i * size);
         }
-      }
+    }
 
-      
+
     const addImageAndLabel = item => {
         let x = (item.left - left) * scalingFactor;
         let y = (item.top - top) * scalingFactor;
         let width = item.width * scalingFactor;
         let height = item.height * scalingFactor;
-    
+
         const img = new Image();
         img.src = `Icons/${item.itemName.replace(/\s/g, '')}.png`;
         img.onload = () => {
-          const imgAspect = img.width / img.height;
-          const boxAspect = width / height;
-          let imgWidth = width;
-          let imgHeight = height;
-          if (imgAspect > boxAspect) {
-            imgWidth = Math.min(width, img.width);
-            imgHeight = imgWidth / imgAspect;
-          } else {
-            imgHeight = Math.min(height, img.height);
-            imgWidth = imgHeight * imgAspect;
-          }
-          const imgX = x + (width - imgWidth) / 2;
-          const imgY = y + (height - imgHeight) / 2;
-          ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
-          drawLabel(item);
+            const imgAspect = img.width / img.height;
+            const boxAspect = width / height;
+            let imgWidth = width;
+            let imgHeight = height;
+            if (imgAspect > boxAspect) {
+                imgWidth = Math.min(width, img.width);
+                imgHeight = imgWidth / imgAspect;
+            } else {
+                imgHeight = Math.min(height, img.height);
+                imgWidth = imgHeight * imgAspect;
+            }
+            const imgX = x + (width - imgWidth) / 2;
+            const imgY = y + (height - imgHeight) / 2;
+            ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+            drawLabel(item);
         };
-      }
-    
+    }
 
-    
+
+
 
 
     const render = (item, state) => {
@@ -293,23 +293,23 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
 
     const renderAdjacent = (item1, item2, direction) => {
         switch (direction) {
-            case(UP):
-                drawRect(item1.top-UNCONNECT_SIZE, item1.top+UNCONNECT_SIZE, Math.max(item1.left, item2.left)+UNCONNECT_SIZE, Math.min(item1.right, item2.right)-UNCONNECT_SIZE, CONNECT_BACKGROUND)
+            case (UP):
+                drawRect(item1.top - UNCONNECT_SIZE, item1.top + UNCONNECT_SIZE, Math.max(item1.left, item2.left) + UNCONNECT_SIZE, Math.min(item1.right, item2.right) - UNCONNECT_SIZE, CONNECT_BACKGROUND)
                 break;
-            case(LEFT):
-                drawRect(Math.max(item1.top, item2.top)+UNCONNECT_SIZE, Math.min(item1.bottom, item2.bottom)-UNCONNECT_SIZE, item1.left-UNCONNECT_SIZE, item1.left+UNCONNECT_SIZE, CONNECT_BACKGROUND)
+            case (LEFT):
+                drawRect(Math.max(item1.top, item2.top) + UNCONNECT_SIZE, Math.min(item1.bottom, item2.bottom) - UNCONNECT_SIZE, item1.left - UNCONNECT_SIZE, item1.left + UNCONNECT_SIZE, CONNECT_BACKGROUND)
                 break;
-            case(DOWN):
-                drawRect(item1.bottom-UNCONNECT_SIZE, item1.bottom+UNCONNECT_SIZE, Math.max(item1.left, item2.left)+UNCONNECT_SIZE, Math.min(item1.right, item2.right)-UNCONNECT_SIZE, CONNECT_BACKGROUND)
+            case (DOWN):
+                drawRect(item1.bottom - UNCONNECT_SIZE, item1.bottom + UNCONNECT_SIZE, Math.max(item1.left, item2.left) + UNCONNECT_SIZE, Math.min(item1.right, item2.right) - UNCONNECT_SIZE, CONNECT_BACKGROUND)
                 break;
-            case(RIGHT):
-                drawRect(Math.max(item1.top, item2.top)+UNCONNECT_SIZE, Math.min(item1.bottom, item2.bottom)-UNCONNECT_SIZE, item1.right-UNCONNECT_SIZE, item1.right+UNCONNECT_SIZE, CONNECT_BACKGROUND)
+            case (RIGHT):
+                drawRect(Math.max(item1.top, item2.top) + UNCONNECT_SIZE, Math.min(item1.bottom, item2.bottom) - UNCONNECT_SIZE, item1.right - UNCONNECT_SIZE, item1.right + UNCONNECT_SIZE, CONNECT_BACKGROUND)
                 break;
         }
     };
 
 
-    const findBox = (x,y, items) => {
+    const findBox = (x, y, items) => {
         // for (let box of boxes) {
         for (let i = 0; i < boxes.length; i++) {
             let box = boxes[i]
@@ -333,16 +333,16 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
             // ctx.stroke(highlighed);
             // ctx.fillStyle = BACKGROUND_ITEM;
             // ctx.fill(highlighed);
-        } 
+        }
         highlighed = item;
         if (highlighed) {
             // console.log(highlighed);
             render(highlighed, HIGHLIGHTED)
         }
-}
+    }
 
-    return { render, renderAdjacent, mouseMoveEventHandler};
-    
+    return { render, renderAdjacent, mouseMoveEventHandler };
+
 }
 
 const mergeBox = (item1, item2) => ({
@@ -363,11 +363,42 @@ const CaluclateBoundingBox = items => {
     return items.reduce(mergeBox, VOID_BOX)
 }
 
+const CalculateTotals = (items, itemData) => {
+    let totalStabilityCost = 0,
+        totalPowerIdle = 0,
+        totalPowerMax = 0,
+        totalPowerProduced = 0,
+        totalHeatRate = 0,
+        totalStabilityConferred = 15;
+  
+    items.forEach(box => {
+      let itemInfo = itemData.get(box);
+      if (!itemInfo) {
+        console.log("ERROR: No item info for " + box.itemName);
+      } else {
+        totalStabilityCost += itemInfo.stabilityCost;
+        totalStabilityConferred += itemInfo.stabilityConferred;
+        totalPowerIdle += itemInfo.powerConsumptionIdle;
+        totalPowerMax += itemInfo.powerConsumptionMax;
+        totalPowerProduced += itemInfo.powerProduction;
+        totalHeatRate += itemInfo.heatRate;
+      }
+    });
+  
+    return {
+      totalStabilityCost,
+      totalPowerIdle,
+      totalPowerMax,
+      totalPowerProduced,
+      totalHeatRate,
+      totalStabilityConferred
+    };
+  }
+  
 
+// Draw label
 
-  // Draw label
-
-  function drawBoxes(canvas, items, itemData) {
+function drawBoxes(canvas, items, itemData) {
 
     // Calculate the bounding box of the items
     const boundingBox = CaluclateBoundingBox(items);
@@ -389,17 +420,17 @@ const CaluclateBoundingBox = items => {
 
     // Calculate the scaling factor based on the aspect ratios and the maximum dimensions
     let scalingFactor = boundingBoxAspectRatio > windowAspectRatio
-    ? Math.min(MAX_HEIGHT / boundingBoxHeight, windowHeight / boundingBoxHeight) // If bounding box is taller than the window, limit by height
-    : Math.min(MAX_WIDTH / boundingBoxWidth, windowWidth / boundingBoxWidth); // Otherwise, limit by width
+        ? Math.min(MAX_HEIGHT / boundingBoxHeight, windowHeight / boundingBoxHeight) // If bounding box is taller than the window, limit by height
+        : Math.min(MAX_WIDTH / boundingBoxWidth, windowWidth / boundingBoxWidth); // Otherwise, limit by width
 
     // If the scaled height exceeds the maximum height, scale down based on height
     if (scalingFactor * boundingBoxHeight > MAX_HEIGHT) {
-    scalingFactor = MAX_HEIGHT / boundingBoxHeight;
+        scalingFactor = MAX_HEIGHT / boundingBoxHeight;
     }
 
     // If the scaled width exceeds the maximum width, scale down based on width
     if (scalingFactor * boundingBoxWidth > MAX_WIDTH) {
-    scalingFactor = MAX_WIDTH / boundingBoxWidth;
+        scalingFactor = MAX_WIDTH / boundingBoxWidth;
     }
 
     // Calculate the scaled dimensions using the scaling factor
@@ -417,24 +448,67 @@ const CaluclateBoundingBox = items => {
         view.render(item);
     }
 
-    const queue = [...items]
+    const itemsWithId = items.map((item, index) => {
+        return {
+            index: index,
+            item: item
+        };
+    });
+
+    const queue = [...itemsWithId]
+    const parent = {}; // or an array of indices
+    for (let item of itemsWithId) {
+        parent[item.index] = item.index;
+    }
+
+
+
+
+    function find(item) {
+        if (parent[item.index] === item.index) {
+            return item.index;
+        }
+        return find({ index: parent[item.index], item: item.item });
+    }
+
+    function union(item1, item2) {
+        const root1 = find(item1);
+        const root2 = find(item2);
+        parent[root2] = root1;
+    }
+
+    
     while (queue.length) {
         let item = queue.shift();
         for (let i of queue) {
-            const direction = adjacent(item, i)
-            if (direction) {
-                if (connected(item, i, direction, itemData)) {
-                    view.renderAdjacent(item, i, direction);
-                }
+            const direction = adjacent(item.item, i.item)
+            if (direction && connected(item.item, i.item, direction, itemData)) {
+                view.renderAdjacent(item.item, i.item, direction);
+                union(item, i);
             }
         }
     }
 
+    function extractGroups(parent) {
+        const groups = {};
+        for (let i in parent) {
+          const root = find({ index: i, item: null });
+          if (groups[root]) {
+            groups[root].push(items[i]);
+          } else {
+            groups[root] = [items[i]];
+          }
+        }
+        return Object.values(groups);
+      }
+
+
     return {
-        "mouseMoveEventHandler": event => view.mouseMoveEventHandler(event, items)
+        "mouseMoveEventHandler": event => view.mouseMoveEventHandler(event, items),
+        "groups": extractGroups(parent).map(group => CalculateTotals(group, itemData))
     }
 
-  }
+}
 
 
 export { decode, drawBoxes, readItems, readData }
