@@ -375,7 +375,7 @@ const calculateTotals = (items, itemData) => {
             console.log("ERROR: No item info for " + box.itemName);
         } else {
             totalStabilityCost += itemInfo.stabilityCost;
-            totalStabilityConferred = Math.max(totalStabilityConferred, itemInfo.stabilityConferred+15);
+            totalStabilityConferred = Math.max(totalStabilityConferred, itemInfo.stabilityConferred + 15);
             totalPowerIdle += itemInfo.powerConsumptionIdle;
             totalPowerMax += itemInfo.powerConsumptionMax;
             totalPowerProduced += itemInfo.powerProduction;
@@ -501,7 +501,6 @@ function drawBoxes(canvas, items, itemData) {
     }
 
     let allGroups = extractGroups(parent);
-    console.log(allGroups);
     let stationGroups = allGroups.map(group => group.filter(item => itemData.get(item).itemCategory === "Stations")).filter(group => group.length > 0);
 
     return {
