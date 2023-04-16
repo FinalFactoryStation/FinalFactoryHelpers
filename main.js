@@ -201,7 +201,7 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
     }
 
 
-    const drawItem = (item, state)  => {
+    const drawBox = (item, state)  => {
         const stroke = state == HIGHLIGHTED ? STROKE_HIGHLIGHT : STOKE_DEFAULT;
         const fill = state == HIGHLIGHTED ? BACKGROUND_HIGHLIGHT : BACKGROUND_DEFAULT;
         const box = drawRect(item.top+MARGIN_ITEM, item.bottom-MARGIN_ITEM, item.left+MARGIN_ITEM, item.right-MARGIN_ITEM, fill, stroke);
@@ -254,7 +254,7 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
       }
 
       
-    const addImage = item => {
+    const addImageAndLabel = item => {
         let x = (item.left - left) * scalingFactor;
         let y = (item.top - top) * scalingFactor;
         let width = item.width * scalingFactor;
@@ -277,6 +277,7 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
           const imgX = x + (width - imgWidth) / 2;
           const imgY = y + (height - imgHeight) / 2;
           ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+          drawLabel(item);
         };
       }
     
@@ -285,9 +286,9 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
 
 
     const render = (item, state) => {
-        drawItem(item, state);
-        addImage(item);
-        drawLabel(item);
+        drawBox(item, state);
+        addImageAndLabel(item);
+
     };
 
     const renderAdjacent = (item1, item2, direction) => {
