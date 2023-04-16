@@ -356,7 +356,7 @@ const VOID_BOX = {
     right: -Infinity,
 }
 
-const caluclateBoundingBox = items => {
+const calculateBoundingBox = items => {
     return items.reduce(mergeBox, VOID_BOX)
 }
 
@@ -401,7 +401,7 @@ const calculateTotals = (items, itemData) => {
 function drawBoxes(canvas, items, itemData) {
 
     // Calculate the bounding box of the items
-    const boundingBox = caluclateBoundingBox(items);
+    const boundingBox = calculateBoundingBox(items);
 
     // Get the dimensions of the bounding box and the window
     const { left, right, top, bottom } = boundingBox;
