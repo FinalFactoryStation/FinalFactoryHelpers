@@ -44,11 +44,71 @@
       color: #333;
       overflow-y: scroll;
       margin-bottom: 20px;
+      max-height: 80px;
 
     }
 
+    .tab {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+    }
+
+
+    .tab-links {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tab-link {
+      display: block;
+      padding: 10px;
+      margin-bottom: 5px;
+      border: 1px solid #ccc;
+      border-right: none;
+      background-color: #f1f1f1;
+      text-decoration: none;
+      color: #000;
+    }
+
+    .tab-link:hover {
+      background-color: #ddd;
+    }
+
+    .tab-link.active {
+      background-color: #ccc;
+    }
+
+    .tab-content {
+      flex-grow: 1;
+      padding: 0px;
+      border: 1px solid #ccc;
+      border-left: none;
+    }
+
+    .tab-pane {
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+
+    .tab-tabs {
+      overflow-y: scroll;
+      height: 160px;
+    }
+
     .groups {
-      margin-bottom: 10px;
+      font-size: 16px;
+      line-height: 1.8;
+      padding: 10px;
+      margin: auto;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
     }
   </style>
 
@@ -78,7 +138,11 @@
 
     <br>
     <div>
-      <div id="tooltip">
+      <div class="tab">
+        <div class="tab-tabs">
+          <div class="tab-links"></div>
+        </div>
+        <div class="tab-content"></div>
       </div>
       <div class="canvas-container">
         <canvas id="myCanvas" width="500" height="500"></canvas>
@@ -113,35 +177,68 @@
       h = win.innerWidth || docElem.clientWidth || body.clientWidth,
       w = win.innerHeight || docElem.clientHeight || body.clientHeight;
 
+    console.log(`${h} x ${w}`);
 
-    const view = drawBoxes(canvas, items, itemData, h, w);
+    const view = drawBoxes(canvas, items, itemData, w, h*.85);
     canvas.addEventListener("mousemove", view.mouseMoveEventHandler);
-    const templateDiv = document.querySelector('#tooltip');
 
+    // Get the tab links and tab content elements
+    var tabLinks = document.querySelector('.tab-links');
+    var tabContent = document.querySelector('.tab-content');
     let groups = view.stationGroupTotals;
-    for (let i = 0; i < groups.length; i++) {
-      // Get the values from the JSON object
-      const group = i; // Set the group index as the loop index
-      const stabilityCost = groups[i].totalStabilityCost;
-      const stabilityConferred = groups[i].totalStabilityConferred;
-      const powerIdle = groups[i].totalPowerIdle;
-      const powerMax = groups[i].totalPowerMax;
-      const powerProduced = groups[i].totalPowerProduced;
-      const heatRate = groups[i].totalHeatRate;
-      const totalItems = groups[i].totalItems;
-      // Create a new div element for each JSON object
-      const div = document.createElement('div');
+    groups.forEach(function (group, index) {
+      // Create a button element for the tab link
+      var link = document.createElement('button');
+      link.setAttribute('class', 'tab-link');
+      link.setAttribute('data-group', 'Structure ' + (index + 1));
+      link.textContent = 'Structure ' + (index + 1);
+      tabLinks.appendChild(link);
 
-      // Set the values in the HTML template using the element IDs
-      div.innerHTML = `<div class="groups">Structure: <span id="group">${group}</span><br />
-                    Contains: <span id="contains">${groups[i].totalItems} stations.</span><br />
-                    Stability. Cost:<span id="stability-cost">${stabilityCost}</span>, Conferred: <span id="stability-conferred">${stabilityConferred}</span> <strong>(This is doesn't account for struct or artifacts!)</strong> <br />
-                    Power Consumption. Idle: <span id="power-consumption-idle">${powerIdle}</span>, Max:<span id="power-consumption-max">${powerMax}</span>, Produced:<span id="power-produced">${powerProduced}</span><br />
-                    Heat Rate: <span id="heat-rate">${heatRate}</span></div>`
+      // Create a div element for the tab pane
+      var pane = document.createElement('div');
+      pane.setAttribute('class', 'tab-pane');
+      pane.setAttribute('data-group', 'Structure ' + (index + 1));
+      pane.innerHTML = `
+    <div class="groups">Structure: <span id="group">Structure ${index + 1}</span><br />
+      Contains: <span id="contains">${group.totalItems} stations.</span><br />
+      Stability. Cost: <span id="stability-cost">${group.totalStabilityCost}</span>, Conferred: <span id="stability-conferred">${group.totalStabilityConferred}</span> <strong>(This does not account for struct or artifacts!)</strong><br />
+      Power Consumption. Idle: <span id="power-consumption-idle">${group.totalPowerIdle}</span>, Max: <span id="power-consumption-max">${group.totalPowerMax}</span>, Produced: <span id="power-produced">${group.totalPowerProduced}</span><br />
+      Heat Rate: <span id="heat-rate">${group.totalHeatRate}</span>
+    </div>`;
+      tabContent.appendChild(pane);
+    });
 
-      // Append the new div element to the tooltip div element in the HTML template
-      templateDiv.appendChild(div);
-    }
+    // Get all tab links and tab panes
+    var tabLinks = document.querySelectorAll('.tab-link');
+    var tabPanes = document.querySelectorAll('.tab-pane');
+    // Loop through each tab link and add a click event listener
+    tabLinks.forEach(function (link) {
+      link.addEventListener('click', function () {
+        // Get the data-group value of the clicked tab link
+        var group = link.getAttribute('data-group');
+
+        // Loop through each tab pane and hide/show them as necessary
+        tabPanes.forEach(function (pane) {
+          if (pane.getAttribute('data-group') === group) {
+            pane.classList.add('active');
+          } else {
+            pane.classList.remove('active');
+          }
+        });
+
+        // Loop through each tab link and set/remove the active class as necessary
+        tabLinks.forEach(function (otherLink) {
+          if (otherLink === link) {
+            otherLink.classList.add('active');
+          } else {
+            otherLink.classList.remove('active');
+          }
+        });
+      });
+    });
+
+    tabLinks[0].click();
+
 
 
   </script>
