@@ -4,21 +4,34 @@
 <head>
   <title>Blueprint Drawing thingy</title>
   <style>
+    .container {
+      width: 90%;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
     canvas {
       border: 1px solid black;
+
     }
 
     .canvas-container {
-      position: relative;
       width: 100%;
-      padding-bottom: 56.25%;
-      /* Set the aspect ratio to 16:9 */
+      text-align: center;
     }
 
     .canvas-container canvas {
-      position: absolute;
+      /* position: absolute; */
       top: 0;
       left: 0;
+      margin: 0 auto;
+    }
+
+    #blueprint-textbox {
+      resize: none;
+      outline: none;
+      width: 100%;
+
     }
 
     #tooltip {
@@ -29,6 +42,9 @@
       font-family: Arial, sans-serif;
       font-size: 14px;
       color: #333;
+      overflow-y: scroll;
+      margin-bottom: 20px;
+
     }
 
     .groups {
@@ -53,22 +69,22 @@
 </head>
 
 <body>
-  <form action="" method="get">
-    <label for="blueprint-textbox">Blueprint:</label><br>
-    <textarea id="blueprint-textbox" rows="10" cols="50" name="bp"></textarea><br>
-    <button id="draw-button" type="submit">Draw Blueprint</button>
-  </form>
-  <br>
-  <div id="tooltip">
-    <!-- Group: <span id="group"></span><br />
-    Stability. Cost:<span id="stability-cost"></span>, Conferred: <span id="stability-conferred"></span><br />
-    Power Consumption. Idle: <span id="power-consumption-idle"></span>, Max:<span id="power-consumption-max"></span>, Produced:<span id="power-produced"></span><br />
-    Heat Rate: <span id="heat-rate"></span> -->
-  </div>
-  <div class="canvas-container">
-    <canvas id="myCanvas" width="500" height="500"></canvas>
-  </div>
+  <div class="container">
+    <form action="" method="get">
+      <label for="blueprint-textbox">Blueprint:</label><br>
+      <textarea id="blueprint-textbox" rows="10" cols="50" name="bp"></textarea><br>
+      <button id="draw-button" type="submit">Draw Blueprint</button>
+    </form>
 
+    <br>
+    <div>
+      <div id="tooltip">
+      </div>
+      <div class="canvas-container">
+        <canvas id="myCanvas" width="500" height="500"></canvas>
+      </div>
+    </div>
+  </div>
 
   <script type="module">
     import { decode, drawBoxes, readItems, readData } from "./main.js";
@@ -89,7 +105,16 @@
     const items = readItems(blueprint);
     const itemData = await readData("itemData.json")
 
-    const view = drawBoxes(canvas, items, itemData);
+    // Size of HTML document (same as pageHeight/pageWidth in screenshot).
+    var win = window,
+      doc = document,
+      docElem = doc.documentElement,
+      body = doc.getElementsByTagName('body')[0],
+      h = win.innerWidth || docElem.clientWidth || body.clientWidth,
+      w = win.innerHeight || docElem.clientHeight || body.clientHeight;
+
+
+    const view = drawBoxes(canvas, items, itemData, h, w);
     canvas.addEventListener("mousemove", view.mouseMoveEventHandler);
     const templateDiv = document.querySelector('#tooltip');
 
@@ -104,8 +129,6 @@
       const powerProduced = groups[i].totalPowerProduced;
       const heatRate = groups[i].totalHeatRate;
       const totalItems = groups[i].totalItems;
-
-      console.log(groups[i])
       // Create a new div element for each JSON object
       const div = document.createElement('div');
 

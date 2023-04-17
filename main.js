@@ -398,7 +398,7 @@ const calculateTotals = (items, itemData) => {
 
 // Draw label
 
-function drawBoxes(canvas, items, itemData) {
+function drawBoxes(canvas, items, itemData, MAX_HEIGHT=1000, MAX_WIDTH=1000) {
 
     // Calculate the bounding box of the items
     const boundingBox = calculateBoundingBox(items);
@@ -413,10 +413,6 @@ function drawBoxes(canvas, items, itemData) {
     // Calculate the aspect ratios of the bounding box and the window
     const boundingBoxAspectRatio = boundingBoxWidth / boundingBoxHeight;
     const windowAspectRatio = windowWidth / windowHeight;
-
-    // Set maximum dimensions to limit the scaling factor
-    const MAX_WIDTH = 1000;
-    const MAX_HEIGHT = 800;
 
     // Calculate the scaling factor based on the aspect ratios and the maximum dimensions
     let scalingFactor = boundingBoxAspectRatio > windowAspectRatio

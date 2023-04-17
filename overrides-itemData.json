@@ -2,6 +2,12 @@
     "Advanced Mining Station": {
         "categories": ["basic", "inventory"]
     },
+    "Mining Station": {
+        "categories": ["basic", "inventory"]
+    },
+    "Junction": {
+        "categories": ["basic", "inventory"]
+    },
     "Antimatter Power Station": {
         "connections": 1,
         "connect":"basic"
@@ -15,6 +21,14 @@
         "connect":"Heat Exchanger"
     },
     "Solar Panel": {
+        "connections": 1,
+        "connect":"basic"
+    },
+    "Power Transmitter": {
+        "connections": 1,
+        "connect":"basic"
+    },
+    "Power Receiver": {
         "connections": 1,
         "connect":"basic"
     },
