@@ -38,6 +38,18 @@
     "Station Core": {
         "categories": ["basic", "inventory"]
     },
+    "Quantum Printer": {
+        "categories": ["basic", "inventory"]
+    },
+    "Advanced Assembler": {
+        "categories": ["basic", "inventory"]
+    },
+    "Atomic Printer": {
+        "categories": ["basic", "inventory"]
+    },
+    "Assembler": {
+        "categories": ["basic", "inventory"]
+    },
     "High Density Station Core": {
         "categories": ["basic", "inventory"]
     },

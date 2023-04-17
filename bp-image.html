@@ -19,8 +19,20 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
+    }
+
+    #tooltip {
+      z-index: 999;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 10px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .groups {
+      margin-bottom: 10px;
     }
   </style>
 
@@ -47,10 +59,11 @@
     <button id="draw-button" type="submit">Draw Blueprint</button>
   </form>
   <br>
-  <div>
-    <p>Stability. Cost:<span id="stability-cost"></span>, Conferred: <span id="stability-conferred"></span></p>
-    <p>Power Consumption. Idle: <span id="power-consumption-idle"></span>, Max:<span id="power-consumption-max"></span>, Produced:<span id="power-produced"></span></p>
-    <p>Heat Rate: <span id="heat-rate"></span></p>
+  <div id="tooltip">
+    <!-- Group: <span id="group"></span><br />
+    Stability. Cost:<span id="stability-cost"></span>, Conferred: <span id="stability-conferred"></span><br />
+    Power Consumption. Idle: <span id="power-consumption-idle"></span>, Max:<span id="power-consumption-max"></span>, Produced:<span id="power-produced"></span><br />
+    Heat Rate: <span id="heat-rate"></span> -->
   </div>
   <div class="canvas-container">
     <canvas id="myCanvas" width="500" height="500"></canvas>
@@ -76,45 +89,36 @@
     const items = readItems(blueprint);
     const itemData = await readData("itemData.json")
 
-
-    let totalStabilityCost = 0, totalPowerIdle = 0, totalPowerMax = 0, totalPowerProduced = 0, totalHeatRate = 0, totalStabilityConferred = 0;
-    items.forEach(box => {
-      let itemInfo = itemData.get(box);
-      if (!itemInfo) {
-        console.log("ERROR: No item info for " + box.itemName);
-      } else {
-        totalStabilityCost += itemInfo.stabilityCost;
-        totalStabilityConferred += itemInfo.stabilityConferred;
-        totalPowerIdle += itemInfo.powerConsumptionIdle;
-        totalPowerMax += itemInfo.powerConsumptionMax;
-        totalPowerProduced += itemInfo.powerProduction;
-        totalHeatRate += itemInfo.heatRate;
-
-      }
-    });
-    // Set the innerText values
-    stabilityCostElement.innerText = totalStabilityCost;
-    stabilityconferredElement.innerText = totalStabilityConferred;
-    powerConsumptionIdleElement.innerText = totalPowerIdle;
-    powerConsumptionMaxElement.innerText = totalPowerMax;
-    powerProducedElement.innerText = totalPowerProduced;
-    heatRateElement.innerText = totalHeatRate;
-
-
-
     const view = drawBoxes(canvas, items, itemData);
-
     canvas.addEventListener("mousemove", view.mouseMoveEventHandler);
+    const templateDiv = document.querySelector('#tooltip');
 
-    // drawButton.addEventListener('click', function() {
-    //     const bps = blueprintTextbox.value;
-    //     const d = decode(bps);
-    //     const items = d["Items"].map(item => get_rotated_object_info(item));
-    //     drawBoxes(canvas, items);
-    //   });
+    let groups = view.stationGroupTotals;
+    for (let i = 0; i < groups.length; i++) {
+      // Get the values from the JSON object
+      const group = i; // Set the group index as the loop index
+      const stabilityCost = groups[i].totalStabilityCost;
+      const stabilityConferred = groups[i].totalStabilityConferred;
+      const powerIdle = groups[i].totalPowerIdle;
+      const powerMax = groups[i].totalPowerMax;
+      const powerProduced = groups[i].totalPowerProduced;
+      const heatRate = groups[i].totalHeatRate;
+      const totalItems = groups[i].totalItems;
 
+      console.log(groups[i])
+      // Create a new div element for each JSON object
+      const div = document.createElement('div');
 
+      // Set the values in the HTML template using the element IDs
+      div.innerHTML = `<div class="groups">Structure: <span id="group">${group}</span><br />
+                    Contains: <span id="contains">${groups[i].totalItems} stations.</span><br />
+                    Stability. Cost:<span id="stability-cost">${stabilityCost}</span>, Conferred: <span id="stability-conferred">${stabilityConferred}</span> <strong>(This is doesn't account for struct or artifacts!)</strong> <br />
+                    Power Consumption. Idle: <span id="power-consumption-idle">${powerIdle}</span>, Max:<span id="power-consumption-max">${powerMax}</span>, Produced:<span id="power-produced">${powerProduced}</span><br />
+                    Heat Rate: <span id="heat-rate">${heatRate}</span></div>`
 
+      // Append the new div element to the tooltip div element in the HTML template
+      templateDiv.appendChild(div);
+    }
 
 
   </script>
