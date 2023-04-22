@@ -168,7 +168,7 @@
     const blueprint = decode(bps);
     const items = readItems(blueprint);
     const itemData = await readData("itemData.json")
-
+    
     // Size of HTML document (same as pageHeight/pageWidth in screenshot).
     var win = window,
       doc = document,
@@ -181,6 +181,7 @@
 
     const view = drawBoxes(canvas, items, itemData, w, h*.85);
     canvas.addEventListener("mousemove", view.mouseMoveEventHandler);
+
 
     // Get the tab links and tab content elements
     var tabLinks = document.querySelector('.tab-links');
@@ -238,8 +239,13 @@
     });
 
     tabLinks[0].click();
-
-
+    // This is how you can return an image of the canvas with the images rendered.  Needed for the bot.
+    // await view.promise;
+    // const dataURL = canvas.toDataURL("image/png");
+    // body = document.body;
+    // const img = new Image();
+    // img.src = dataURL;
+    // body.appendChild(img);
 
   </script>
 

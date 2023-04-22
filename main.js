@@ -257,30 +257,33 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
 
 
     const addImageAndLabel = item => {
-        let x = (item.left - left) * scalingFactor;
-        let y = (item.top - top) * scalingFactor;
-        let width = item.width * scalingFactor;
-        let height = item.height * scalingFactor;
-
-        const img = new Image();
-        img.src = `Icons/${item.itemName.replace(/\s/g, '')}.png`;
-        img.onload = () => {
-            const imgAspect = img.width / img.height;
-            const boxAspect = width / height;
-            let imgWidth = width;
-            let imgHeight = height;
-            if (imgAspect > boxAspect) {
-                imgWidth = Math.min(width, img.width);
-                imgHeight = imgWidth / imgAspect;
-            } else {
-                imgHeight = Math.min(height, img.height);
-                imgWidth = imgHeight * imgAspect;
-            }
-            const imgX = x + (width - imgWidth) / 2;
-            const imgY = y + (height - imgHeight) / 2;
-            ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
-            drawLabel(item);
-        };
+        return new Promise(resolve => {
+            let x = (item.left - left) * scalingFactor;
+            let y = (item.top - top) * scalingFactor;
+            let width = item.width * scalingFactor;
+            let height = item.height * scalingFactor;
+    
+            const img = new Image();
+            img.src = `Icons/${item.itemName.replace(/\s/g, '')}.png`;
+            img.onload = () => {
+                const imgAspect = img.width / img.height;
+                const boxAspect = width / height;
+                let imgWidth = width;
+                let imgHeight = height;
+                if (imgAspect > boxAspect) {
+                    imgWidth = Math.min(width, img.width);
+                    imgHeight = imgWidth / imgAspect;
+                } else {
+                    imgHeight = Math.min(height, img.height);
+                    imgWidth = imgHeight * imgAspect;
+                }
+                const imgX = x + (width - imgWidth) / 2;
+                const imgY = y + (height - imgHeight) / 2;
+                ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+                drawLabel(item);
+                resolve();
+            };
+        });
     }
 
 
@@ -288,9 +291,12 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
 
 
     const render = (item, state) => {
-        drawBox(item, state);
-        addImageAndLabel(item);
-
+        return new Promise(resolve => {
+            drawBox(item, state);
+            addImageAndLabel(item).then(() => {
+                resolve();
+            });
+        });
     };
 
     const renderAdjacent = (item1, item2, direction) => {
@@ -440,9 +446,7 @@ function drawBoxes(canvas, items, itemData, MAX_HEIGHT=1000, MAX_WIDTH=1000) {
 
     const view = makeRender(canvas, itemData, boundingBox, scalingFactor);
 
-    for (let item of items) {
-        view.render(item);
-    }
+    const promises = items.map(item => view.render(item));
 
     const itemsWithId = items.map((item, index) => {
         return {
@@ -501,7 +505,8 @@ function drawBoxes(canvas, items, itemData, MAX_HEIGHT=1000, MAX_WIDTH=1000) {
 
     return {
         "mouseMoveEventHandler": event => view.mouseMoveEventHandler(event, items),
-        "stationGroupTotals": stationGroups.map(group => calculateTotals(group, itemData))
+        "stationGroupTotals": stationGroups.map(group => calculateTotals(group, itemData)),
+        "promise": Promise.all(promises)
     }
 
 }
