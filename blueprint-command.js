@@ -2,11 +2,12 @@ import { drawBoxes, readItems, readData } from "./main.js";
 import { decode } from "./util.js";
 import { createCanvas, CanvasRenderingContext2D } from 'canvas';
 import { polyfillPath2D } from "path2d-polyfill";
+import { SlashCommandBuilder, EmbedBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } from 'discord.js';
+import config from './bot-config.cjs';
+const { CUTTLY_KEY } = config;
 
 global.CanvasRenderingContext2D = CanvasRenderingContext2D;
 polyfillPath2D(global);
-
-import { SlashCommandBuilder, EmbedBuilder, AttachmentBuilder } from 'discord.js';
 
 const handler = async interaction => {
     const blueprintString = interaction.options.getString('blueprint_string');
@@ -20,7 +21,6 @@ const handler = async interaction => {
     const itemData = await readData("itemData.json")
     await drawBoxes(canvas, items, itemData);
 
-    console.log('<img src="' + canvas.toDataURL() + '" />')
     const img = new AttachmentBuilder(canvas.toBuffer())
         .setName("image.png");
         
@@ -29,7 +29,24 @@ const handler = async interaction => {
         .setTitle('Some blueprint')
         .setImage('attachment://image.png')
 
-    await interaction.reply({ embeds: [response], files: [img] });
+    const shortApiCall = `https://cutt.ly/api/api.php?key=${CUTTLY_KEY}&short=${encodeURIComponent("https://jmerkow.github.io/FinalFactoryHelpers/bp-image.html?bp="+blueprintString)}&noTitle=1`
+    console.log(shortApiCall);
+    const link = await fetch(shortApiCall)
+        .then(response => response.json())
+        .then(j => {
+            console.log(j);
+            return j.url.shortLink;
+        });
+
+    const button = new ButtonBuilder()
+        .setLabel('blueprint string')
+        .setURL(link)
+        .setStyle(ButtonStyle.Link);
+
+    const row = new ActionRowBuilder()
+        .addComponents(button);
+
+    await interaction.reply({ embeds: [response], files: [img], components: [row] });
 }
 
 
