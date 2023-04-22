@@ -1,8 +1,4 @@
-import { Base64 } from 'https://cdn.jsdelivr.net/npm/js-base64@3.7.5/base64.mjs';
-import 'https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js';
-
-
-const DEFLATE_OPTIONS = { to: 'string' };
+import { loadImage, loadJson, windowSize, path2D } from "./util.js";
 
 const BACKGROUND_DEFAULT = "black";
 const BACKGROUND_HIGHLIGHT = "#414a4c";
@@ -29,7 +25,6 @@ const MARGIN_ITEM = UNCONNECT_SIZE + WIDTH_STROKE - 0.02;
 
 const HIGHLIGHTED = 1;
 
-
 const rotate = (sides, direction) => {
     const v = sides << (direction % 4);
     return (v & 15) + ((v & ~15) >> 4);
@@ -37,17 +32,12 @@ const rotate = (sides, direction) => {
 
 const rotate180 = sides => rotate(sides, 2);
 
-
-const decode = bps => JSON.parse(pako.inflate(Base64.toUint8Array(bps.substring(16)), DEFLATE_OPTIONS));
-
 const readItems = j => j["Items"].map(getInfo);
 
 const readData = async url => {
-    const itemData = await fetch(url)
-        .then(response => response.json())
+    const itemData = await loadJson(url)
         .then(jsonData => Object.fromEntries(jsonData.items.map(item => [item.name, item])));
-    const itemOverrides = await fetch("overrides-" + url)
-        .then(response => response.json())
+    const itemOverrides = await loadJson("overrides-" + url);
     for (const name in itemOverrides) {
         Object.assign(itemData[name], itemOverrides[name]);
     }
@@ -185,7 +175,7 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
     const boxes = [];
 
     const drawRect = (rtop, rbottom, rleft, rright, fill, stroke) => {
-        const box = new Path2D();
+        const box = new path2D();
         box.rect(
             (rleft - left) * scalingFactor,
             (rtop - top) * scalingFactor,
@@ -256,47 +246,33 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
     }
 
 
-    const addImageAndLabel = item => {
-        return new Promise(resolve => {
-            let x = (item.left - left) * scalingFactor;
-            let y = (item.top - top) * scalingFactor;
-            let width = item.width * scalingFactor;
-            let height = item.height * scalingFactor;
-    
-            const img = new Image();
-            img.src = `Icons/${item.itemName.replace(/\s/g, '')}.png`;
-            img.onload = () => {
-                const imgAspect = img.width / img.height;
-                const boxAspect = width / height;
-                let imgWidth = width;
-                let imgHeight = height;
-                if (imgAspect > boxAspect) {
-                    imgWidth = Math.min(width, img.width);
-                    imgHeight = imgWidth / imgAspect;
-                } else {
-                    imgHeight = Math.min(height, img.height);
-                    imgWidth = imgHeight * imgAspect;
-                }
-                const imgX = x + (width - imgWidth) / 2;
-                const imgY = y + (height - imgHeight) / 2;
-                ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
-                drawLabel(item);
-                resolve();
-            };
-        });
+    const drawImage = async item => {
+        let x = (item.left - left) * scalingFactor;
+        let y = (item.top - top) * scalingFactor;
+        let width = item.width * scalingFactor;
+        let height = item.height * scalingFactor;
+
+        const img = await loadImage(`Icons/${item.itemName.replace(/\s/g, '')}.png`);
+        const imgAspect = img.width / img.height;
+        const boxAspect = width / height;
+        let imgWidth = width;
+        let imgHeight = height;
+        if (imgAspect > boxAspect) {
+            imgWidth = Math.min(width, img.width);
+            imgHeight = imgWidth / imgAspect;
+        } else {
+            imgHeight = Math.min(height, img.height);
+            imgWidth = imgHeight * imgAspect;
+        }
+        const imgX = x + (width - imgWidth) / 2;
+        const imgY = y + (height - imgHeight) / 2;
+        ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
     }
 
-
-
-
-
-    const render = (item, state) => {
-        return new Promise(resolve => {
-            drawBox(item, state);
-            addImageAndLabel(item).then(() => {
-                resolve();
-            });
-        });
+    const render = async (item, state) => {
+        drawBox(item, state);
+        await drawImage(item);
+        drawLabel(item);
     };
 
     const renderAdjacent = (item1, item2, direction) => {
@@ -318,7 +294,6 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
 
 
     const findBox = (x, y, items) => {
-        // for (let box of boxes) {
         for (let i = 0; i < boxes.length; i++) {
             let box = boxes[i]
             if (ctx.isPointInPath(box, x, y)) {
@@ -339,7 +314,6 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
         }
         highlighed = item;
         if (highlighed) {
-            // console.log(highlighed);
             render(highlighed, HIGHLIGHTED)
         }
     }
@@ -404,7 +378,7 @@ const calculateTotals = (items, itemData) => {
 
 // Draw label
 
-function drawBoxes(canvas, items, itemData, MAX_HEIGHT=1000, MAX_WIDTH=1000) {
+async function drawBoxes(canvas, items, itemData, MAX_HEIGHT=1000, MAX_WIDTH=1000) {
 
     // Calculate the bounding box of the items
     const boundingBox = calculateBoundingBox(items);
@@ -413,8 +387,7 @@ function drawBoxes(canvas, items, itemData, MAX_HEIGHT=1000, MAX_WIDTH=1000) {
     const { left, right, top, bottom } = boundingBox;
     const boundingBoxWidth = right - left;
     const boundingBoxHeight = bottom - top;
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
+    const [windowWidth, windowHeight] = windowSize;
 
     // Calculate the aspect ratios of the bounding box and the window
     const boundingBoxAspectRatio = boundingBoxWidth / boundingBoxHeight;
@@ -446,7 +419,9 @@ function drawBoxes(canvas, items, itemData, MAX_HEIGHT=1000, MAX_WIDTH=1000) {
 
     const view = makeRender(canvas, itemData, boundingBox, scalingFactor);
 
-    const promises = items.map(item => view.render(item));
+    for (let item of items) {
+        await view.render(item);
+    }
 
     const itemsWithId = items.map((item, index) => {
         return {
@@ -505,11 +480,10 @@ function drawBoxes(canvas, items, itemData, MAX_HEIGHT=1000, MAX_WIDTH=1000) {
 
     return {
         "mouseMoveEventHandler": event => view.mouseMoveEventHandler(event, items),
-        "stationGroupTotals": stationGroups.map(group => calculateTotals(group, itemData)),
-        "promise": Promise.all(promises)
+        "stationGroupTotals": stationGroups.map(group => calculateTotals(group, itemData))
     }
 
 }
 
 
-export { decode, drawBoxes, readItems, readData }
+export { drawBoxes, readItems, readData }
