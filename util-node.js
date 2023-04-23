@@ -5,10 +5,7 @@ import { loadImage } from "canvas";
 
 const DEFLATE_OPTIONS = { to: 'string' };
 
-const decode = bps => {
-    const cleaned = bps.substring(16).replace(" ", "+");
-    JSON.parse(inflate(Buffer.from(cleaned, 'base64'), DEFLATE_OPTIONS));
-}
+const decode = bps => JSON.parse(inflate(Buffer.from(bps.substring(16), "base64"), DEFLATE_OPTIONS));
 
 const loadJson = f => {
     console.log(f);

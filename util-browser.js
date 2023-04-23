@@ -3,7 +3,6 @@ import 'https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako_inflate.es5.js';
 
 const DEFLATE_OPTIONS = { to: 'string' };
 
-
 const decode = bps => JSON.parse(pako.inflate(Base64.toUint8Array(bps.substring(16)), DEFLATE_OPTIONS));
 
 const loadImage = filename => {

@@ -3,8 +3,7 @@ import { decode } from "./util.js";
 import { createCanvas, CanvasRenderingContext2D } from 'canvas';
 import { polyfillPath2D } from "path2d-polyfill";
 import { SlashCommandBuilder, EmbedBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } from 'discord.js';
-import config from './bot-config.cjs';
-const { CUTTLY_KEY } = config;
+import { uploadBlueprint } from './azure-helper.cjs';
 
 global.CanvasRenderingContext2D = CanvasRenderingContext2D;
 polyfillPath2D(global);
@@ -23,23 +22,30 @@ const handler = async interaction => {
 
     const img = new AttachmentBuilder(canvas.toBuffer())
         .setName("image.png");
-        
+
+    const link = await uploadBlueprint(blueprintString);
+
+    console.log(link);
+
     const response = new EmbedBuilder()
         .setColor(0x0099FF)
         .setTitle('Some blueprint')
         .setImage('attachment://image.png')
+        // .addFields({ name: 'view blueprint', value: link })
 
-    const shortApiCall = `https://cutt.ly/api/api.php?key=${CUTTLY_KEY}&short=${encodeURIComponent("https://jmerkow.github.io/FinalFactoryHelpers/bp-image.html?bp="+blueprintString)}&noTitle=1`
-    console.log(shortApiCall);
-    const link = await fetch(shortApiCall)
-        .then(response => response.json())
-        .then(j => {
-            console.log(j);
-            return j.url.shortLink;
-        });
+
+
+    // const shortApiCall = `https://cutt.ly/api/api.php?key=${CUTTLY_KEY}&short=${encodeURIComponent("https://jmerkow.github.io/FinalFactoryHelpers/bp-image.html?bp="+encodeURIComponent(blueprintString))}&noTitle=1`
+    // console.log(shortApiCall);
+    // const link = await fetch(shortApiCall)
+    //     .then(response => response.json())
+    //     .then(j => {
+    //         console.log(j);
+    //         return j.url.shortLink;
+    //     });
 
     const button = new ButtonBuilder()
-        .setLabel('blueprint string')
+        .setLabel('view blueprint')
         .setURL(link)
         .setStyle(ButtonStyle.Link);
 
