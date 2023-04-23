@@ -1,4 +1,6 @@
-import { loadImage, loadJson, windowSize, path2D } from "./util.js";
+import { loadImage, windowSize, path2D } from "./util.js";
+import { dir } from "./constants.js"
+import { adjacent, connected } from "./items.js";
 
 const BACKGROUND_DEFAULT = "black";
 const BACKGROUND_HIGHLIGHT = "#414a4c";
@@ -11,152 +13,47 @@ const WIDTH_STROKE = .03;
 const STOKE_DEFAULT = "black";
 
 
-const UP = 0b1;
-const RIGHT = 0b10;
-const DOWN = 0b100;
-const LEFT = 0b1000;
-
-const ANY_DIRECTION = UP + RIGHT + DOWN + LEFT;
-const HORIZONTAL = RIGHT + LEFT;
-const VERTICAL = UP + DOWN;
 
 const UNCONNECT_SIZE = 0.04;
 const MARGIN_ITEM = UNCONNECT_SIZE + WIDTH_STROKE - 0.02;
 
 const HIGHLIGHTED = 1;
 
-const rotate = (sides, direction) => {
-    const v = sides << (direction % 4);
-    return (v & 15) + ((v & ~15) >> 4);
-}
 
-const rotate180 = sides => rotate(sides, 2);
+// const HFLIP_TRANSFORM = item => ({
+//     width: item.width,
+//     height: item.height,
+//     direction: hflip(item.direction),
+//     top: item.top,
+//     bottom: item.bottom,
+//     left: -item.left,
+//     right: -item.right,
+//     itemName: item.itemName
+// });
 
-const readItems = j => j["Items"].map(getInfo);
+// const CLOCKWISE_TRANSFORM = item => ({
+//     width: item.height,
+//     height: item.width,
+//     direction: rotate(item.direction, 1),
+//     top: -item.left,
+//     bottom: -item.right,
+//     left: -item.top,
+//     right: -item.bottom,
+//     itemName: item.itemName
+// });
 
-const readData = async url => {
-    const itemData = await loadJson(url)
-        .then(jsonData => Object.fromEntries(jsonData.items.map(item => [item.name, item])));
-    const itemOverrides = await loadJson("overrides-" + url);
-    for (const name in itemOverrides) {
-        Object.assign(itemData[name], itemOverrides[name]);
-    }
-
-    const get = item => itemData[item.itemName];
-
-    const connections = item => {
-        const data = get(item);
-        return rotate(data.connections ?? 0, item.direction);
-    }
-
-    const compatable = (value, name, categories) => (value == name) || categories.includes(value);
-
-    const facing = item => rotate(UP, item.direction);
-
-    const getMask = (item, slots, direction) => {
-        switch (rotate(direction, 4 - item.direction)) {
-            case UP:
-                return slots[0];
-            case RIGHT:
-                return slots[2];
-            case DOWN:
-                return slots[4];
-            case LEFT:
-                return slots[6];
-        }
-        console.log("error")
-    }
-
-    const accessible = (item1, item2, direction) => {
-        const { slots = undefined } = get(item2);
-        if (!slots) {
-            return true;
-        }
-
-        // TODO update for 64 bits
-        const match = (direction & VERTICAL)
-            ? (((1 << (item1.right - item1.left)) - 1) << (item1.left - item2.left))
-            : (((1 << (item1.bottom - item1.top)) - 1) << (item1.top - item2.top));
-        const slotMask = getMask(item2, slots, direction);
-        console.log(slotMask + ":" + match); 0
-        return (slotMask & match) == match;
-    }
-
-    const connects = (item1, item2, direction) => {
-        const { connect, extend, chain, mate } = get(item1);
-        const categories = get(item2).categories ?? [];
-        if (compatable(connect, item2.itemName, categories)) {
-            return accessible(item1, item2, direction);
-        }
-        if (compatable(extend, item2.itemName, categories)) {
-            return direction & connections(item2);
-        }
-        if (compatable(chain, item2.itemName, categories)) {
-            return facing(item1) != rotate180(facing(item2));
-        }
-        if (compatable(mate, item2.itemName, categories)) {
-            return connections(item1) == rotate180(facing(item2));
-        }
-        return false;
-    }
-
-    const itemCategories = [...new Set(Object.values(itemData).map(obj => obj.itemCategory))];
-
-    return { get, connections, connects, itemCategories, itemData };
-}
-
-const adjacent = (item1, item2) => {
-    if (item1.top == item2.bottom) {
-        if ((item1.left - item2.left) * (item1.right - item2.right) <= 0) {
-            return UP;
-        }
-    } else if (item1.bottom == item2.top) {
-        if ((item1.left - item2.left) * (item1.right - item2.right) <= 0) {
-            return DOWN;
-        }
-    } else if (item1.left == item2.right) {
-        if ((item1.top - item2.top) * (item1.bottom - item2.bottom) <= 0) {
-            return LEFT;
-        }
-    } else if (item1.right == item2.left) {
-        if ((item1.top - item2.top) * (item1.bottom - item2.bottom) <= 0) {
-            return RIGHT;
-        }
-    }
-    return 0;
-}
-
-const connected = (item1, item2, direction, itemData) => {
-    const connections1 = itemData.connections(item1);
-    if ((connections1 & direction) && itemData.connects(item1, item2, direction)) {
-        return true;
-    }
-    const connections2 = itemData.connections(item2);
-    const reversed = rotate180(direction);
-    if ((connections2 & reversed) && itemData.connects(item2, item1, reversed)) {
-        return true;
-    }
-    return false;
-}
+// const COUNTERCLOCKWISE_TRANSFORM = item => ({
+//     width: item.height,
+//     height: item.width,
+//     direction: rotate(item.direction, 1),
+//     top: item.right,
+//     bottom: item.left,
+//     left: item.bottom,
+//     right: item.top,
+//     itemName: item.itemName
+// });
 
 
-const getInfo = obj => {
-    const center_x = obj['OriginalPlacedPosition']['x'] / 10;
-    const center_y = obj['OriginalPlacedPosition']['z'] / 10;
-    const width = obj['Width'];
-    const height = obj['Length'];
-
-    return {
-        width,
-        height,
-        direction: obj['CurrentDirection'],
-        top: -Math.round(center_y + height / 2),
-        bottom: -Math.round(center_y - height / 2),
-        left: Math.round(center_x - width / 2),
-        right: Math.round(center_x + width / 2),
-        itemName: obj['ItemName']
-    };
-}
 
 
 const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
@@ -201,16 +98,16 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
         const connections = itemData.connections(item);
         const center = (item.left + item.right) / 2;
         const middle = (item.top + item.bottom) / 2;
-        if (connections & UP) {
+        if (connections & dir.UP) {
             drawRect(item.top, item.top + UNCONNECT_SIZE, center - UNCONNECT_SIZE, center + UNCONNECT_SIZE, NO_CONNECT_BACKGROUND);
         }
-        if (connections & DOWN) {
+        if (connections & dir.DOWN) {
             drawRect(item.bottom - +UNCONNECT_SIZE, item.bottom, center - UNCONNECT_SIZE, center + UNCONNECT_SIZE, NO_CONNECT_BACKGROUND);
         }
-        if (connections & LEFT) {
+        if (connections & dir.LEFT) {
             drawRect(middle - UNCONNECT_SIZE, middle + UNCONNECT_SIZE, item.left, item.left + UNCONNECT_SIZE, NO_CONNECT_BACKGROUND);
         }
-        if (connections & RIGHT) {
+        if (connections & dir.RIGHT) {
             drawRect(middle - UNCONNECT_SIZE, middle + UNCONNECT_SIZE, item.right - UNCONNECT_SIZE, item.right, NO_CONNECT_BACKGROUND);
         }
     }
@@ -277,16 +174,16 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
 
     const renderAdjacent = (item1, item2, direction) => {
         switch (direction) {
-            case (UP):
+            case (dir.UP):
                 drawRect(item1.top - UNCONNECT_SIZE, item1.top + UNCONNECT_SIZE, Math.max(item1.left, item2.left) + UNCONNECT_SIZE, Math.min(item1.right, item2.right) - UNCONNECT_SIZE, CONNECT_BACKGROUND)
                 break;
-            case (LEFT):
+            case (dir.LEFT):
                 drawRect(Math.max(item1.top, item2.top) + UNCONNECT_SIZE, Math.min(item1.bottom, item2.bottom) - UNCONNECT_SIZE, item1.left - UNCONNECT_SIZE, item1.left + UNCONNECT_SIZE, CONNECT_BACKGROUND)
                 break;
-            case (DOWN):
+            case (dir.DOWN):
                 drawRect(item1.bottom - UNCONNECT_SIZE, item1.bottom + UNCONNECT_SIZE, Math.max(item1.left, item2.left) + UNCONNECT_SIZE, Math.min(item1.right, item2.right) - UNCONNECT_SIZE, CONNECT_BACKGROUND)
                 break;
-            case (RIGHT):
+            case (dir.RIGHT):
                 drawRect(Math.max(item1.top, item2.top) + UNCONNECT_SIZE, Math.min(item1.bottom, item2.bottom) - UNCONNECT_SIZE, item1.right - UNCONNECT_SIZE, item1.right + UNCONNECT_SIZE, CONNECT_BACKGROUND)
                 break;
         }
@@ -476,6 +373,7 @@ async function drawBoxes(canvas, items, itemData, MAX_HEIGHT=1000, MAX_WIDTH=100
     }
 
     let allGroups = extractGroups(parent);
+    console.log(allGroups);
     let stationGroups = allGroups.map(group => group.filter(item => itemData.get(item).itemCategory === "Stations")).filter(group => group.length > 0);
 
     return {
@@ -486,4 +384,4 @@ async function drawBoxes(canvas, items, itemData, MAX_HEIGHT=1000, MAX_WIDTH=100
 }
 
 
-export { drawBoxes, readItems, readData }
+export { drawBoxes }

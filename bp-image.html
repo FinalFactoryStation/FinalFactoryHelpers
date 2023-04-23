@@ -151,7 +151,9 @@
   </div>
 
   <script type="module">
-    import { drawBoxes, readItems, readData } from "./main.js";
+    import { drawBoxes } from "./main.js";
+    import { readItems, readData } from "./items.js";
+
     import { decode } from "./util.js";
 
 
@@ -180,7 +182,16 @@
 
     console.log(`${h} x ${w}`);
 
-    const view = drawBoxes(canvas, items, itemData, w, h*.85);
+    const view = await drawBoxes(canvas, items, itemData, w, h*.85);
+    // view.addEventListener("mouseover", e => {
+    //   console.log(e.item);
+    //   console.log(e.station);
+    // });
+    // view.addEventListener("mouseout", e => {
+    //   console.log(e.item);
+    //   console.log(e.station);
+    // });
+
     canvas.addEventListener("mousemove", view.mouseMoveEventHandler);
 
 

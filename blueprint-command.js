@@ -1,4 +1,5 @@
-import { drawBoxes, readItems, readData } from "./main.js";
+import { drawBoxes, } from "./main.js";
+import { readItems, readData } from "./items.js";
 import { decode } from "./util.js";
 import { createCanvas, CanvasRenderingContext2D } from 'canvas';
 import { polyfillPath2D } from "path2d-polyfill";
