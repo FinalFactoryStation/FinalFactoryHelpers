@@ -8,7 +8,29 @@ const rotate = (sides, direction) => {
 
 const rotate180 = sides => rotate(sides, 2);
 
-const readItems = j => j["Items"].map(getInfo);
+const getInfo = (rawItem, index) => {
+    const center_x = rawItem['OriginalPlacedPosition']['x'] / 10;
+    const center_y = rawItem['OriginalPlacedPosition']['z'] / 10;
+    const width = rawItem['Width'];
+    const height = rawItem['Length'];
+
+    return {
+        width,
+        height,
+        direction: rawItem['CurrentDirection'],
+        top: -Math.round(center_y + height / 2),
+        bottom: -Math.round(center_y - height / 2),
+        left: Math.round(center_x - width / 2),
+        right: Math.round(center_x + width / 2),
+        itemName: rawItem['ItemName'],
+        index
+    };
+}
+
+const readItems = j => {
+    let index = 0;
+    return j["Items"].map(rawItem => getInfo(rawItem, index++))
+};
 
 const readData = async url => {
     const itemData = await loadJson(url)
@@ -113,25 +135,6 @@ const connected = (item1, item2, direction, itemData) => {
         return true;
     }
     return false;
-}
-
-
-const getInfo = obj => {
-    const center_x = obj['OriginalPlacedPosition']['x'] / 10;
-    const center_y = obj['OriginalPlacedPosition']['z'] / 10;
-    const width = obj['Width'];
-    const height = obj['Length'];
-
-    return {
-        width,
-        height,
-        direction: obj['CurrentDirection'],
-        top: -Math.round(center_y + height / 2),
-        bottom: -Math.round(center_y - height / 2),
-        left: Math.round(center_x - width / 2),
-        right: Math.round(center_x + width / 2),
-        itemName: obj['ItemName']
-    };
 }
 
 export { rotate, rotate180, readItems, readData, adjacent, connected };
