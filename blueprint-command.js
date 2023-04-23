@@ -18,7 +18,7 @@ const handler = async interaction => {
     const canvas = createCanvas(500,500);
     const blueprint = decode(blueprintString);
     const items = readItems(blueprint);
-    const itemData = await readData("itemData.json")
+    const itemData = await readData()
     await drawBoxes(canvas, items, itemData);
 
     const img = new AttachmentBuilder(canvas.toBuffer())

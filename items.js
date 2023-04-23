@@ -1,5 +1,11 @@
 import { dir } from "./constants.js"
-import { loadJson } from "./util.js";
+import { loadItemData } from "./util.js";
+
+const blueprintReader = itemData => {
+
+}
+
+
 
 const rotate = (sides, direction) => {
     const v = sides << (direction % 4);
@@ -32,13 +38,8 @@ const readItems = j => {
     return j["Items"].map(rawItem => getInfo(rawItem, index++))
 };
 
-const readData = async url => {
-    const itemData = await loadJson(url)
-        .then(jsonData => Object.fromEntries(jsonData.items.map(item => [item.name, item])));
-    const itemOverrides = await loadJson("overrides-" + url);
-    for (const name in itemOverrides) {
-        Object.assign(itemData[name], itemOverrides[name]);
-    }
+const readData = async () => {
+    const itemData = await loadItemData()
 
     const get = item => itemData[item.itemName];
 

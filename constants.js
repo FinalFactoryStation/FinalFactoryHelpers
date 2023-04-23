@@ -37,10 +37,14 @@ const dir = {
     VERTICAL: 0b0101 // UP + DOWN
 }
 
+const sources = {
+    ITEMS_DATA_URL: "itemData.json",
+    OVERRIDES_URL: "overrides-itemData.json",
+}
 
 // const UNCONNECT_SIZE = 0.04;
 // const MARGIN_ITEM = UNCONNECT_SIZE + WIDTH_STROKE - 0.02;
 
 // const HIGHLIGHTED = 1;
 
-export { styles, dir }
+export { styles, dir, sources }

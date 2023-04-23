@@ -170,7 +170,7 @@
     const bps = queryParams.get('bp');
     const blueprint = decode(bps);
     const items = readItems(blueprint);
-    const itemData = await readData("itemData.json")
+    const itemData = await readData()
     
     // Size of HTML document (same as pageHeight/pageWidth in screenshot).
     var win = window,
