@@ -1,0 +1,22 @@
+{
+  "name": "finalfactoryhelpers",
+  "version": "0.0.1",
+  "description": "",
+  "type": "module",
+  "main": "bot.cjs",
+  "scripts": {
+    "start": "node bot.cjs",
+    "register": "node register-discord-commands.cjs",
+    "test": "node test.cjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "GPLV3",
+  "dependencies": {
+    "@azure/storage-blob": "^12.14.0",
+    "canvas": "^2.11.2",
+    "discord.js": "^14.9.0",
+    "pako": "^2.1.0",
+    "path2d-polyfill": "^2.0.1"
+  }
+}
