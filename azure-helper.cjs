@@ -20,15 +20,9 @@ async function createHash(str) {
 }
 
 async function makeJsonPUpload(blueprintString) {
-    return {
-        filename: (await createHash(blueprintString)) + '.jsonp',
-        content: ```
-            readBlueprint({
-                redirect: window.location.replace('https://jmerkow.github.io/FinalFactoryHelpers/bp-image.html?bp=${encodeURIComponent(blueprintString)}');
-            });
-        ```,
-        options: OPTIONS_TEXT_JAVASCRIPT
-    }
+    const filename = (await createHash(blueprintString)) + '.jsonp';
+    const content = `readBlueprint({redirect: window.location.replace('https://jmerkow.github.io/FinalFactoryHelpers/bp-image.html?bp=${encodeURIComponent(blueprintString)}')});`;
+    return { filename, content, options: OPTIONS_TEXT_JAVASCRIPT }
 }
 
 async function makeHtmlRedirectUpload(blueprintString) {
