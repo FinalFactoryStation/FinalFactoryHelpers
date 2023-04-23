@@ -1,5 +1,5 @@
 import { drawBoxes, } from "./main.js";
-import { readItems, readData } from "./items.js";
+import { Blueprint } from "./blueprint.js";
 import { decode } from "./util.js";
 import { createCanvas, CanvasRenderingContext2D } from 'canvas';
 import { polyfillPath2D } from "path2d-polyfill";
@@ -16,15 +16,13 @@ const handler = async interaction => {
     }
 
     const canvas = createCanvas(500,500);
-    const blueprint = decode(blueprintString);
-    const items = readItems(blueprint);
-    const itemData = await readData()
-    await drawBoxes(canvas, items, itemData);
+    const blueprint = Blueprint.create(blueprintString);
+    await drawBoxes(canvas, blueprint);
 
     const img = new AttachmentBuilder(canvas.toBuffer())
         .setName("image.png");
 
-    const link = await uploadBlueprint(blueprintString);
+    const link = await uploadBlueprint(blueprint.serialize());
 
     console.log(link);
 

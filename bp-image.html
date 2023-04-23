@@ -152,7 +152,7 @@
 
   <script type="module">
     import { drawBoxes } from "./main.js";
-    import { readItems, readData } from "./items.js";
+    import { Blueprint } from "./blueprint.js";
 
     import { decode } from "./util.js";
 
@@ -168,9 +168,7 @@
 
     const queryParams = new URLSearchParams(window.location.search);
     const bps = queryParams.get('bp');
-    const blueprint = decode(bps);
-    const items = readItems(blueprint);
-    const itemData = await readData()
+    const blueprint = await Blueprint.create(bps);
     
     // Size of HTML document (same as pageHeight/pageWidth in screenshot).
     var win = window,
@@ -182,7 +180,7 @@
 
     console.log(`${h} x ${w}`);
 
-    const view = await drawBoxes(canvas, items, itemData, w, h*.85);
+    const view = await drawBoxes(canvas, blueprint, w, h*.85);
     // view.addEventListener("mouseover", e => {
     //   console.log(e.item);
     //   console.log(e.station);
