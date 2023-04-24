@@ -57,6 +57,38 @@ const getMask = (item, slots, direction) => {
     console.log("error")
 }
 
+const adjacent = (item1, item2) => {
+    if (item1.top == item2.bottom) {
+        if ((item1.left - item2.left) * (item1.right - item2.right) <= 0) {
+            return dir.UP;
+        }
+    } else if (item1.bottom == item2.top) {
+        if ((item1.left - item2.left) * (item1.right - item2.right) <= 0) {
+            return dir.DOWN;
+        }
+    } else if (item1.left == item2.right) {
+        if ((item1.top - item2.top) * (item1.bottom - item2.bottom) <= 0) {
+            return dir.LEFT;
+        }
+    } else if (item1.right == item2.left) {
+        if ((item1.top - item2.top) * (item1.bottom - item2.bottom) <= 0) {
+            return dir.RIGHT;
+        }
+    }
+    return 0;
+}
+
+const connected = (item1, item2, direction) => {
+    if ((item1.connections & direction) && connects(item1, item2, direction)) {
+        return true;
+    }
+    const reversed = rotate180(direction);
+    if ((item2.connections & reversed) && connects(item2, item1, reversed)) {
+        return true;
+    }
+    return false;
+}
+
 const createItem = (rawItem, index, data) => {
     const center_x = rawItem['OriginalPlacedPosition']['x'] / 10;
     const center_y = rawItem['OriginalPlacedPosition']['z'] / 10;
@@ -79,6 +111,8 @@ const createItem = (rawItem, index, data) => {
     });
 }
 
+
+
 class Blueprint {
 
     static async create(blueprintString, itemData = undefined) {
@@ -88,40 +122,11 @@ class Blueprint {
         let index = 0;
         const json = decode(blueprintString);
         const items = json["Items"].map(rawItem => createItem(rawItem, index++, itemData[rawItem['ItemName']]))
+
         return new Blueprint(items, itemData, blueprintString);
     }
 
-    adjacent(item1, item2) {
-        if (item1.top == item2.bottom) {
-            if ((item1.left - item2.left) * (item1.right - item2.right) <= 0) {
-                return dir.UP;
-            }
-        } else if (item1.bottom == item2.top) {
-            if ((item1.left - item2.left) * (item1.right - item2.right) <= 0) {
-                return dir.DOWN;
-            }
-        } else if (item1.left == item2.right) {
-            if ((item1.top - item2.top) * (item1.bottom - item2.bottom) <= 0) {
-                return dir.LEFT;
-            }
-        } else if (item1.right == item2.left) {
-            if ((item1.top - item2.top) * (item1.bottom - item2.bottom) <= 0) {
-                return dir.RIGHT;
-            }
-        }
-        return 0;
-    }
-    
-    connected(item1, item2, direction) {
-        if ((item1.connections & direction) && connects(item1, item2, direction)) {
-            return true;
-        }
-        const reversed = rotate180(direction);
-        if ((item2.connections & reversed) && connects(item2, item1, reversed)) {
-            return true;
-        }
-        return false;
-    }
+
 
     serialize() {
         return this.blueprintString;
@@ -132,6 +137,35 @@ class Blueprint {
         this.itemData = itemData;
         this.itemCategories = [...new Set(Object.values(itemData).map(obj => obj.itemCategory))];
         this.blueprintString = blueprintString;
+
+        const queue = [...items]
+        this.itemConnections = Array.from({length: items.length}, () => new Set());
+        this.itemStations = Array.from(items, item => new Set([item]));
+        this.connections = []
+
+        while (queue.length) {
+            let item = queue.shift();
+            for (let other of queue) {
+                const direction = adjacent(item, other)
+                if (direction && connected(item, other, direction)) {
+                    this.connections.push({
+                        from: item, to: other, direction
+                    });
+                    this.itemConnections[item.index].add(other);
+                    this.itemConnections[other.index].add(item);
+                    const newStation = this.itemStations[item.index]
+                    const oldStation = this.itemStations[other.index]
+                    if (newStation !== oldStation) {
+                        for (let i of oldStation) {
+                            newStation.add(i);
+                            this.itemStations[i.index] = newStation;
+                        }
+                    }
+                }
+            }
+        }
+
+        this.stations = new Set(this.itemStations);
     }
 }
 

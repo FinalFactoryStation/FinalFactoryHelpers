@@ -246,16 +246,15 @@ const calculateTotals = (items, itemData) => {
         totalItems = 0;
 
     items.forEach(box => {
-        let itemInfo = itemData.get(box);
-        if (!itemInfo) {
+        if (!box.data) {
             console.log("ERROR: No item info for " + box.itemName);
         } else {
-            totalStabilityCost += itemInfo.stabilityCost;
-            totalStabilityConferred = Math.max(totalStabilityConferred, itemInfo.stabilityConferred + 15);
-            totalPowerIdle += itemInfo.powerConsumptionIdle;
-            totalPowerMax += itemInfo.powerConsumptionMax;
-            totalPowerProduced += itemInfo.powerProduction;
-            totalHeatRate += itemInfo.heatRate;
+            totalStabilityCost += box.data.stabilityCost;
+            totalStabilityConferred = Math.max(totalStabilityConferred, box.data.stabilityConferred + 15);
+            totalPowerIdle += box.data.powerConsumptionIdle;
+            totalPowerMax += box.data.powerConsumptionMax;
+            totalPowerProduced += box.data.powerProduction;
+            totalHeatRate += box.data.heatRate;
             totalItems += 1;
         }
     });
@@ -319,64 +318,13 @@ async function drawBoxes(canvas, blueprint, MAX_HEIGHT=1000, MAX_WIDTH=1000) {
         await view.render(item);
     }
 
-    // const itemsWithId = blueprint.items.map((item, index) => {
-    //     return {
-    //         index: index,
-    //         item: item
-    //     };
-    // });
-
-    // const parent = {};
-    // for (let item of itemsWithId) {
-    //     parent[item.index] = item.index;
-    // }
-
-    // function find(item) {
-    //     if (parent[item.index] === item.index) {
-    //         return item.index;
-    //     }
-    //     return find({ index: parent[item.index], item: item.item });
-    // }
-
-    // function union(item1, item2) {
-    //     const root1 = find(item1);
-    //     const root2 = find(item2);
-    //     parent[root2] = root1;
-    // }
-
-    const queue = [...blueprint.items]
-    while (queue.length) {
-        let item = queue.shift();
-        for (let other of queue) {
-            const direction = blueprint.adjacent(item, other)
-            if (direction && blueprint.connected(item, other, direction)) {
-                view.renderAdjacent(item, other, direction);
-                // union(item, i);
-            }
-        }
+    for (let {from, to, direction} of blueprint.connections ) {
+        view.renderAdjacent(from, to, direction);
     }
 
-    // function extractGroups(parent) {
-    //     const groups = {};
-    //     for (let i in parent) {
-    //         let item = items[i]
-    //         const root = find({ index: i, item: item });
-    //         if (groups[root]) {
-    //             groups[root].push(item);
-    //         } else {
-    //             groups[root] = [item];
-    //         }
-    //     }
-    //     return Object.values(groups);
-    // }
-
-    // let allGroups = extractGroups(parent);
-    // console.log(allGroups);
-    // let stationGroups = allGroups.map(group => group.filter(item => itemData.get(item).itemCategory === "Stations")).filter(group => group.length > 0);
-
     return {
-        "mouseMoveEventHandler": event => view.mouseMoveEventHandler(event, blueprint.items)
-        // "stationGroupTotals": stationGroups.map(group => calculateTotals(group, itemData))
+        "mouseMoveEventHandler": event => view.mouseMoveEventHandler(event, blueprint.items),
+        "stationGroupTotals": Array.from(blueprint.stations, group => calculateTotals(group))
     }
 
 }
