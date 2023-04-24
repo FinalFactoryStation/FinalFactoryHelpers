@@ -1,6 +1,6 @@
 import { loadImage, windowSize, path2D } from "./util.js";
 import { dir } from "./constants.js"
-import { adjacent, connected } from "./items.js";
+// import { adjacent, connected } from "./blueprint.js";
 
 const BACKGROUND_DEFAULT = "black";
 const BACKGROUND_HIGHLIGHT = "#414a4c";
@@ -56,7 +56,7 @@ const HIGHLIGHTED = 1;
 
 
 
-const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
+const makeRender = (canvas, blueprint, boundingBox, scalingFactor) => {
     canvas.width = (boundingBox.right - boundingBox.left) * scalingFactor;
     canvas.height = (boundingBox.bottom - boundingBox.top) * scalingFactor;
 
@@ -95,19 +95,18 @@ const makeRender = (canvas, itemData, boundingBox, scalingFactor) => {
         const fill = state == HIGHLIGHTED ? BACKGROUND_HIGHLIGHT : BACKGROUND_DEFAULT;
         const box = drawRect(item.top + MARGIN_ITEM, item.bottom - MARGIN_ITEM, item.left + MARGIN_ITEM, item.right - MARGIN_ITEM, fill, stroke);
         boxes.push(box);
-        const connections = itemData.connections(item);
         const center = (item.left + item.right) / 2;
         const middle = (item.top + item.bottom) / 2;
-        if (connections & dir.UP) {
+        if (item.connections & dir.UP) {
             drawRect(item.top, item.top + UNCONNECT_SIZE, center - UNCONNECT_SIZE, center + UNCONNECT_SIZE, NO_CONNECT_BACKGROUND);
         }
-        if (connections & dir.DOWN) {
+        if (item.connections & dir.DOWN) {
             drawRect(item.bottom - +UNCONNECT_SIZE, item.bottom, center - UNCONNECT_SIZE, center + UNCONNECT_SIZE, NO_CONNECT_BACKGROUND);
         }
-        if (connections & dir.LEFT) {
+        if (item.connections & dir.LEFT) {
             drawRect(middle - UNCONNECT_SIZE, middle + UNCONNECT_SIZE, item.left, item.left + UNCONNECT_SIZE, NO_CONNECT_BACKGROUND);
         }
-        if (connections & dir.RIGHT) {
+        if (item.connections & dir.RIGHT) {
             drawRect(middle - UNCONNECT_SIZE, middle + UNCONNECT_SIZE, item.right - UNCONNECT_SIZE, item.right, NO_CONNECT_BACKGROUND);
         }
     }
@@ -247,16 +246,15 @@ const calculateTotals = (items, itemData) => {
         totalItems = 0;
 
     items.forEach(box => {
-        let itemInfo = itemData.get(box);
-        if (!itemInfo) {
+        if (!box.data) {
             console.log("ERROR: No item info for " + box.itemName);
         } else {
-            totalStabilityCost += itemInfo.stabilityCost;
-            totalStabilityConferred = Math.max(totalStabilityConferred, itemInfo.stabilityConferred + 15);
-            totalPowerIdle += itemInfo.powerConsumptionIdle;
-            totalPowerMax += itemInfo.powerConsumptionMax;
-            totalPowerProduced += itemInfo.powerProduction;
-            totalHeatRate += itemInfo.heatRate;
+            totalStabilityCost += box.data.stabilityCost;
+            totalStabilityConferred = Math.max(totalStabilityConferred, box.data.stabilityConferred + 15);
+            totalPowerIdle += box.data.powerConsumptionIdle;
+            totalPowerMax += box.data.powerConsumptionMax;
+            totalPowerProduced += box.data.powerProduction;
+            totalHeatRate += box.data.heatRate;
             totalItems += 1;
         }
     });
@@ -275,10 +273,10 @@ const calculateTotals = (items, itemData) => {
 
 // Draw label
 
-async function drawBoxes(canvas, items, itemData, MAX_HEIGHT=1000, MAX_WIDTH=1000) {
+async function drawBoxes(canvas, blueprint, MAX_HEIGHT=1000, MAX_WIDTH=1000) {
 
     // Calculate the bounding box of the items
-    const boundingBox = calculateBoundingBox(items);
+    const boundingBox = calculateBoundingBox(blueprint.items);
 
     // Get the dimensions of the bounding box and the window
     const { left, right, top, bottom } = boundingBox;
@@ -314,71 +312,19 @@ async function drawBoxes(canvas, items, itemData, MAX_HEIGHT=1000, MAX_WIDTH=100
     console.log(`Scaled height: ${scaledHeight}px`);
 
 
-    const view = makeRender(canvas, itemData, boundingBox, scalingFactor);
+    const view = makeRender(canvas, blueprint, boundingBox, scalingFactor);
 
-    for (let item of items) {
+    for (let item of blueprint.items) {
         await view.render(item);
     }
 
-    const itemsWithId = items.map((item, index) => {
-        return {
-            index: index,
-            item: item
-        };
-    });
-
-    const queue = [...itemsWithId]
-    const parent = {};
-    for (let item of itemsWithId) {
-        parent[item.index] = item.index;
+    for (let {from, to, direction} of blueprint.connections ) {
+        view.renderAdjacent(from, to, direction);
     }
-
-    function find(item) {
-        if (parent[item.index] === item.index) {
-            return item.index;
-        }
-        return find({ index: parent[item.index], item: item.item });
-    }
-
-    function union(item1, item2) {
-        const root1 = find(item1);
-        const root2 = find(item2);
-        parent[root2] = root1;
-    }
-
-
-    while (queue.length) {
-        let item = queue.shift();
-        for (let i of queue) {
-            const direction = adjacent(item.item, i.item)
-            if (direction && connected(item.item, i.item, direction, itemData)) {
-                view.renderAdjacent(item.item, i.item, direction);
-                union(item, i);
-            }
-        }
-    }
-
-    function extractGroups(parent) {
-        const groups = {};
-        for (let i in parent) {
-            let item = items[i]
-            const root = find({ index: i, item: item });
-            if (groups[root]) {
-                groups[root].push(item);
-            } else {
-                groups[root] = [item];
-            }
-        }
-        return Object.values(groups);
-    }
-
-    let allGroups = extractGroups(parent);
-    console.log(allGroups);
-    let stationGroups = allGroups.map(group => group.filter(item => itemData.get(item).itemCategory === "Stations")).filter(group => group.length > 0);
 
     return {
-        "mouseMoveEventHandler": event => view.mouseMoveEventHandler(event, items),
-        "stationGroupTotals": stationGroups.map(group => calculateTotals(group, itemData))
+        "mouseMoveEventHandler": event => view.mouseMoveEventHandler(event, blueprint.items),
+        "stationGroupTotals": Array.from(blueprint.stations, group => calculateTotals(group))
     }
 
 }
