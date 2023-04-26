@@ -4,30 +4,7 @@ import { dir, DEFAULT_CANVAS_BACKGROUND } from "./constants.js";
 
 const ITEM_MARGIN = 0.1;
 
-// const drawBox = (item, state) => {
-//     const stroke = state == HIGHLIGHTED ? STROKE_HIGHLIGHT : STOKE_DEFAULT;
-//     const fill = state == HIGHLIGHTED ? BACKGROUND_HIGHLIGHT : BACKGROUND_DEFAULT;
-//     const box = drawRect(item.top + MARGIN_ITEM, item.bottom - MARGIN_ITEM, item.left + MARGIN_ITEM, item.right - MARGIN_ITEM, fill, stroke);
-//     boxes.push(box);
-//     const center = (item.left + item.right) / 2;
-//     const middle = (item.top + item.bottom) / 2;
-//     if (item.connections & dir.UP) {
-//         drawRect(item.top, item.top, center, center, NO_CONNECT_BACKGROUND);
-//     }
-//     if (item.connections & dir.DOWN) {
-//         drawRect(item.bottom - +UNCONNECT_SIZE, item.bottom, center, center, NO_CONNECT_BACKGROUND);
-//     }
-//     if (item.connections & dir.LEFT) {
-//         drawRect(middle, middle, item.left, item.left, NO_CONNECT_BACKGROUND);
-//     }
-//     if (item.connections & dir.RIGHT) {
-//         drawRect(middle, middle, item.right, item.right, NO_CONNECT_BACKGROUND);
-//     }
-// }
-
-
 // const wordWrap = (text, width)
-
 
 const imageCache = {};
 
