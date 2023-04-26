@@ -151,24 +151,12 @@
   </div>
 
   <script type="module">
-    import { drawBoxes } from "./main.js";
-    import { Blueprint } from "./blueprint.js";
-
-    import { decode } from "./util.js";
-
-
-
+    import { InteractiveBlueprint } from "./blueprint-interactive.js";
+    import { styles } from "./constants.js";
     const canvas = document.getElementById('myCanvas');
-    const stabilityCostElement = document.getElementById("stability-cost");
-    const stabilityconferredElement = document.getElementById("stability-conferred");
-    const powerConsumptionIdleElement = document.getElementById("power-consumption-idle");
-    const powerConsumptionMaxElement = document.getElementById("power-consumption-max");
-    const powerProducedElement = document.getElementById("power-produced");
-    const heatRateElement = document.getElementById("heat-rate");
 
     const queryParams = new URLSearchParams(window.location.search);
     const bps = queryParams.get('bp');
-    const blueprint = await Blueprint.create(bps);
     
     // Size of HTML document (same as pageHeight/pageWidth in screenshot).
     var win = window,
@@ -180,7 +168,22 @@
 
     console.log(`${h} x ${w}`);
 
-    const view = await drawBoxes(canvas, blueprint, w, h*.85);
+    const blueprint = await InteractiveBlueprint.create(bps, canvas, w, h*.8);
+
+    blueprint.styleConnections({
+      fill: "midnightblue"
+    })
+    blueprint.style(styles.DEFAULT_ITEM)
+
+    blueprint.addEventListener("itemover", e => {
+        blueprint.styleItem(e.detail.item, styles.HIGHLIGHT_ITEM);
+    });
+
+    blueprint.addEventListener("itemout", e => {
+      blueprint.styleItem(e.detail.item, styles.DEFAULT_ITEM);
+    });
+
+    // const view = await drawBoxes(canvas, blueprint5);
     // view.addEventListener("mouseover", e => {
     //   console.log(e.item);
     //   console.log(e.station);
@@ -190,14 +193,11 @@
     //   console.log(e.station);
     // });
 
-    canvas.addEventListener("mousemove", view.mouseMoveEventHandler);
-
-
     // Get the tab links and tab content elements
     var tabLinks = document.querySelector('.tab-links');
     var tabContent = document.querySelector('.tab-content');
-    let groups = view.stationGroupTotals;
-    groups.forEach(function (group, index) {
+    let index = 0;
+    for (let station of blueprint.stations) {
       // Create a button element for the tab link
       var link = document.createElement('button');
       link.setAttribute('class', 'tab-link');
@@ -211,13 +211,14 @@
       pane.setAttribute('data-group', 'Structure ' + (index + 1));
       pane.innerHTML = `
     <div class="groups">Structure: <span id="group">Structure ${index + 1}</span><br />
-      Contains: <span id="contains">${group.totalItems} stations.</span><br />
-      Stability. Cost: <span id="stability-cost">${group.totalStabilityCost}</span>, Conferred: <span id="stability-conferred">${group.totalStabilityConferred}</span> <strong>(This does not account for struct or artifacts!)</strong><br />
-      Power Consumption. Idle: <span id="power-consumption-idle">${group.totalPowerIdle}</span>, Max: <span id="power-consumption-max">${group.totalPowerMax}</span>, Produced: <span id="power-produced">${group.totalPowerProduced}</span><br />
-      Heat Rate: <span id="heat-rate">${group.totalHeatRate}</span>
+      Contains: <span id="contains">${station.size} stations.</span><br />
+      Stability. Cost: <span id="stability-cost">${station.totalStabilityCost}</span>, Conferred: <span id="stability-conferred">${station.totalStabilityConferred}</span> <strong>(This does not account for struct or artifacts!)</strong><br />
+      Power Consumption. Idle: <span id="power-consumption-idle">${station.totalPowerIdle}</span>, Max: <span id="power-consumption-max">${station.totalPowerMax}</span>, Produced: <span id="power-produced">${station.totalPowerProduced}</span><br />
+      Heat Rate: <span id="heat-rate">${station.totalHeatRate}</span>
     </div>`;
       tabContent.appendChild(pane);
-    });
+      index += 1;
+    };
 
     // Get all tab links and tab panes
     var tabLinks = document.querySelectorAll('.tab-link');
