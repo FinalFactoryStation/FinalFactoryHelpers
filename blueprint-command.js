@@ -1,9 +1,9 @@
-import { drawBoxes, } from "./main.js";
-import { Blueprint } from "./blueprint.js";
+import { BlueprintView } from "./blueprint-view.js";
 import { createCanvas, CanvasRenderingContext2D } from 'canvas';
 import { polyfillPath2D } from "path2d-polyfill";
 import { SlashCommandBuilder, EmbedBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } from 'discord.js';
 import { uploadBlueprint } from './azure-helper.cjs';
+import { styles } from "./constants.js";
 
 global.CanvasRenderingContext2D = CanvasRenderingContext2D;
 polyfillPath2D(global);
@@ -15,15 +15,18 @@ const handler = async interaction => {
     }
 
     const canvas = createCanvas(500,500);
-    const blueprint = Blueprint.create(blueprintString);
-    await drawBoxes(canvas, blueprint);
+
+    const blueprint = await BlueprintView.create(blueprintString, canvas);
+
+    blueprint.styleConnections({
+      fill: "midnightblue"
+    })
+    blueprint.style(styles.ITEM_DEFAULT)
 
     const img = new AttachmentBuilder(canvas.toBuffer())
         .setName("image.png");
 
     const link = await uploadBlueprint(blueprint.serialize());
-
-    console.log(link);
 
     const response = new EmbedBuilder()
         .setColor(0x0099FF)

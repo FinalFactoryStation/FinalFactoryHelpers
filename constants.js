@@ -10,19 +10,19 @@
 
 const styles = {
     DEFAULT_ITEM: {
-        background: "black",
+        fill: "black",
         stroke: "black",
-        stroke_width: 0.03
+        strokeWidth: 0.03
     },
     HIGHLIGHT_STATION: {
-        background: "#414a4c",
+        fill: "#414a4c",
         stroke: "green",
-        stroke_width: 0.03
+        strokeWidth: 0.03
     },
     HIGHLIGHT_ITEM: {
-        background: "#414a4c",
+        fill: "#414a4c",
         stroke: "green",
-        stroke_width: 0.03
+        strokeWidth: 0.03
     }
 }
 
@@ -42,9 +42,45 @@ const sources = {
     OVERRIDES_URL: "overrides-itemData.json",
 }
 
+const DEFAULT_CANVAS_BACKGROUND = "grey";
+
+
 // const UNCONNECT_SIZE = 0.04;
 // const MARGIN_ITEM = UNCONNECT_SIZE + WIDTH_STROKE - 0.02;
 
 // const HIGHLIGHTED = 1;
 
-export { styles, dir, sources }
+// const HFLIP_TRANSFORM = item => ({
+//     width: item.width,
+//     height: item.height,
+//     direction: hflip(item.direction),
+//     top: item.top,
+//     bottom: item.bottom,
+//     left: -item.left,
+//     right: -item.right,
+//     itemName: item.itemName
+// });
+
+// const CLOCKWISE_TRANSFORM = item => ({
+//     width: item.height,
+//     height: item.width,
+//     direction: rotate(item.direction, 1),
+//     top: -item.left,
+//     bottom: -item.right,
+//     left: -item.top,
+//     right: -item.bottom,
+//     itemName: item.itemName
+// });
+
+// const COUNTERCLOCKWISE_TRANSFORM = item => ({
+//     width: item.height,
+//     height: item.width,
+//     direction: rotate(item.direction, 1),
+//     top: item.right,
+//     bottom: item.left,
+//     left: item.bottom,
+//     right: item.top,
+//     itemName: item.itemName
+// });
+
+export { styles, dir, sources, DEFAULT_CANVAS_BACKGROUND }

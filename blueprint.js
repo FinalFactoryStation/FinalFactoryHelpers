@@ -111,36 +111,50 @@ const createItem = (rawItem, index, data) => {
     });
 }
 
+class Station extends Set {
+    constructor(item) {
+        super([item])
+        this.totalStabilityCost = item.data.stabilityCost;
+        this.totalStabilityConferred = item.data.stabilityConferred + 15;
+        this.totalPowerIdle = item.data.powerConsumptionIdle;
+        this.totalPowerMax = item.data.powerConsumptionMax;
+        this.totalPowerProduced = item.data.powerProduction;
+        this.totalHeatRate = item.data.heatRate;
+    }
 
+    concat(other) {
+        for (let i of other) {
+            this.add(i);
+        }
+        this.totalStabilityCost += other.totalStabilityCost;
+        this.totalStabilityConferred = Math.max(this.totalStabilityConferred, other.totalStabilityConferred);
+        this.totalPowerIdle += other.totalPowerIdle;
+        this.totalPowerMax += other.totalPowerMax;
+        this.totalPowerProduced += other.totalPowerProduced;
+        this.totalHeatRate += other.totalHeatRate;
+    }
+}
 
 class Blueprint {
-
-    static async create(blueprintString, itemData = undefined) {
-        if (!itemData) {
-            itemData = await loadItemData();
-        }
-        let index = 0;
-        const json = decode(blueprintString);
-        const items = json["Items"].map(rawItem => createItem(rawItem, index++, itemData[rawItem['ItemName']]))
-
-        return new Blueprint(items, itemData, blueprintString);
+    static async create(blueprintString, itemData=undefined) {
+        const result = new Blueprint();
+        await Blueprint.init.call(result, blueprintString, itemData);
+        return result;
     }
 
-
-
-    serialize() {
-        return this.blueprintString;
-    }
-
-    constructor(items, itemData, blueprintString) {
-        this.items = items;
-        this.itemData = itemData;
-        this.itemCategories = [...new Set(Object.values(itemData).map(obj => obj.itemCategory))];
+    async init(blueprintString, itemData) {
         this.blueprintString = blueprintString;
+        this.itemData = itemData ?? await loadItemData();
 
-        const queue = [...items]
-        this.itemConnections = Array.from({length: items.length}, () => new Set());
-        this.itemStations = Array.from(items, item => new Set([item]));
+        const json = decode(blueprintString);
+        let index = 0;
+        this.items = json["Items"].map(rawItem => createItem(rawItem, index++, this.itemData[rawItem['ItemName']]))
+
+        this.itemCategories = [...new Set(Object.values(this.itemData).map(obj => obj.itemCategory))];
+
+        const queue = [...this.items]
+        this.itemConnections = Array.from({length: this.items.length}, () => new Set());
+        this.itemStations = Array.from(this.items, item => new Station(item));
         this.connections = []
 
         while (queue.length) {
@@ -156,8 +170,8 @@ class Blueprint {
                     const newStation = this.itemStations[item.index]
                     const oldStation = this.itemStations[other.index]
                     if (newStation !== oldStation) {
+                        newStation.concat(oldStation)
                         for (let i of oldStation) {
-                            newStation.add(i);
                             this.itemStations[i.index] = newStation;
                         }
                     }
@@ -167,6 +181,12 @@ class Blueprint {
 
         this.stations = new Set(this.itemStations);
     }
+
+    serialize() {
+        return this.blueprintString;
+    }
+
+
 }
 
 
