@@ -21,13 +21,13 @@ async function createHash(str) {
 
 async function makeJsonPUpload(blueprintString) {
     const filename = (await createHash(blueprintString)) + '.jsonp';
-    const content = `readBlueprint({redirect: window.location.replace('https://jmerkow.github.io/FinalFactoryHelpers/bp-image.html?bp=${encodeURIComponent(blueprintString)}')});`;
+    const content = `readBlueprint({redirect: window.location.replace('https://finalfactorystation.github.io/FinalFactoryHelpers/bp-image.html?bp=${encodeURIComponent(blueprintString)}')});`;
     return { filename, content, options: OPTIONS_TEXT_JAVASCRIPT }
 }
 
 async function makeHtmlRedirectUpload(blueprintString) {
     const filename = (await createHash(blueprintString)) + '.html';
-    const content = `<meta http-equiv="Refresh" content="0; url='https://jmerkow.github.io/FinalFactoryHelpers/bp-image.html?bp=${encodeURIComponent(blueprintString)}'" />`;
+    const content = `<meta http-equiv="Refresh" content="0; url='https://finalfactorystation.github.io/FinalFactoryHelpers/bp-image.html?bp=${encodeURIComponent(blueprintString)}'" />`;
     return { filename, content, options: OPTIONS_TEXT_HTML }
 }
 
