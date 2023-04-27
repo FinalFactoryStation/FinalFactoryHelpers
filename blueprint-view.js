@@ -182,9 +182,9 @@ class BlueprintView extends Blueprint {
     }
 
     async style(style) {
-        this.items.forEach(item => {
-            this.styleItem(item, style);
-        });
+        for (let item of this.items) {
+            await this.styleItem(item, style);
+        }
     }
 
     styleConnection(item1, item2, direction, style) {

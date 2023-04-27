@@ -21,7 +21,7 @@ const handler = async interaction => {
     blueprint.styleConnections({
       fill: "midnightblue"
     })
-    blueprint.style(styles.DEFAULT_ITEM)
+    await blueprint.style(styles.DEFAULT_ITEM)
 
     const img = new AttachmentBuilder(canvas.toBuffer())
         .setName("image.png");
