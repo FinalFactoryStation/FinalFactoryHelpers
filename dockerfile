@@ -1,5 +1,5 @@
 FROM node:18
-COPY ./package.json ./package-lock.json* /usr/src/app
+COPY ./package.json ./package-lock.json* /usr/src/app/
 WORKDIR /usr/src/app
 RUN npm install
 WORKDIR /
