@@ -36,7 +36,6 @@ const accessible = (item1, item2, direction) => {
         ? (((1 << (item1.right - item1.left)) - 1) << (item1.left - item2.left))
         : (((1 << (item1.bottom - item1.top)) - 1) << (item1.top - item2.top));
     const slotMask = getMask(item2, item2.data.slots, direction);
-    console.log(slotMask + ":" + match); 0
     return (slotMask & match) == match;
 }
 
@@ -76,7 +75,6 @@ const adjacent = (item1, item2) => {
 }
 
 const connected = (item1, item2, direction) => {
-console.log(item1)
     if ((item1.connections & direction) && connects(item1, item2, direction)) {
         return true;
     }
@@ -134,7 +132,14 @@ class Station extends Set {
 }
 
 class Blueprint {
+    static async create(blueprintString, itemData=undefined) {
+        return await Blueprint.prototype.init.call(new Blueprint(), blueprintString, itemData);
+    }
 
+    async transform(transformation) {
+        const newItems = this.items.map(transformation);
+        return Blueprint.prototype.init.call(new Blueprint(), this.blueprintString, this.itemData, newItems);
+    }
 
     async init(bp, itemData=undefined, items=undefined) {
         if (bp instanceof Blueprint) {
@@ -149,7 +154,6 @@ class Blueprint {
         }
         this.items = items;
         this.blueprintString = bp;
-
 
         this.itemCategories = [...new Set(Object.values(this.itemData).map(obj => obj.itemCategory))];
 
@@ -181,23 +185,12 @@ class Blueprint {
         }
 
         this.stations = new Set(this.itemStations);
-console.log(this.connections)
         return this;
     }
 
     serialize() {
         return this.blueprintString;
     }
-
-    static async create(blueprintString, itemData=undefined) {
-        return await Blueprint.prototype.init.call(new Blueprint(), blueprintString, itemData);
-    }
-
-    async transform(transformation) {
-        const newItems = this.items.map(transformation);
-        return Blueprint.prototype.init.call(new Blueprint(), this.blueprintString, this.itemData, newItems);
-    }
-
 }
 
 
