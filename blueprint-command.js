@@ -31,8 +31,6 @@ const makeReply = async blueprintString => {
     const src = new AttachmentBuilder(Buffer.from(blueprintString, "utf-8"))
         .setName("bp.txt");
 
-    const hash = createHash(blueprintString);
-
     const link = await uploadBlueprint(blueprint.serialize());
 
     const response = new EmbedBuilder()
