@@ -1,10 +1,7 @@
 import { dir, rotate } from "./constants.js"
 import { decode, encode, loadItemData } from "./util.js";
 
-
-
 const rotate180 = sides => rotate(sides, 2);
-
 const facing = item => rotate(dir.UP, item.direction)
 
 const connects = (item1, item2, direction) => {
@@ -210,28 +207,5 @@ class Blueprint {
         });
     }
 }
-
-/*
-    const center_x = rawItem['OriginalPlacedPosition']['x'] / 10;
-    const center_y = rawItem['OriginalPlacedPosition']['z'] / 10;
-    const width = rawItem['Width'];
-    const height = rawItem['Length'];
-    const direction = rawItem['CurrentDirection'];
-
-    return Object.freeze({
-        width,
-        height,
-        direction,
-        top: -Math.round(center_y + height / 2),
-        bottom: -Math.round(center_y - height / 2),
-        left: Math.round(center_x - width / 2),
-        right: Math.round(center_x + width / 2),
-        itemName: rawItem['ItemName'],
-        index,
-        data,
-        connections: rotate(data.connections ?? 0, direction)
-    });
-*/
-
 
 export { rotate, Blueprint };
