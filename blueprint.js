@@ -1,5 +1,5 @@
 import { dir, rotate } from "./constants.js"
-import { decode, loadItemData } from "./util.js";
+import { decode, encode, loadItemData } from "./util.js";
 
 
 
@@ -138,7 +138,7 @@ class Blueprint {
 
     async transform(transformation) {
         const newItems = this.items.map(transformation);
-        return Blueprint.prototype.init.call(new Blueprint(), this.blueprintString, this.itemData, newItems);
+        return Blueprint.prototype.init.call(new Blueprint(), undefined, this.itemData, newItems);
     }
 
     async init(bp, itemData=undefined, items=undefined) {
@@ -189,9 +189,49 @@ class Blueprint {
     }
 
     serialize() {
-        return this.blueprintString;
+        if (this.blueprintString) {
+            return this.blueprintString;
+        }
+        return encode({
+            Items: this.items.map(item => {
+                const center_x = (item.left + item.right) / 2;
+                const center_y = -(item.top + item.bottom) / 2;
+                return {
+                    OriginalPlacedPosition: {
+                        x: center_x*10,
+                        z: center_y*10
+                    },
+                    Width: item.width,
+                    Length: item.height,
+                    CurrentDirection: item.direction,
+                    ItemName: item.itemName
+                };
+            })    
+        });
     }
 }
+
+/*
+    const center_x = rawItem['OriginalPlacedPosition']['x'] / 10;
+    const center_y = rawItem['OriginalPlacedPosition']['z'] / 10;
+    const width = rawItem['Width'];
+    const height = rawItem['Length'];
+    const direction = rawItem['CurrentDirection'];
+
+    return Object.freeze({
+        width,
+        height,
+        direction,
+        top: -Math.round(center_y + height / 2),
+        bottom: -Math.round(center_y - height / 2),
+        left: Math.round(center_x - width / 2),
+        right: Math.round(center_x + width / 2),
+        itemName: rawItem['ItemName'],
+        index,
+        data,
+        connections: rotate(data.connections ?? 0, direction)
+    });
+*/
 
 
 export { rotate, Blueprint };

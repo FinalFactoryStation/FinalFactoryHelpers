@@ -4,12 +4,12 @@ const RUNTIME = globalThis.process?.release?.name || 'browser'
 const DEFLATE_OPTIONS = { to: 'string' };
 
 
-let decode, loadImage, loadJson, windowSize, path2D;
+let decode, encode, loadImage, loadJson, windowSize, path2D;
 
 if (RUNTIME == "node") {
-    ({ decode, loadImage, loadJson, windowSize, path2D } = await import("./util-node.js"));
+    ({ decode, encode, loadImage, loadJson, windowSize, path2D } = await import("./util-node.js"));
 } else if (RUNTIME == "browser") {
-    ({ decode, loadImage, loadJson, windowSize, path2D } = await import("./util-browser.js"));
+    ({ decode, encode, loadImage, loadJson, windowSize, path2D } = await import("./util-browser.js"));
 } else {
     throw new Error("unreasonable runtime: " + RUNTIME) 
 }
@@ -25,4 +25,4 @@ const loadItemData = async () => {
     return itemData;
 }
 
-export { decode, loadImage, loadJson, windowSize, path2D, loadItemData }
+export { decode, encode, loadImage, loadJson, windowSize, path2D, loadItemData }

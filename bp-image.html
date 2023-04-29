@@ -170,7 +170,9 @@
 
     const blueprint = await InteractiveBlueprint.create(bps, canvas, w, h*.8);
 
+    console.log((await blueprint.transform(TRANSFORMATIONS.CLOCKWISE)).serialize())
     // const old_bp = await InteractiveBlueprint.create(bps, canvas, w, h*.8);
+    // const blueprint = await InteractiveBlueprint.create(await old_bp.transform(TRANSFORMATIONS.VFLIP), canvas, w, h*.8);
     // const blueprint = await InteractiveBlueprint.create(await old_bp.transform(TRANSFORMATIONS.COUNTER_CLOCKWISE), canvas, w, h*.8);
 
     blueprint.styleConnections({
