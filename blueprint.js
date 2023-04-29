@@ -1,10 +1,7 @@
-import { dir } from "./constants.js"
+import { dir, rotate } from "./constants.js"
 import { decode, loadItemData } from "./util.js";
 
-const rotate = (directions, newDirection) => {
-    const v = directions << (newDirection % 4);
-    return (v & 15) + ((v & ~15) >> 4);
-}
+
 
 const rotate180 = sides => rotate(sides, 2);
 
@@ -79,6 +76,7 @@ const adjacent = (item1, item2) => {
 }
 
 const connected = (item1, item2, direction) => {
+console.log(item1)
     if ((item1.connections & direction) && connects(item1, item2, direction)) {
         return true;
     }
@@ -136,19 +134,22 @@ class Station extends Set {
 }
 
 class Blueprint {
-    static async create(blueprintString, itemData=undefined) {
-        const result = new Blueprint();
-        await Blueprint.init.call(result, blueprintString, itemData);
-        return result;
-    }
 
-    async init(blueprintString, itemData) {
-        this.blueprintString = blueprintString;
+
+    async init(bp, itemData=undefined, items=undefined) {
+        if (bp instanceof Blueprint) {
+            return Blueprint.prototype.init.call(this, bp.blueprintString, bp.itemData, bp.items)
+        }
+
         this.itemData = itemData ?? await loadItemData();
+        if (!items) {
+            const json = decode(bp);
+            let index = 0;
+            items = json["Items"].map(rawItem => createItem(rawItem, index++, this.itemData[rawItem['ItemName']]))
+        }
+        this.items = items;
+        this.blueprintString = bp;
 
-        const json = decode(blueprintString);
-        let index = 0;
-        this.items = json["Items"].map(rawItem => createItem(rawItem, index++, this.itemData[rawItem['ItemName']]))
 
         this.itemCategories = [...new Set(Object.values(this.itemData).map(obj => obj.itemCategory))];
 
@@ -180,12 +181,22 @@ class Blueprint {
         }
 
         this.stations = new Set(this.itemStations);
+console.log(this.connections)
+        return this;
     }
 
     serialize() {
         return this.blueprintString;
     }
 
+    static async create(blueprintString, itemData=undefined) {
+        return await Blueprint.prototype.init.call(new Blueprint(), blueprintString, itemData);
+    }
+
+    async transform(transformation) {
+        const newItems = this.items.map(transformation);
+        return Blueprint.prototype.init.call(new Blueprint(), this.blueprintString, this.itemData, newItems);
+    }
 
 }
 
