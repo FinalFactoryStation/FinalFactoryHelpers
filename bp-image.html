@@ -3,11 +3,15 @@
 
 <head>
   <title>Blueprint Drawing thingy</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
   <style>
     .container {
       width: 90%;
       margin: 0 auto;
       padding: 0 20px;
+
     }
 
     canvas {
@@ -15,23 +19,27 @@
 
     }
 
+
     .action-bar {
       width: 100%;
       display: flex;
-      flex-direction: row;
-      justify-content: right;
+      justify-content: space-between;
       align-items: center;
-      margin: 0 auto;
       padding: 10px 0px;
+      gap: 8px;
     }
 
-    .action-bar button {
-      margin: 0 10px;
+    .action-bar #open-lightbox {
+      margin-right: auto;
     }
+
 
     .canvas-container {
       width: 100%;
       text-align: center;
+      border: #000;
+      border-radius: 5px;
+      background-color: #b1b1b1;
     }
 
     .canvas-container canvas {
@@ -39,6 +47,36 @@
       top: 0;
       left: 0;
       margin: 0 auto;
+    }
+
+    .canvas-lightbox {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .canvas-lightbox .canvas-box {
+      width: 90%;
+      height: 90%;
+      max-width: 100%;
+      max-height: 100%;
+      background-color: #b1b1b1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .canvas-lightbox canvas {
+      max-width: 80%;
+      max-height: 80%;
     }
 
     #blueprint-textbox {
@@ -124,6 +162,8 @@
       border: 1px solid #ccc;
       background-color: #f9f9f9;
     }
+
+
   </style>
 </head>
 
@@ -144,8 +184,15 @@
         <div class="tab-content"></div>
       </div>
       <div class="action-bar">
-        <button id="rotate-button" type="submit">Rotate</button>
-        <button id="flip-button" type="submit">Flip</button>
+        <button id="open-lightbox">
+          <i class="fas fa-expand"></i>
+        </button>
+        <button id="rotate-button" type="submit">
+          <i class="fa-solid fa-arrows-rotate"></i>
+        </button>
+        <button id="flip-button" type="submit">
+          <i class="fa-solid fa-arrows-up-down"></i>
+        </button>
       </div>
       <div class="canvas-container">
         <canvas id="myCanvas" width="500" height="500"></canvas>
@@ -159,7 +206,7 @@
       const form = document.querySelector('form');
       const formData = new FormData(form);
       formData.append('rotate', 1);
-      const urlParams = new URLSearchParams(window.location.search);
+      const urlParams = new URLSearchParams();
       for (const [name, value] of formData.entries()) {
         urlParams.set(name, value);
       }
@@ -173,14 +220,41 @@
       const form = document.querySelector('form');
       const formData = new FormData(form);
       formData.append('flip', 1);
-      const urlParams = new URLSearchParams(window.location.search);
+      const urlParams = new URLSearchParams();
       for (const [name, value] of formData.entries()) {
         urlParams.set(name, value);
       }
       const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
       window.location.href = newUrl;
     });
-    
+
+    function openLightbox() {
+      const canvasContainer = document.querySelector('.canvas-container');
+      const canvas = document.getElementById('myCanvas');
+
+      canvasContainer.classList.add('canvas-lightbox');
+      document.body.classList.add('no-scroll'); // Add this line
+
+      const canvasBox = document.createElement('div');
+      canvasBox.classList.add('canvas-box');
+      canvasContainer.appendChild(canvasBox);
+      canvasBox.appendChild(canvas);
+
+      canvasContainer.addEventListener('click', closeLightbox);
+    }
+
+    function closeLightbox() {
+      const canvasContainer = document.querySelector('.canvas-container');
+      const canvas = document.getElementById('myCanvas');
+
+      canvasContainer.classList.remove('canvas-lightbox');
+      canvas.classList.remove('canvas-lightbox');
+
+      canvas.removeEventListener('click', closeLightbox);
+    }
+
+    const lightboxBtn = document.getElementById('open-lightbox');
+    lightboxBtn.addEventListener('click', openLightbox);
   </script>
 
   <script type="module">
@@ -197,7 +271,7 @@
     console.log(bps);
     console.log("rotate", rotate);
     console.log("flip", flip);
-    
+
     //Decode the blueprint then flip/rotate it depending on the query params
     var blueprint = await Blueprint.create(bps);
     if (rotate) {
@@ -221,10 +295,10 @@
       body = doc.getElementsByTagName('body')[0],
       h = win.innerWidth || docElem.clientWidth || body.clientWidth,
       w = win.innerHeight || docElem.clientHeight || body.clientHeight;
-      console.log(`${h} x ${w}`);
+    console.log(`${h} x ${w}`);
 
     //Draw Blueprint
-    var blueprint_view = await InteractiveBlueprint.create(bps, canvas, w, h * .8);
+    var blueprint_view = await InteractiveBlueprint.create(bps, canvas, w, h*.8);
     blueprint_view.styleConnections({
       fill: "midnightblue"
     })
