@@ -6,5 +6,7 @@ module.exports = {
     "GUILD_ID": process.env.DISCORD_CLIENT_ID ?? "530867164866150410",
     "BLOB_ACCOUNT_NAME": process.env.BLOB_ACCOUNT_NAME ?? "finalfactoryblueprints",
     "BLOB_CONTAINER_NAME": process.env.BLOB_CONTAINER_NAME ?? "prints",
-    "BLOB_SAS_TOKEN": process.env.BLOB_SAS_TOKEN
+    "AZURE_STORAGE_ACCOUNT_KEY": process.env.AZURE_STORAGE_ACCOUNT_KEY,
+    "SITE_URL": process.env.SITE_URL ?? "https://finalfactorystation.github.io/FinalFactoryHelpers/bp-image.html",
 }
+

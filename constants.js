@@ -98,4 +98,5 @@ const sources = {
 const DEFAULT_CANVAS_BACKGROUND = "grey";
 const DEFAULT_CANVAS_BACKGROUND_IMAGE = "Backgrounds/neb1.jpg";
 
+
 export { styles, dir, sources, DEFAULT_CANVAS_BACKGROUND, DEFAULT_CANVAS_BACKGROUND_IMAGE, TRANSFORMATIONS, rotate }
