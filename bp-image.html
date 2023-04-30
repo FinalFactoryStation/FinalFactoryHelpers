@@ -267,9 +267,9 @@
       pane.setAttribute('class', 'tab-pane');
       pane.setAttribute('data-group', 'Structure ' + (index + 1));
       pane.innerHTML = `
-    <div class="groups">Structure: <span id="group">Structure ${index + 1}</span><br />
+    <div class="groups">
       Contains: <span id="contains">${station.size} stations.</span><br />
-      Stability. Cost: <span id="stability-cost">${station.totalStabilityCost}</span>, Conferred: <span id="stability-conferred">${station.totalStabilityConferred}</span> <strong>(This does not account for struct or artifacts!)</strong><br />
+      Stability. Cost: <span id="stability-cost">${station.totalStabilityCost}</span>, Conferred: <span id="stability-conferred">${station.totalStabilityConferred}</span> <strong>(This does not account for struts or artifacts!)</strong><br />
       Power Consumption. Idle: <span id="power-consumption-idle">${station.totalPowerIdle}</span>, Max: <span id="power-consumption-max">${station.totalPowerMax}</span>, Produced: <span id="power-produced">${station.totalPowerProduced}</span><br />
       Heat Rate: <span id="heat-rate">${station.totalHeatRate}</span>
     </div>`;
