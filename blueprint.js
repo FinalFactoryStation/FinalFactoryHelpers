@@ -1,13 +1,7 @@
-import { dir } from "./constants.js"
-import { decode, loadItemData } from "./util.js";
-
-const rotate = (directions, newDirection) => {
-    const v = directions << (newDirection % 4);
-    return (v & 15) + ((v & ~15) >> 4);
-}
+import { dir, rotate } from "./constants.js"
+import { decode, encode, loadItemData } from "./util.js";
 
 const rotate180 = sides => rotate(sides, 2);
-
 const facing = item => rotate(dir.UP, item.direction)
 
 const connects = (item1, item2, direction) => {
@@ -39,7 +33,6 @@ const accessible = (item1, item2, direction) => {
         ? (((1 << (item1.right - item1.left)) - 1) << (item1.left - item2.left))
         : (((1 << (item1.bottom - item1.top)) - 1) << (item1.top - item2.top));
     const slotMask = getMask(item2, item2.data.slots, direction);
-    console.log(slotMask + ":" + match); 0
     return (slotMask & match) == match;
 }
 
@@ -137,18 +130,27 @@ class Station extends Set {
 
 class Blueprint {
     static async create(blueprintString, itemData=undefined) {
-        const result = new Blueprint();
-        await Blueprint.init.call(result, blueprintString, itemData);
-        return result;
+        return await Blueprint.prototype.init.call(new Blueprint(), blueprintString, itemData);
     }
 
-    async init(blueprintString, itemData) {
-        this.blueprintString = blueprintString;
-        this.itemData = itemData ?? await loadItemData();
+    async transform(transformation) {
+        const newItems = this.items.map(transformation);
+        return Blueprint.prototype.init.call(new Blueprint(), undefined, this.itemData, newItems);
+    }
 
-        const json = decode(blueprintString);
-        let index = 0;
-        this.items = json["Items"].map(rawItem => createItem(rawItem, index++, this.itemData[rawItem['ItemName']]))
+    async init(bp, itemData=undefined, items=undefined) {
+        if (bp instanceof Blueprint) {
+            return Blueprint.prototype.init.call(this, bp.blueprintString, bp.itemData, bp.items)
+        }
+
+        this.itemData = itemData ?? await loadItemData();
+        if (!items) {
+            const json = decode(bp);
+            let index = 0;
+            items = json["Items"].map(rawItem => createItem(rawItem, index++, this.itemData[rawItem['ItemName']]))
+        }
+        this.items = items;
+        this.blueprintString = bp;
 
         this.itemCategories = [...new Set(Object.values(this.itemData).map(obj => obj.itemCategory))];
 
@@ -180,14 +182,30 @@ class Blueprint {
         }
 
         this.stations = new Set(this.itemStations);
+        return this;
     }
 
     serialize() {
-        return this.blueprintString;
+        if (this.blueprintString) {
+            return this.blueprintString;
+        }
+        return encode({
+            Items: this.items.map(item => {
+                const center_x = (item.left + item.right) / 2;
+                const center_y = -(item.top + item.bottom) / 2;
+                return {
+                    OriginalPlacedPosition: {
+                        x: center_x*10,
+                        z: center_y*10
+                    },
+                    Width: item.width,
+                    Length: item.height,
+                    CurrentDirection: item.direction,
+                    ItemName: item.itemName
+                };
+            })    
+        });
     }
-
-
 }
-
 
 export { rotate, Blueprint };

@@ -6,11 +6,16 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 const loadCommands = async commands => {
 	for (let script of COMANND_SCRIPTS) {
-		const {command, handler} = await import(script);
+		const {command, handler, buttonIds, buttonHandler } = await import(script);
 		if (!!command && !!handler) {
 			commands.set(command.name, handler);
 		} else {
 			console.log(`[WARNING] The command at ${script} is missing a required "command" or "handler" property.`);
+		}
+		if (!!buttonIds && !!buttonHandler) {
+			for (let id of buttonIds) {
+				commands.set(id, buttonHandler);
+			}
 		}
 	}
 	return commands;
@@ -19,7 +24,8 @@ const loadCommands = async commands => {
 
 client.on(Events.InteractionCreate, async interaction => {
     try {
-        const execute = interaction.client.commands.get(interaction.commandName);
+		const command = interaction.commandName ?? interaction.customId.split(":")[0]
+        const execute = interaction.client.commands.get(command);
         if (!execute) {
             console.error(`No command matching ${interaction.commandName} was found.`);
 			await interaction.followUp({ content: 'Command missing implementation!', ephemeral: true });

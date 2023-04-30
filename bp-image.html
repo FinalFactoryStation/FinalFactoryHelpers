@@ -152,7 +152,7 @@
 
   <script type="module">
     import { InteractiveBlueprint } from "./blueprint-interactive.js";
-    import { styles } from "./constants.js";
+    import { styles, TRANSFORMATIONS } from "./constants.js";
     const canvas = document.getElementById('myCanvas');
 
     const queryParams = new URLSearchParams(window.location.search);
@@ -169,6 +169,11 @@
     console.log(`${h} x ${w}`);
 
     const blueprint = await InteractiveBlueprint.create(bps, canvas, w, h*.8);
+
+    console.log((await blueprint.transform(TRANSFORMATIONS.CLOCKWISE)).serialize())
+    // const old_bp = await InteractiveBlueprint.create(bps, canvas, w, h*.8);
+    // const blueprint = await InteractiveBlueprint.create(await old_bp.transform(TRANSFORMATIONS.VFLIP), canvas, w, h*.8);
+    // const blueprint = await InteractiveBlueprint.create(await old_bp.transform(TRANSFORMATIONS.COUNTER_CLOCKWISE), canvas, w, h*.8);
 
     blueprint.styleConnections({
       fill: "midnightblue"

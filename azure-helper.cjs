@@ -39,4 +39,4 @@ async function uploadBlueprint(blueprintString) {
     return `https://${BLOB_ACCOUNT_NAME}.blob.core.windows.net/${BLOB_CONTAINER_NAME}/${upload.filename}`;
 }
 
-module.exports = { uploadBlueprint };
+module.exports = { uploadBlueprint, createHash };
