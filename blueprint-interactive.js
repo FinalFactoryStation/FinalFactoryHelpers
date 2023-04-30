@@ -3,12 +3,12 @@ import { BlueprintView } from "./blueprint-view.js";
 
 class InteractiveBlueprint extends BlueprintView {
 
-    static async create(blueprintString, canvas, MAX_HEIGHT=1000, MAX_WIDTH=1000, canvasBackground=undefined, itemData=undefined) {
-        return InteractiveBlueprint.prototype.init.call(new InteractiveBlueprint(), blueprintString, canvas, MAX_HEIGHT, MAX_WIDTH, canvasBackground, itemData);
+    static async create(blueprintString, canvas, MAX_HEIGHT=1000, MAX_WIDTH=1000, canvasBackground=undefined, itemData=undefined, canvasBackgroundImg=undefined) {
+        return InteractiveBlueprint.prototype.init.call(new InteractiveBlueprint(), blueprintString, canvas, MAX_HEIGHT, MAX_WIDTH, canvasBackground, itemData, canvasBackgroundImg);
     }
 
-    async init(blueprintString, canvas, maxHeight, maxWidth, canvasBackground, itemData) {
-        await BlueprintView.prototype.init.call(this, blueprintString, canvas, maxHeight, maxWidth, canvasBackground, itemData);
+    async init(blueprintString, canvas, maxHeight, maxWidth, canvasBackground, itemData, canvasBackgroundImg) {
+        await BlueprintView.prototype.init.call(this, blueprintString, canvas, maxHeight, maxWidth, canvasBackground, itemData, canvasBackgroundImg);
 
         this.canvas.addEventListener("mousemove", e => this.mouseMoveEventHandler(e));
         this.last = undefined;
