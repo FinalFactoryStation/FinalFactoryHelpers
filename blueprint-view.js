@@ -204,10 +204,6 @@ class BlueprintView extends Blueprint {
         this.ctx.globalAlpha = 1; // Reset opacity
 
 
-        this.xoffset = 0;
-        this.yoffset = 0;
-
-
 
         this.xoffset = left;
         this.yoffset = top;
