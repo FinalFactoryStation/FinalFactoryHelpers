@@ -3,11 +3,15 @@
 
 <head>
   <title>Blueprint Drawing thingy</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
   <style>
     .container {
       width: 90%;
       margin: 0 auto;
       padding: 0 20px;
+
     }
 
     canvas {
@@ -15,9 +19,27 @@
 
     }
 
+
+    .action-bar {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0px;
+      gap: 8px;
+    }
+
+    .action-bar #open-lightbox {
+      margin-right: auto;
+    }
+
+
     .canvas-container {
       width: 100%;
       text-align: center;
+      border: #000;
+      border-radius: 5px;
+      background-color: #b1b1b1;
     }
 
     .canvas-container canvas {
@@ -25,6 +47,36 @@
       top: 0;
       left: 0;
       margin: 0 auto;
+    }
+
+    .canvas-lightbox {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .canvas-lightbox .canvas-box {
+      width: 90%;
+      height: 90%;
+      max-width: 100%;
+      max-height: 100%;
+      background-color: #b1b1b1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .canvas-lightbox canvas {
+      max-width: 80%;
+      max-height: 80%;
     }
 
     #blueprint-textbox {
@@ -110,22 +162,9 @@
       border: 1px solid #ccc;
       background-color: #f9f9f9;
     }
+
+
   </style>
-
-
-
-
-  <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      const queryString = window.location.search;
-      const urlParams = new URLSearchParams(queryString);
-      const bpValue = urlParams.get('bp');
-      const blueprintTextbox = document.getElementById('blueprint-textbox');
-      blueprintTextbox.value = bpValue;
-    });
-  </script>
-
-
 </head>
 
 <body>
@@ -144,48 +183,133 @@
         </div>
         <div class="tab-content"></div>
       </div>
+      <div class="action-bar">
+        <button id="open-lightbox">
+          <i class="fas fa-expand"></i>
+        </button>
+        <button id="rotate-button" type="submit">
+          <i class="fa-solid fa-arrows-rotate"></i>
+        </button>
+        <button id="flip-button" type="submit">
+          <i class="fa-solid fa-arrows-up-down"></i>
+        </button>
+      </div>
       <div class="canvas-container">
         <canvas id="myCanvas" width="500" height="500"></canvas>
       </div>
     </div>
   </div>
 
+  <script>
+    const rotateButton = document.getElementById('rotate-button');
+    rotateButton.addEventListener('click', async () => {
+      const form = document.querySelector('form');
+      const formData = new FormData(form);
+      formData.append('rotate', 1);
+      const urlParams = new URLSearchParams();
+      for (const [name, value] of formData.entries()) {
+        urlParams.set(name, value);
+      }
+      const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+      window.location.href = newUrl;
+
+    });
+
+    const flipButton = document.getElementById('flip-button');
+    flipButton.addEventListener('click', () => {
+      const form = document.querySelector('form');
+      const formData = new FormData(form);
+      formData.append('flip', 1);
+      const urlParams = new URLSearchParams();
+      for (const [name, value] of formData.entries()) {
+        urlParams.set(name, value);
+      }
+      const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+      window.location.href = newUrl;
+    });
+
+    function openLightbox() {
+      const canvasContainer = document.querySelector('.canvas-container');
+      const canvas = document.getElementById('myCanvas');
+
+      canvasContainer.classList.add('canvas-lightbox');
+      document.body.classList.add('no-scroll'); // Add this line
+
+      const canvasBox = document.createElement('div');
+      canvasBox.classList.add('canvas-box');
+      canvasContainer.appendChild(canvasBox);
+      canvasBox.appendChild(canvas);
+
+      canvasContainer.addEventListener('click', closeLightbox);
+    }
+
+    function closeLightbox() {
+      const canvasContainer = document.querySelector('.canvas-container');
+      const canvas = document.getElementById('myCanvas');
+
+      canvasContainer.classList.remove('canvas-lightbox');
+      canvas.classList.remove('canvas-lightbox');
+
+      canvas.removeEventListener('click', closeLightbox);
+    }
+
+    const lightboxBtn = document.getElementById('open-lightbox');
+    lightboxBtn.addEventListener('click', openLightbox);
+  </script>
+
   <script type="module">
     import { InteractiveBlueprint } from "./blueprint-interactive.js";
+    import { Blueprint } from "./blueprint.js";
     import { styles, TRANSFORMATIONS } from "./constants.js";
     const canvas = document.getElementById('myCanvas');
 
     const queryParams = new URLSearchParams(window.location.search);
-    const bps = queryParams.get('bp');
-    
-    // Size of HTML document (same as pageHeight/pageWidth in screenshot).
+    var bps = queryParams.get('bp');
+    const rotate = queryParams.get('rotate', false) ?? false;
+    const flip = queryParams.get('flip', false) ?? false;
+
+    console.log(bps);
+    console.log("rotate", rotate);
+    console.log("flip", flip);
+
+    //Decode the blueprint then flip/rotate it depending on the query params
+    var blueprint = await Blueprint.create(bps);
+    if (rotate) {
+      console.log('rotate');
+      bps = (await blueprint.transform(TRANSFORMATIONS.CLOCKWISE)).serialize();
+
+    }
+    if (flip) {
+      console.log('flip');
+      bps = (await blueprint.transform(TRANSFORMATIONS.VFLIP)).serialize();
+    }
+
+    //Set the blueprint text box to the updated blueprint
+    const blueprintTextbox = document.getElementById('blueprint-textbox');
+    blueprintTextbox.value = bps;
+
+    // Get size for to draw the blueprint on the canvas
     var win = window,
       doc = document,
       docElem = doc.documentElement,
       body = doc.getElementsByTagName('body')[0],
       h = win.innerWidth || docElem.clientWidth || body.clientWidth,
       w = win.innerHeight || docElem.clientHeight || body.clientHeight;
-
     console.log(`${h} x ${w}`);
 
-    const blueprint = await InteractiveBlueprint.create(bps, canvas, w, h*.8);
-
-    console.log((await blueprint.transform(TRANSFORMATIONS.CLOCKWISE)).serialize())
-    // const old_bp = await InteractiveBlueprint.create(bps, canvas, w, h*.8);
-    // const blueprint = await InteractiveBlueprint.create(await old_bp.transform(TRANSFORMATIONS.VFLIP), canvas, w, h*.8);
-    // const blueprint = await InteractiveBlueprint.create(await old_bp.transform(TRANSFORMATIONS.COUNTER_CLOCKWISE), canvas, w, h*.8);
-
-    blueprint.styleConnections({
+    //Draw Blueprint
+    var blueprint_view = await InteractiveBlueprint.create(bps, canvas, w, h*.8);
+    blueprint_view.styleConnections({
       fill: "midnightblue"
     })
-    blueprint.style(styles.DEFAULT_ITEM)
+    blueprint_view.style(styles.DEFAULT_ITEM)
 
-    blueprint.addEventListener("itemover", e => {
-        blueprint.styleItem(e.detail.item, styles.HIGHLIGHT_ITEM);
+    blueprint_view.addEventListener("itemover", e => {
+      blueprint_view.styleItem(e.detail.item, styles.HIGHLIGHT_ITEM);
     });
 
-    blueprint.addEventListener("itemout", e => {
-      blueprint.styleItem(e.detail.item, styles.DEFAULT_ITEM);
+    blueprint_view.addEventListener("itemout", e => {
+      blueprint_view.styleItem(e.detail.item, styles.DEFAULT_ITEM);
     });
 
     // const view = await drawBoxes(canvas, blueprint5);
@@ -197,6 +321,8 @@
     //   console.log(e.item);
     //   console.log(e.station);
     // });
+
+
 
     // Get the tab links and tab content elements
     var tabLinks = document.querySelector('.tab-links');
@@ -215,9 +341,9 @@
       pane.setAttribute('class', 'tab-pane');
       pane.setAttribute('data-group', 'Structure ' + (index + 1));
       pane.innerHTML = `
-    <div class="groups">Structure: <span id="group">Structure ${index + 1}</span><br />
+    <div class="groups">
       Contains: <span id="contains">${station.size} stations.</span><br />
-      Stability. Cost: <span id="stability-cost">${station.totalStabilityCost}</span>, Conferred: <span id="stability-conferred">${station.totalStabilityConferred}</span> <strong>(This does not account for struct or artifacts!)</strong><br />
+      Stability. Cost: <span id="stability-cost">${station.totalStabilityCost}</span>, Conferred: <span id="stability-conferred">${station.totalStabilityConferred}</span> <strong>(This does not account for struts or artifacts!)</strong><br />
       Power Consumption. Idle: <span id="power-consumption-idle">${station.totalPowerIdle}</span>, Max: <span id="power-consumption-max">${station.totalPowerMax}</span>, Produced: <span id="power-produced">${station.totalPowerProduced}</span><br />
       Heat Rate: <span id="heat-rate">${station.totalHeatRate}</span>
     </div>`;

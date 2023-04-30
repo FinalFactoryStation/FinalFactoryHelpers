@@ -1,6 +1,6 @@
 import { Blueprint } from "./blueprint.js";
 import { windowSize, path2D, loadImage } from "./util.js";
-import { dir, DEFAULT_CANVAS_BACKGROUND } from "./constants.js";
+import { dir, DEFAULT_CANVAS_BACKGROUND, DEFAULT_CANVAS_BACKGROUND_IMAGE } from "./constants.js";
 
 const ITEM_MARGIN = 0.1;
 
@@ -50,7 +50,7 @@ class BlueprintView extends Blueprint {
     drawLabel(item) {
         const width = (item.right - item.left) * this.scalingFactor;
         const size = Math.round(this.scalingFactor / 5);
-        const labelY = (item.top - this.yoffset  + ITEM_MARGIN) * this.scalingFactor + size;
+        const labelY = (item.top - this.yoffset + ITEM_MARGIN) * this.scalingFactor + size;
         this.ctx.font = size + "px Arial";
         this.ctx.fillStyle = "white";
         const words = item.itemName.split(' ');
@@ -73,13 +73,13 @@ class BlueprintView extends Blueprint {
             this.ctx.fillText(lines[i], (item.left - this.xoffset) * this.scalingFactor + width / 2 - labelWidth / 2, labelY + i * size);
         }
     }
-    
+
     async drawImage(item) {
         let x = (item.left - this.xoffset) * this.scalingFactor;
         let y = (item.top - this.yoffset) * this.scalingFactor;
         let width = item.width * this.scalingFactor;
         let height = item.height * this.scalingFactor;
-    
+
         const img = await getImage(`Icons/${item.itemName.replace(/\s/g, '')}.png`);
         const imgAspect = img.width / img.height;
         const boxAspect = width / height;
@@ -111,10 +111,10 @@ class BlueprintView extends Blueprint {
 
     drawConnection(top, left, bottom, right, vertPadding, horizPadding, style) {
         this.ctx.rect(
-            (left - this.xoffset - 2*horizPadding) * this.scalingFactor,
-            (top - this.yoffset - 2*vertPadding) * this.scalingFactor,
-            (right - left + 3*horizPadding) * this.scalingFactor,
-            (bottom - top + 3*vertPadding) * this.scalingFactor);
+            (left - this.xoffset - 2 * horizPadding) * this.scalingFactor,
+            (top - this.yoffset - 2 * vertPadding) * this.scalingFactor,
+            (right - left + 3 * horizPadding) * this.scalingFactor,
+            (bottom - top + 3 * vertPadding) * this.scalingFactor);
         this.ctx.fillStyle = style.fill;
         this.ctx.fill();
         if (style.strokeWidth) {
@@ -125,11 +125,11 @@ class BlueprintView extends Blueprint {
 
     }
 
-    static async create(blueprintString, canvas, MAX_HEIGHT=1000, MAX_WIDTH=1000, canvasBackground=undefined, itemData=undefined) {
-        return BlueprintView.prototype.init.call(new BlueprintView(), blueprintString, canvas, MAX_HEIGHT, MAX_WIDTH, canvasBackground, itemData);
+    static async create(blueprintString, canvas, MAX_HEIGHT = 1000, MAX_WIDTH = 1000, canvasBackground = undefined, itemData = undefined, canvasBackgroundImg = undefined) {
+        return BlueprintView.prototype.init.call(new BlueprintView(), blueprintString, canvas, MAX_HEIGHT, MAX_WIDTH, canvasBackground, itemData, canvasBackgroundImg);
     }
 
-    async init(blueprintString, canvas, maxHeight, maxWidth, canvasBackground, itemData) {
+    async init(blueprintString, canvas, maxHeight, maxWidth, canvasBackground, itemData, canvasBackgroundImg) {
         await Blueprint.prototype.init.call(this, blueprintString, itemData);
 
         this.canvas = canvas;
@@ -139,21 +139,21 @@ class BlueprintView extends Blueprint {
         const boundingBoxWidth = right - left;
         const boundingBoxHeight = bottom - top;
         const [windowWidth, windowHeight] = windowSize;
-    
+
         // Calculate the aspect ratios of the bounding box and the window
         const boundingBoxAspectRatio = boundingBoxWidth / boundingBoxHeight;
         const windowAspectRatio = windowWidth / windowHeight;
-    
+
         // Calculate the scaling factor based on the aspect ratios and the maximum dimensions
         this.scalingFactor = boundingBoxAspectRatio > windowAspectRatio
             ? Math.min(maxHeight / boundingBoxHeight, windowHeight / boundingBoxHeight) // If bounding box is taller than the window, limit by height
             : Math.min(maxWidth / boundingBoxWidth, windowWidth / boundingBoxWidth); // Otherwise, limit by width
-    
+
         // If the scaled height exceeds the maximum height, scale down based on height
         if (this.scalingFactor * boundingBoxHeight > maxHeight) {
             this.scalingFactor = maxHeight / boundingBoxHeight;
         }
-    
+
         // If the scaled width exceeds the maximum width, scale down based on width
         if (this.scalingFactor * boundingBoxWidth > maxWidth) {
             this.scalingFactor = maxWidth / boundingBoxWidth;
@@ -161,15 +161,53 @@ class BlueprintView extends Blueprint {
 
         this.canvas.width = (right - left) * this.scalingFactor;
         this.canvas.height = (bottom - top) * this.scalingFactor;
-    
-    
+
         this.ctx = this.canvas.getContext("2d");
         this.ctx.fillStyle = canvasBackground ?? DEFAULT_CANVAS_BACKGROUND;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    
+
+        const img = await getImage(canvasBackgroundImg ?? DEFAULT_CANVAS_BACKGROUND_IMAGE);
+        const imageWidth = img.width;
+        const imageHeight = img.height;
+
+
+        // Calculate the aspect ratio of the image and the canvas
+        const imageAspectRatio = imageWidth / imageHeight;
+        const canvasAspectRatio = this.canvas.width / this.canvas.height;
+
+        // Choose a random crop that covers at least the entire canvas
+        let cropWidth, cropHeight, x, y;
+        if (imageAspectRatio > canvasAspectRatio) {
+            // If the image is wider than the canvas, choose the crop based on width
+            cropWidth = Math.min(imageWidth, Math.ceil(imageHeight * canvasAspectRatio));
+            cropHeight = imageHeight;
+            x = Math.floor(Math.random() * (imageWidth - cropWidth + 1));
+            y = 0;
+        } else {
+            // Otherwise, choose the crop based on height
+            cropWidth = imageWidth;
+            cropHeight = Math.min(imageHeight, Math.ceil(imageWidth / canvasAspectRatio));
+            x = 0;
+            y = Math.floor(Math.random() * (imageHeight - cropHeight + 1));
+        }
+
+        // Draw the cropped image onto the canvas, scaled to fit
+        const scaleX = this.canvas.width / cropWidth;
+        const scaleY = this.canvas.height / cropHeight;
+        const scale = Math.min(scaleX, scaleY);
+        const scaledWidth = cropWidth * scale;
+        const scaledHeight = cropHeight * scale;
+        const offsetX = Math.floor((this.canvas.width - scaledWidth) / 2);
+        const offsetY = Math.floor((this.canvas.height - scaledHeight) / 2);
+        this.ctx.globalAlpha = 0.7; // Set opacity to 90%
+        this.ctx.drawImage(img, x, y, cropWidth, cropHeight, offsetX, offsetY, scaledWidth, scaledHeight);
+        this.ctx.globalAlpha = 1; // Reset opacity
+
+
+
         this.xoffset = left;
         this.yoffset = top;
-    
+
         this.itemPaths = this.items.map(item => this.makeItemPath(item));
 
         return this;
@@ -190,20 +228,20 @@ class BlueprintView extends Blueprint {
     styleConnection(item1, item2, direction, style) {
         switch (direction) {
             case (dir.UP):
-                return this.drawConnection(item1.top, Math.max(item1.left, item2.left), 
-                    item1.top, Math.min(item1.right, item2.right), 
+                return this.drawConnection(item1.top, Math.max(item1.left, item2.left),
+                    item1.top, Math.min(item1.right, item2.right),
                     ITEM_MARGIN, -ITEM_MARGIN, style)
             case (dir.LEFT):
-                return this.drawConnection(Math.max(item1.top, item2.top), item1.left, 
-                    Math.min(item1.bottom, item2.bottom), item1.left, 
+                return this.drawConnection(Math.max(item1.top, item2.top), item1.left,
+                    Math.min(item1.bottom, item2.bottom), item1.left,
                     -ITEM_MARGIN, ITEM_MARGIN, style)
             case (dir.DOWN):
-                return this.drawConnection(item1.bottom, Math.max(item1.left, item2.left), 
-                    item1.bottom,  Math.min(item1.right, item2.right), 
+                return this.drawConnection(item1.bottom, Math.max(item1.left, item2.left),
+                    item1.bottom, Math.min(item1.right, item2.right),
                     ITEM_MARGIN, -ITEM_MARGIN, style)
             case (dir.RIGHT):
-                return this.drawConnection(Math.max(item1.top, item2.top), item1.right, 
-                    Math.min(item1.bottom, item2.bottom), item1.right, 
+                return this.drawConnection(Math.max(item1.top, item2.top), item1.right,
+                    Math.min(item1.bottom, item2.bottom), item1.right,
                     -ITEM_MARGIN, ITEM_MARGIN, style)
         }
     }
