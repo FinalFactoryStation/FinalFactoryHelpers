@@ -125,21 +125,6 @@
       background-color: #f9f9f9;
     }
   </style>
-
-
-
-
-  <script>
-    window.addEventListener('DOMContentLoaded', () => {
-      const queryString = window.location.search;
-      const urlParams = new URLSearchParams(queryString);
-      const bpValue = urlParams.get('bp');
-      const blueprintTextbox = document.getElementById('blueprint-textbox');
-      blueprintTextbox.value = bpValue;
-    });
-  </script>
-
-
 </head>
 
 <body>
@@ -168,48 +153,7 @@
     </div>
   </div>
 
-  <script type="module">
-    import { InteractiveBlueprint } from "./blueprint-interactive.js";
-    import { styles, TRANSFORMATIONS } from "./constants.js";
-    const canvas = document.getElementById('myCanvas');
-
-    const queryParams = new URLSearchParams(window.location.search);
-    var bps = queryParams.get('bp');
-    const rotate = queryParams.get('rotate', false) ?? false;
-    const flip = queryParams.get('flip', false) ?? false;
-
-    console.log(bps);
-    console.log("rotate", rotate);
-    console.log("flip", flip);
-
-
-    // Size of HTML document (same as pageHeight/pageWidth in screenshot).
-    var win = window,
-      doc = document,
-      docElem = doc.documentElement,
-      body = doc.getElementsByTagName('body')[0],
-      h = win.innerWidth || docElem.clientWidth || body.clientWidth,
-      w = win.innerHeight || docElem.clientHeight || body.clientHeight;
-
-    console.log(`${h} x ${w}`);
-
-
-
-    var blueprint = await InteractiveBlueprint.create(bps, canvas, w, h * .8);
-    if (rotate) {
-      console.log('rotate');
-      bps = (await blueprint.transform(TRANSFORMATIONS.CLOCKWISE)).serialize();
-      
-    }
-    if (flip) {
-      console.log('flip');
-      bps = (await blueprint.transform(TRANSFORMATIONS.VFLIP)).serialize();
-    }
-    const blueprintTextbox = document.getElementById('blueprint-textbox');
-    blueprintTextbox.value = bps;
-    blueprint = await InteractiveBlueprint.create(bps, canvas, w, h * .8);
-
-
+  <script>
     const rotateButton = document.getElementById('rotate-button');
     rotateButton.addEventListener('click', async () => {
       const form = document.querySelector('form');
@@ -236,18 +180,62 @@
       const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
       window.location.href = newUrl;
     });
+    
+  </script>
 
-    blueprint.styleConnections({
+  <script type="module">
+    import { InteractiveBlueprint } from "./blueprint-interactive.js";
+    import { Blueprint } from "./blueprint.js";
+    import { styles, TRANSFORMATIONS } from "./constants.js";
+    const canvas = document.getElementById('myCanvas');
+
+    const queryParams = new URLSearchParams(window.location.search);
+    var bps = queryParams.get('bp');
+    const rotate = queryParams.get('rotate', false) ?? false;
+    const flip = queryParams.get('flip', false) ?? false;
+
+    console.log(bps);
+    console.log("rotate", rotate);
+    console.log("flip", flip);
+    
+    //Decode the blueprint then flip/rotate it depending on the query params
+    var blueprint = await Blueprint.create(bps);
+    if (rotate) {
+      console.log('rotate');
+      bps = (await blueprint.transform(TRANSFORMATIONS.CLOCKWISE)).serialize();
+
+    }
+    if (flip) {
+      console.log('flip');
+      bps = (await blueprint.transform(TRANSFORMATIONS.VFLIP)).serialize();
+    }
+
+    //Set the blueprint text box to the updated blueprint
+    const blueprintTextbox = document.getElementById('blueprint-textbox');
+    blueprintTextbox.value = bps;
+
+    // Get size for to draw the blueprint on the canvas
+    var win = window,
+      doc = document,
+      docElem = doc.documentElement,
+      body = doc.getElementsByTagName('body')[0],
+      h = win.innerWidth || docElem.clientWidth || body.clientWidth,
+      w = win.innerHeight || docElem.clientHeight || body.clientHeight;
+      console.log(`${h} x ${w}`);
+
+    //Draw Blueprint
+    var blueprint_view = await InteractiveBlueprint.create(bps, canvas, w, h * .8);
+    blueprint_view.styleConnections({
       fill: "midnightblue"
     })
-    blueprint.style(styles.DEFAULT_ITEM)
+    blueprint_view.style(styles.DEFAULT_ITEM)
 
-    blueprint.addEventListener("itemover", e => {
-      blueprint.styleItem(e.detail.item, styles.HIGHLIGHT_ITEM);
+    blueprint_view.addEventListener("itemover", e => {
+      blueprint_view.styleItem(e.detail.item, styles.HIGHLIGHT_ITEM);
     });
 
-    blueprint.addEventListener("itemout", e => {
-      blueprint.styleItem(e.detail.item, styles.DEFAULT_ITEM);
+    blueprint_view.addEventListener("itemout", e => {
+      blueprint_view.styleItem(e.detail.item, styles.DEFAULT_ITEM);
     });
 
     // const view = await drawBoxes(canvas, blueprint5);
@@ -259,6 +247,8 @@
     //   console.log(e.item);
     //   console.log(e.station);
     // });
+
+
 
     // Get the tab links and tab content elements
     var tabLinks = document.querySelector('.tab-links');
