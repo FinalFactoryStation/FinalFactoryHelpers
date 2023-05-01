@@ -1,4 +1,4 @@
-import { inflate, deflate } from 'pako';
+import { inflate, gzip } from 'pako';
 import { Path2D } from "path2d-polyfill";
 import { loadImage } from "canvas";
 
@@ -6,7 +6,7 @@ import { loadImage } from "canvas";
 const INFLATE_OPTIONS = { to: 'string' };
 
 const decode = bps => JSON.parse(inflate(Buffer.from(bps.substring(16), "base64"), INFLATE_OPTIONS));
-const encode = obj => "ffblueprintstart"+Buffer.from(deflate(Buffer.from(JSON.stringify(obj)))).toString('base64');
+const encode = obj => "ffblueprintstart"+Buffer.from(gzip(Buffer.from(JSON.stringify(obj)))).toString('base64');
 
 const loadJson = f => {
     console.log(f);
