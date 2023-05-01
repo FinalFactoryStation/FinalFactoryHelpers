@@ -20,7 +20,7 @@ const HFLIP_DIRECTION = [0, 3, 2, 1]
 const VFLIP_DIRECTION = [2, 1, 0, 3]
 
 const TRANSFORMATIONS = {
-    HFLIP: item => ({
+    HFLIP: item => (Object.assign({}, item, { 
         width: item.width,
         height: item.height,
         direction: HFLIP_DIRECTION[item.direction],
@@ -32,8 +32,8 @@ const TRANSFORMATIONS = {
         data: item.data,
         index: item.index,
         connections: rotate(item.data.connections ?? 0, HFLIP_DIRECTION[item.direction])
-    }),    
-    VFLIP: item => ({
+    })),    
+    VFLIP: item => (Object.assign({}, item, { 
         width: item.width,
         height: item.height,
         direction: VFLIP_DIRECTION[item.direction],
@@ -45,8 +45,8 @@ const TRANSFORMATIONS = {
         data: item.data,
         index: item.index,
         connections: rotate(item.data.connections ?? 0, VFLIP_DIRECTION[item.direction])
-    }),
-    CLOCKWISE: item => ({
+    })),
+    CLOCKWISE: item => (Object.assign({}, item, { 
         width: item.height,
         height: item.width,
         direction: (item.direction+1)%4,
@@ -58,8 +58,8 @@ const TRANSFORMATIONS = {
         data: item.data,
         index: item.index,
         connections: rotate(item.data.connections ?? 0, (item.direction+1)%4)
-    }),
-    COUNTER_CLOCKWISE: item => ({
+    })),
+    COUNTER_CLOCKWISE: item => (Object.assign({}, item, { 
         width: item.height,
         height: item.width,
         direction: (item.direction-1)%4,
@@ -71,7 +71,7 @@ const TRANSFORMATIONS = {
         data: item.data,
         index: item.index,
         connections: rotate(item.data.connections ?? 0, (item.direction-1)%4)
-    })
+    }))
 }
 
 const dir = {

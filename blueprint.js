@@ -89,7 +89,7 @@ const createItem = (rawItem, index, data) => {
     const height = rawItem['Length'];
     const direction = rawItem['CurrentDirection'];
 
-    return Object.freeze({
+    return Object.freeze(Object.assign({}, rawItem, {
         width,
         height,
         direction,
@@ -100,8 +100,8 @@ const createItem = (rawItem, index, data) => {
         itemName: rawItem['ItemName'],
         index,
         data,
-        connections: rotate(data.connections ?? 0, direction)
-    });
+        connections: rotate(data.connections ?? 0, direction),
+    }));;
 }
 
 class Station extends Set {
@@ -193,7 +193,7 @@ class Blueprint {
             Items: this.items.map(item => {
                 const center_x = (item.left + item.right) / 2;
                 const center_y = -(item.top + item.bottom) / 2;
-                return {
+                return Object.assign({}, item, {
                     OriginalPlacedPosition: {
                         x: center_x*10,
                         z: center_y*10
@@ -201,8 +201,8 @@ class Blueprint {
                     Width: item.width,
                     Length: item.height,
                     CurrentDirection: item.direction,
-                    ItemName: item.itemName
-                };
+                    ItemName: item.itemName,
+                });
             })    
         });
     }
